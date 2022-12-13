@@ -4,3 +4,6 @@
 [submodule "RadioHead"]
 	path = RadioHead
 	url = https://github.com/jecrespo/RadioHead.git
+[submodule "fprime-arduino"]
+	path = fprime-arduino
+	url = https://github.com/SterlingPeet/fprime-arduino
