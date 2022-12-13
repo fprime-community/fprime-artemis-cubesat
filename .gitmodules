@@ -1,9 +1,9 @@
 [submodule "fprime"]
-	path = fprime
+	path = lib/fprime
 	url = https://github.com/nasa/fprime.git
 [submodule "RadioHead"]
-	path = RadioHead
+	path = lib/RadioHead
 	url = https://github.com/jecrespo/RadioHead.git
 [submodule "fprime-arduino"]
-	path = fprime-arduino
+	path = lib/fprime-arduino
 	url = https://github.com/SterlingPeet/fprime-arduino
