@@ -1,0 +1,6 @@
+[submodule "fprime"]
+	path = fprime
+	url = https://github.com/nasa/fprime.git
+[submodule "RadioHead"]
+	path = RadioHead
+	url = https://github.com/jecrespo/RadioHead.git
