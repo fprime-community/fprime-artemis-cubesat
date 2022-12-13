@@ -26,6 +26,8 @@ module Isc {
     instance cmdDisp
     instance cmdSeq
     instance comm
+    instance commDriver
+    instance commQueue
     instance framer
     instance eventLogger
     instance fatalAdapter
@@ -66,16 +68,21 @@ module Isc {
 
     connections Downlink {
 
-      tlmSend.PktSend -> framer.comIn
-      eventLogger.PktSend -> framer.comIn
-      fileDownlink.bufferSendOut -> framer.bufferIn
+      tlmSend.PktSend -> commQueue.comQueueIn[0]
+      eventLogger.PktSend -> commQueue.comQueueIn[1]
+      fileDownlink.bufferSendOut -> commQueue.buffQueueIn[0]
+
+      commQueue.comQueueSend -> framer.comIn
+      commQueue.buffQueueSend -> framer.bufferIn
 
       framer.framedAllocate -> staticMemory.bufferAllocate[0]
-      framer.framedOut -> comm.send
+      framer.framedOut -> comm.comDataIn
       framer.bufferDeallocate -> fileDownlink.bufferReturn
 
-      comm.deallocate -> staticMemory.bufferDeallocate[0]
+      commDriver.deallocate -> staticMemory.bufferDeallocate[0]
+      comm.drvDataOut -> commDriver.send
 
+      comm.comStatus -> commQueue.comStatusIn
     }
 
     connections FaultProtection {
@@ -88,7 +95,7 @@ module Isc {
 
       # Rate group 1
       rateGroupDriverComp.CycleOut[Ports_RateGroups.rateGroup1] -> rateGroup1Comp.CycleIn
-      rateGroup1Comp.RateGroupMemberOut[0] -> comm.schedIn
+      rateGroup1Comp.RateGroupMemberOut[0] -> commDriver.schedIn
       rateGroup1Comp.RateGroupMemberOut[1] -> blinker.run
       rateGroup1Comp.RateGroupMemberOut[2] -> tlmSend.Run
       rateGroup1Comp.RateGroupMemberOut[3] -> fileDownlink.Run
@@ -105,8 +112,9 @@ module Isc {
 
     connections Uplink {
 
-      comm.allocate -> staticMemory.bufferAllocate[1]
-      comm.$recv -> deframer.framedIn
+      commDriver.allocate -> staticMemory.bufferAllocate[1]
+      commDriver.$recv -> comm.drvDataIn
+      comm.comDataOut -> deframer.framedIn
       deframer.framedDeallocate -> staticMemory.bufferDeallocate[1]
 
       deframer.comOut -> cmdDisp.seqCmdBuff
@@ -117,8 +125,9 @@ module Isc {
       deframer.bufferDeallocate -> fileUplinkBufferManager.bufferSendIn
       fileUplink.bufferSendOut -> fileUplinkBufferManager.bufferSendIn
 
-    }
+      commDriver.ready -> comm.drvConnected
 
+     }
   }
 
 }

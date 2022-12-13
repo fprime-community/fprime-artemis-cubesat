@@ -5,7 +5,7 @@ module Isc {
   # ----------------------------------------------------------------------
 
   module Default {
-    constant QUEUE_SIZE = 10
+    constant QUEUE_SIZE = 100
     constant STACK_SIZE = 64 * 1024
   }
 
@@ -62,11 +62,15 @@ module Isc {
   #    stack size Default.STACK_SIZE \
   #    priority 97
 
+  instance commQueue: Svc.ComQueue base id 0x0D00 \
+      queue size Default.QUEUE_SIZE \
+      stack size Default.STACK_SIZE \
+      priority 100
+
+
   # ----------------------------------------------------------------------
   # Passive component instances
   # ----------------------------------------------------------------------
-
-  instance comm: Arduino.SerialDriver base id 0x4000
 
   instance framer: Svc.Framer base id 0x4100
 
@@ -92,8 +96,12 @@ module Isc {
 
   instance rateDriver: Arduino.HardwareRateDriver base id 0x4C00
 
-  instance ledPin: Arduino.GpioDriver base id 0x5000
+  instance comm: Svc.ComStub base id 0x5000
 
-  instance blinker: ArduinoBlink.LedBlinker base id 0x5100
+  instance commDriver: Arduino.SerialDriver base id 0x4000
+
+  instance ledPin: Arduino.GpioDriver base id 0x6000
+
+  instance blinker: ArduinoBlink.LedBlinker base id 0x6100
 
 }

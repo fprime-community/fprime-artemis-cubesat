@@ -67,6 +67,7 @@ enum TopologyConstants {
  * desired, but is extracted here for clarity.
  */
 void configureTopology() {
+    commDriver.configure(0, 115200);
     rateDriver.configure(100); // Rate group period in milliseconds
     (void) ledPin.open(13, Arduino::GpioDriver::OUT); // Open pin 13 as our LED pin
     // Command sequencer needs to allocate memory to hold contents of command sequences
@@ -85,6 +86,16 @@ void configureTopology() {
     // Parameter database is configured with a database file name, and that file must be initially read.
     //prmDb.configure("PrmDb.dat");
     //prmDb.readParamFile();
+
+    Svc::ComQueue::QueueConfigurationTable configurationTable;
+    // Channels, deep queue, low priority
+    configurationTable.entries[0] = {.depth = 500, .priority = 2};
+    // Events , highest-priority
+    configurationTable.entries[1] = {.depth = 100, .priority = 0};
+    // File Downlink
+    configurationTable.entries[2] = {.depth = 100, .priority = 1};
+    // Allocation identifier is 0 as the MallocAllocator discards it
+    commQueue.configure(configurationTable, 0, mallocator);
 
     // Buffer managers need a configured set of buckets and an allocator used to allocate memory for those buckets.
     Svc::BufferManager::BufferBins upBuffMgrBins;
@@ -118,14 +129,7 @@ void setupTopology(const TopologyState& state) {
     //loadParameters();
     // Autocoded task kick-off (active components). Function provided by autocoder.
     startTasks(state);
-    // Initialize socket client communication if and only if there is a valid specification
-/*    if (state.hostname != nullptr && state.port != 0) {
-        Os::TaskString name("ReceiveTask");
-        // Uplink is configured for receive so a socket task is started
-        comm.configure(state.hostname, state.port);
-        comm.startSocketTask(name, true, COMM_PRIORITY, Default::STACK_SIZE);
-    }*/
-    comm.configure(0, 115200);
+
     rateDriver.start(); // Start rate group
 }
 
