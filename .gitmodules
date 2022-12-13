@@ -7,12 +7,12 @@
 [submodule "fprime-arduino"]
 	path = lib/fprime-arduino
 	url = https://github.com/SterlingPeet/fprime-arduino
-[submodule "lib/Adafruit/Adafruit_LSM6DS"]
+[submodule "Adafruit_LSM6DS"]
 	path = lib/Adafruit/Adafruit_LSM6DS
 	url = https://github.com/adafruit/Adafruit_LSM6DS.git
-[submodule "lib/Adafruit/Adafruit_Sensor"]
+[submodule "Adafruit_Sensor"]
 	path = lib/Adafruit/Adafruit_Sensor
 	url = https://github.com/adafruit/Adafruit_Sensor.git
-[submodule "lib/Adafruit/Adafruit_BusIO"]
+[submodule "Adafruit_BusIO"]
 	path = lib/Adafruit/Adafruit_BusIO
 	url = https://github.com/adafruit/Adafruit_BusIO.git
