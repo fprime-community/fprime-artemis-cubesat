@@ -21,6 +21,7 @@
 cmake_minimum_required(VERSION 3.13)
 cmake_policy(SET CMP0048 NEW)
 project(Isc VERSION 1.0.0 LANGUAGES C CXX)
+set(BAREMETAL_SCHEDULER CACHE BOOL ON "Uses the baremetal scheduler")
 
 ##
 # Section 2: F prime Core
@@ -40,24 +41,10 @@ include("${FPRIME_FRAMEWORK_PATH}/cmake/FPrime-Code.cmake")
 ##
 
 # Add Topology subdirectory
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/LedBlinker/")
 add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/Top/")
 
 set(SOURCE_FILES "${CMAKE_CURRENT_LIST_DIR}/Main.cpp")
-set(MOD_DEPS ${PROJECT_NAME}/Top)
-
+set(MOD_DEPS ${PROJECT_NAME}/Top Os/Baremetal/TaskRunner)
 register_fprime_deployment()
-# The following compile options will only apply to the deployment executable.
-# The extra warnings trigger in core F Prime so we don't apply them there.
-target_compile_options("${PROJECT_NAME}" PUBLIC -Wall)
-target_compile_options("${PROJECT_NAME}" PUBLIC -Wextra)
-target_compile_options("${PROJECT_NAME}" PUBLIC -Werror)
-#target_compile_options("${PROJECT_NAME}" PUBLIC -Wshadow)
-target_compile_options("${PROJECT_NAME}" PUBLIC -Wconversion)
-target_compile_options("${PROJECT_NAME}" PUBLIC -Wsign-conversion)
-target_compile_options("${PROJECT_NAME}" PUBLIC -Wformat-security)
-target_compile_options("${PROJECT_NAME}" PUBLIC -Wnon-virtual-dtor)
-target_compile_options("${PROJECT_NAME}" PUBLIC -Wold-style-cast)
-target_compile_options("${PROJECT_NAME}" PUBLIC -Woverloaded-virtual)
-target_compile_options("${PROJECT_NAME}" PUBLIC -Wno-unused-parameter)
-target_compile_options("${PROJECT_NAME}" PUBLIC -Wundef)
-set_property(TARGET "${PROJECT_NAME}" PROPERTY CXX_STANDARD 11)
+finalize_arduino_executable("${PROJECT_NAME}")

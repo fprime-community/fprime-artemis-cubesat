@@ -19,6 +19,9 @@ module Isc {
     # Instances used in the topology
     # ----------------------------------------------------------------------
 
+    instance rateDriver
+    instance blinker
+    instance ledPin
     instance tlmSend
     instance cmdDisp
     instance cmdSeq
@@ -31,8 +34,7 @@ module Isc {
     instance fileManager
     instance fileUplink
     instance fileUplinkBufferManager
-    instance linuxTime
-    instance prmDb
+    instance systemTime
     instance rateGroup1Comp
     instance rateGroupDriverComp
     instance staticMemory
@@ -48,17 +50,19 @@ module Isc {
 
     event connections instance eventLogger
 
-    param connections instance prmDb
-
     telemetry connections instance tlmSend
 
     text event connections instance textLogger
 
-    time connections instance linuxTime
+    time connections instance systemTime
 
     # ----------------------------------------------------------------------
     # Direct graph specifiers
     # ----------------------------------------------------------------------
+
+    connections Blinker {
+      blinker.gpio -> ledPin.gpioWrite
+    }
 
     connections Downlink {
 
@@ -66,11 +70,11 @@ module Isc {
       eventLogger.PktSend -> framer.comIn
       fileDownlink.bufferSendOut -> framer.bufferIn
 
-      framer.framedAllocate -> staticMemory.bufferAllocate[Ports_StaticMemory.downlink]
+      framer.framedAllocate -> staticMemory.bufferAllocate[0]
       framer.framedOut -> comm.send
       framer.bufferDeallocate -> fileDownlink.bufferReturn
 
-      comm.deallocate -> staticMemory.bufferDeallocate[Ports_StaticMemory.downlink]
+      comm.deallocate -> staticMemory.bufferDeallocate[0]
 
     }
 
@@ -79,15 +83,18 @@ module Isc {
     }
 
     connections RateGroups {
-      #blockDrv.CycleOut -> rateGroupDriverComp.CycleIn
+      rateDriver.CycleOut -> rateGroupDriverComp.CycleIn
+      #rateDriver.error -> ledPin.gpioWrite
 
       # Rate group 1
       rateGroupDriverComp.CycleOut[Ports_RateGroups.rateGroup1] -> rateGroup1Comp.CycleIn
-      rateGroup1Comp.RateGroupMemberOut[0] -> tlmSend.Run
-      rateGroup1Comp.RateGroupMemberOut[1] -> fileDownlink.Run
-      rateGroup1Comp.RateGroupMemberOut[2] -> systemResources.run
-      rateGroup1Comp.RateGroupMemberOut[3] -> cmdSeq.schedIn
-      rateGroup1Comp.RateGroupMemberOut[4] -> fileUplinkBufferManager.schedIn
+      rateGroup1Comp.RateGroupMemberOut[0] -> comm.schedIn
+      rateGroup1Comp.RateGroupMemberOut[1] -> blinker.run
+      rateGroup1Comp.RateGroupMemberOut[2] -> tlmSend.Run
+      rateGroup1Comp.RateGroupMemberOut[3] -> fileDownlink.Run
+      rateGroup1Comp.RateGroupMemberOut[4] -> systemResources.run
+      rateGroup1Comp.RateGroupMemberOut[5] -> cmdSeq.schedIn
+      rateGroup1Comp.RateGroupMemberOut[6] -> fileUplinkBufferManager.schedIn
 
     }
 
@@ -98,9 +105,9 @@ module Isc {
 
     connections Uplink {
 
-      comm.allocate -> staticMemory.bufferAllocate[Ports_StaticMemory.uplink]
+      comm.allocate -> staticMemory.bufferAllocate[1]
       comm.$recv -> deframer.framedIn
-      deframer.framedDeallocate -> staticMemory.bufferDeallocate[Ports_StaticMemory.uplink]
+      deframer.framedDeallocate -> staticMemory.bufferDeallocate[1]
 
       deframer.comOut -> cmdDisp.seqCmdBuff
       cmdDisp.seqCmdStatus -> deframer.cmdResponseIn
