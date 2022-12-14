@@ -36,7 +36,7 @@ namespace ArtemisSensors {
 
   }
 
-  bool init_imu(void) {
+  bool LSM6DS::init_imu(void) {
     if (!imu.begin_I2C())
     {
       return false;
