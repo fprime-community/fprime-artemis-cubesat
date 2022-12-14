@@ -50,6 +50,9 @@ include_directories("${FPRIME_PROJECT_ROOT}/lib/Adafruit/Adafruit_BusIO/")
 add_fprime_subdirectory("${FPRIME_PROJECT_ROOT}/artemis-sensors/LSM6DS")
 
 set(SOURCE_FILES "${CMAKE_CURRENT_LIST_DIR}/Main.cpp")
-set(MOD_DEPS ${PROJECT_NAME}/Top Os/Baremetal/TaskRunner)
+set(MOD_DEPS
+    "${PROJECT_NAME}/Top"
+    Os/Baremetal/TaskRunner
+)
 register_fprime_deployment()
 finalize_arduino_executable("${PROJECT_NAME}")

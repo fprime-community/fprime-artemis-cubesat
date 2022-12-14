@@ -11,6 +11,7 @@
 // Used to access topology functions
 #include <Isc/Top/IscTopology.hpp>
 #include <Os/Log.hpp>
+#include <Fw/Logger/Logger.hpp>
 #include <FprimeArduino.hpp>
 #include <Os/Baremetal/TaskRunner/TaskRunner.hpp>
 #include <Arduino/Os/StreamLog.hpp>
