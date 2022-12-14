@@ -5,7 +5,7 @@ module Isc {
   # ----------------------------------------------------------------------
 
   module Default {
-    constant QUEUE_SIZE = 10
+    constant QUEUE_SIZE = 100
     constant STACK_SIZE = 64 * 1024
   }
 
@@ -62,20 +62,15 @@ module Isc {
   #    stack size Default.STACK_SIZE \
   #    priority 97
 
-  instance prmDb: Svc.PrmDb base id 0x0D00 \
-    queue size Default.QUEUE_SIZE \
-    stack size Default.STACK_SIZE \
-    priority 96
+  instance commQueue: Svc.ComQueue base id 0x0D00 \
+      queue size Default.QUEUE_SIZE \
+      stack size Default.STACK_SIZE \
+      priority 100
+
 
   # ----------------------------------------------------------------------
   # Passive component instances
   # ----------------------------------------------------------------------
-
-  @ Communications driver. May be swapped with other comm drivers like UART
-  @ Note: Here we have TCP reliable uplink and UDP (low latency) downlink
-  instance comm: Drv.ByteStreamDriverModel base id 0x4000 \
-    type "Drv::TcpClient" \ # type specified to select implementor of ByteStreamDriverModel
-    at "../../Drv/TcpClient/TcpClient.hpp" # location of above implementor must also be specified
 
   instance framer: Svc.Framer base id 0x4100
 
@@ -85,9 +80,9 @@ module Isc {
 
   instance fileUplinkBufferManager: Svc.BufferManager base id 0x4400
 
-  instance linuxTime: Svc.Time base id 0x4500 \
-    type "Svc::LinuxTime" \
-    at "../../Svc/LinuxTime/LinuxTime.hpp"
+  instance systemTime: Svc.Time base id 0x4500 \
+    type "Svc::ArduinoTimeImpl" \
+    at "../../lib/fprime-arduino/Arduino/ArduinoTime/ArduinoTimeImpl.hpp"
 
   instance rateGroupDriverComp: Svc.RateGroupDriver base id 0x4600
 
@@ -98,5 +93,15 @@ module Isc {
   instance deframer: Svc.Deframer base id 0x4A00
 
   instance systemResources: Svc.SystemResources base id 0x4B00
+
+  instance rateDriver: Arduino.HardwareRateDriver base id 0x4C00
+
+  instance comm: Svc.ComStub base id 0x5000
+
+  instance commDriver: Arduino.SerialDriver base id 0x4000
+
+  instance ledPin: Arduino.GpioDriver base id 0x6000
+
+  instance blinker: ArduinoBlink.LedBlinker base id 0x6100
 
 }

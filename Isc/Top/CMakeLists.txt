@@ -7,16 +7,13 @@
 
 set(SOURCE_FILES
   "${CMAKE_CURRENT_LIST_DIR}/instances.fpp"
-  "${CMAKE_CURRENT_LIST_DIR}/IscPackets.xml"
   "${CMAKE_CURRENT_LIST_DIR}/topology.fpp"
   "${CMAKE_CURRENT_LIST_DIR}/IscTopology.cpp"
 )
 set(MOD_DEPS
   Fw/Logger
-  Svc/LinuxTime
-  # Communication Implementations
-  Drv/Udp
-  Drv/TcpClient
+  Arduino/ArduinoTime
+  Arduino/Drv/SerialDriver
 )
 
 register_fprime_module()

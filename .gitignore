@@ -34,3 +34,5 @@
 # Fprime
 **/build-artifacts
 **/build-fprime-*
+
+**/logs
