@@ -30,3 +30,9 @@
 *.exe
 *.out
 *.app
+
+# Fprime
+**/build-artifacts
+**/build-fprime-*
+
+**/logs
