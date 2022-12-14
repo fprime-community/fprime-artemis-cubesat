@@ -10,7 +10,6 @@
 // ======================================================================
 // Provides access to autocoded functions
 #include <Isc/Top/IscTopologyAc.hpp>
-#include <Isc/Top/IscPacketsAc.hpp>
 
 // Necessary project-specified types
 #include <Fw/Types/MallocAllocator.hpp>
@@ -58,22 +57,6 @@ enum TopologyConstants {
     UPLINK_BUFFER_MANAGER_ID = 200
 };
 
-// Ping entries are autocoded, however; this code is not properly exported. Thus, it is copied here.
-/*Svc::Health::PingEntry pingEntries[] = {
-    {PingEntries::blockDrv::WARN, PingEntries::blockDrv::FATAL, "blockDrv"},
-    {PingEntries::tlmSend::WARN, PingEntries::tlmSend::FATAL, "chanTlm"},
-    {PingEntries::cmdDisp::WARN, PingEntries::cmdDisp::FATAL, "cmdDisp"},
-    {PingEntries::cmdSeq::WARN, PingEntries::cmdSeq::FATAL, "cmdSeq"},
-    {PingEntries::eventLogger::WARN, PingEntries::eventLogger::FATAL, "eventLogger"},
-    {PingEntries::fileDownlink::WARN, PingEntries::fileDownlink::FATAL, "fileDownlink"},
-    {PingEntries::fileManager::WARN, PingEntries::fileManager::FATAL, "fileManager"},
-    {PingEntries::fileUplink::WARN, PingEntries::fileUplink::FATAL, "fileUplink"},
-    {PingEntries::pingRcvr::WARN, PingEntries::pingRcvr::FATAL, "pingRcvr"},
-    {PingEntries::prmDb::WARN, PingEntries::prmDb::FATAL, "prmDb"},
-    {PingEntries::rateGroup1Comp::WARN, PingEntries::rateGroup1Comp::FATAL, "rateGroup1Comp"},
-    {PingEntries::rateGroup2Comp::WARN, PingEntries::rateGroup2Comp::FATAL, "rateGroup2Comp"},
-    {PingEntries::rateGroup3Comp::WARN, PingEntries::rateGroup3Comp::FATAL, "rateGroup3Comp"},
-};*/
 
 /**
  * \brief configure/setup components in project-specific way
@@ -83,6 +66,9 @@ enum TopologyConstants {
  * desired, but is extracted here for clarity.
  */
 void configureTopology() {
+    commDriver.configure(0, 115200);
+    rateDriver.configure(100); // Rate group period in milliseconds
+    (void) ledPin.open(13, Arduino::GpioDriver::OUT); // Open pin 13 as our LED pin
     // Command sequencer needs to allocate memory to hold contents of command sequences
     cmdSeq.allocateBuffer(0, mallocator, CMD_SEQ_BUFFER_SIZE);
 
@@ -97,8 +83,18 @@ void configureTopology() {
                            FILE_DOWNLINK_FILE_QUEUE_DEPTH);
 
     // Parameter database is configured with a database file name, and that file must be initially read.
-    prmDb.configure("PrmDb.dat");
-    prmDb.readParamFile();
+    //prmDb.configure("PrmDb.dat");
+    //prmDb.readParamFile();
+
+    Svc::ComQueue::QueueConfigurationTable configurationTable;
+    // Channels, deep queue, low priority
+    configurationTable.entries[0] = {.depth = 500, .priority = 2};
+    // Events , highest-priority
+    configurationTable.entries[1] = {.depth = 100, .priority = 0};
+    // File Downlink
+    configurationTable.entries[2] = {.depth = 100, .priority = 1};
+    // Allocation identifier is 0 as the MallocAllocator discards it
+    commQueue.configure(configurationTable, 0, mallocator);
 
     // Buffer managers need a configured set of buckets and an allocator used to allocate memory for those buckets.
     Svc::BufferManager::BufferBins upBuffMgrBins;
@@ -132,38 +128,8 @@ void setupTopology(const TopologyState& state) {
     //loadParameters();
     // Autocoded task kick-off (active components). Function provided by autocoder.
     startTasks(state);
-    // Initialize socket client communication if and only if there is a valid specification
-    if (state.hostname != nullptr && state.port != 0) {
-        Os::TaskString name("ReceiveTask");
-        // Uplink is configured for receive so a socket task is started
-        comm.configure(state.hostname, state.port);
-        comm.startSocketTask(name, true, COMM_PRIORITY, Default::STACK_SIZE);
-    }
-}
 
-// Variables used for cycle simulation
-Os::Mutex cycleLock;
-volatile bool cycleFlag = true;
-
-void startSimulatedCycle(U32 milliseconds) {
-    cycleLock.lock();
-    bool cycling = cycleFlag;
-    cycleLock.unLock();
-
-    // Main loop
-    while (cycling) {
-        Os::Task::delay(milliseconds);
-
-        cycleLock.lock();
-        cycling = cycleFlag;
-        cycleLock.unLock();
-    }
-}
-
-void stopSimulatedCycle() {
-    cycleLock.lock();
-    cycleFlag = false;
-    cycleLock.unLock();
+    rateDriver.start(); // Start rate group
 }
 
 void teardownTopology(const TopologyState& state) {
@@ -172,8 +138,8 @@ void teardownTopology(const TopologyState& state) {
     freeThreads(state);
 
     // Other task clean-up.
-    comm.stopSocketTask();
-    (void)comm.joinSocketTask(nullptr);
+    //comm.stopSocketTask();
+    //(void)comm.joinSocketTask(nullptr);
 
     // Resource deallocation
     cmdSeq.deallocateBuffer(mallocator);

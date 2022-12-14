@@ -68,5 +68,6 @@
 
     <ignore>
         <channel name="cmdDisp.CommandErrors"/>
+        <channel name="blinker.numBlinks"/>
     </ignore>
 </packets>
