@@ -104,4 +104,6 @@ module Isc {
 
   instance blinker: ArduinoBlink.LedBlinker base id 0x6100
 
+  instance imu: ArtemisSensors.LSM6DS base id 0x6200
+
 }

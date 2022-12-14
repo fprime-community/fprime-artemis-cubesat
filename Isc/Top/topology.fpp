@@ -43,6 +43,7 @@ module Isc {
     instance textLogger
     instance deframer
     instance systemResources
+    instance imu
 
     # ----------------------------------------------------------------------
     # Pattern graph specifiers
@@ -102,6 +103,7 @@ module Isc {
       rateGroup1Comp.RateGroupMemberOut[4] -> systemResources.run
       rateGroup1Comp.RateGroupMemberOut[5] -> cmdSeq.schedIn
       rateGroup1Comp.RateGroupMemberOut[6] -> fileUplinkBufferManager.schedIn
+      rateGroup1Comp.RateGroupMemberOut[7] -> imu.SchedIn
 
     }
 

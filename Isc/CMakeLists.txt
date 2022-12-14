@@ -41,16 +41,17 @@ include("${FPRIME_FRAMEWORK_PATH}/cmake/FPrime-Code.cmake")
 ##
 
 # Add Topology subdirectory
-add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/LedBlinker/")
-add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/Top/")
-add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/../lib/Adafruit/")
 include_directories("${FPRIME_PROJECT_ROOT}/lib/Adafruit/Adafruit_LSM6DS/")
 include_directories("${FPRIME_PROJECT_ROOT}/lib/Adafruit/Adafruit_Sensor/")
 include_directories("${FPRIME_PROJECT_ROOT}/lib/Adafruit/Adafruit_BusIO/")
-add_fprime_subdirectory("${FPRIME_PROJECT_ROOT}/artemis-sensors/LSM6DS")
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/LedBlinker/")
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/Top/")
+add_fprime_subdirectory("${FPRIME_PROJECT_ROOT}/lib/Adafruit/")
+add_fprime_subdirectory("${FPRIME_PROJECT_ROOT}/artemis-sensors/LSM6DS/")
 
 set(SOURCE_FILES "${CMAKE_CURRENT_LIST_DIR}/Main.cpp")
 set(MOD_DEPS
+    "lib/Adafruit"
     "${PROJECT_NAME}/Top"
     Os/Baremetal/TaskRunner
 )
