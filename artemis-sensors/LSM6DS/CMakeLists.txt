@@ -10,9 +10,10 @@ set(SOURCE_FILES
   "${CMAKE_CURRENT_LIST_DIR}/LSM6DS.fpp"
   "${CMAKE_CURRENT_LIST_DIR}/LSM6DS.cpp"
 )
-
+include_arduino_libraries("Adafruit_LSM6DSOX" "Adafruit_LSM6DS")
 set(MOD_DEPS
-    "lib/Adafruit"
+    "Adafruit_LSM6DSOX"
+    "Adafruit_LSM6DS"
 )
 
 register_fprime_module()
