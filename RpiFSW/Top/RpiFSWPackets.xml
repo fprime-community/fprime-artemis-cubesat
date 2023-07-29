@@ -1,0 +1,78 @@
+<packets name="RpiFSWPackets" namespace="RpiFSW" size="111">
+
+    <import_topology>RpiFSW/Top/RpiFSWTopologyAppAi.xml</import_topology>
+
+    <packet name="CDH" id="1" level="1">
+        <channel name="rpi_cmdDisp.CommandsDispatched"/>
+        <channel name="rpi_rateGroup1.RgMaxTime"/>
+        <channel name="rpi_rateGroup2.RgMaxTime"/>
+        <channel name="rpi_rateGroup3.RgMaxTime"/>
+        <channel name="rpi_fileDownlink.FilesSent"/>
+        <channel name="rpi_fileDownlink.PacketsSent"/>
+        <channel name="rpi_fileManager.CommandsExecuted"/>
+        <channel name="rpi_bufferManager.TotalBuffs"/>
+        <channel name="rpi_bufferManager.CurrBuffs"/>
+        <channel name="rpi_bufferManager.HiBuffs"/>
+        <!-- Uncomment to use Svc::TlmPacketizer -->
+        <!--channel name="tlmSend.SendLevel"/-->
+    </packet>
+
+    <packet name="CDHErrors" id="2" level="1">
+        <channel name="rpi_rateGroup1.RgCycleSlips"/>
+        <channel name="rpi_rateGroup2.RgCycleSlips"/>
+        <channel name="rpi_rateGroup3.RgCycleSlips"/>
+        <channel name="rpi_fileDownlink.Warnings"/>
+        <channel name="rpi_health.PingLateWarnings"/>
+        <channel name="rpi_fileManager.Errors"/>
+        <channel name="rpi_fileManager.Errors"/>
+        <channel name="rpi_bufferManager.NoBuffs"/>
+        <channel name="rpi_bufferManager.EmptyBuffs"/>
+    </packet>
+
+    <packet name="DriveTlm" id="3" level="1">
+        <channel name="rpi_blockDrv.BD_Cycles"/>
+    </packet>
+
+    <packet name="SystemRes1" id="5" level="2">
+        <channel name="rpi_systemResources.MEMORY_TOTAL"/>
+        <channel name="rpi_systemResources.MEMORY_USED"/>
+        <channel name="rpi_systemResources.NON_VOLATILE_TOTAL"/>
+        <channel name="rpi_systemResources.NON_VOLATILE_FREE"/>
+    </packet>
+
+    <packet name="SystemRes2" id="6" level="2">
+        <channel name="rpi_systemResources.FRAMEWORK_VERSION"/>
+        <channel name="rpi_systemResources.PROJECT_VERSION"/>
+    </packet>
+
+    <packet name="SystemRes3" id="7" level="2">
+        <channel name="rpi_systemResources.CPU"/>
+        <channel name="rpi_systemResources.CPU_00"/>
+        <channel name="rpi_systemResources.CPU_01"/>
+        <channel name="rpi_systemResources.CPU_02"/>
+        <channel name="rpi_systemResources.CPU_03"/>
+        <channel name="rpi_systemResources.CPU_04"/>
+        <channel name="rpi_systemResources.CPU_05"/>
+        <channel name="rpi_systemResources.CPU_06"/>
+        <channel name="rpi_systemResources.CPU_07"/>
+        <channel name="rpi_systemResources.CPU_08"/>
+        <channel name="rpi_systemResources.CPU_09"/>
+        <channel name="rpi_systemResources.CPU_10"/>
+        <channel name="rpi_systemResources.CPU_11"/>
+        <channel name="rpi_systemResources.CPU_12"/>
+        <channel name="rpi_systemResources.CPU_13"/>
+        <channel name="rpi_systemResources.CPU_14"/>
+        <channel name="rpi_systemResources.CPU_15"/>
+    </packet>
+
+    <packet name="Hub" id="8" level="2">
+        <channel name="rpi_hubDriver.BytesRecv"/>
+        <channel name="rpi_hubDriver.BytesSent"/>
+    </packet>
+
+    <!-- Ignored packets -->
+
+    <ignore>
+        <channel name="rpi_cmdDisp.CommandErrors"/>
+    </ignore>
+</packets>

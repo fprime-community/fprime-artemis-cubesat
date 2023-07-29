@@ -1,0 +1,31 @@
+<packets name="TeensyGDSPackets" namespace="TeensyGDS" size="111">
+
+    <import_topology>TeensyGDS/Top/TeensyGDSTopologyAppAi.xml</import_topology>
+
+    <packet name="CDH" id="1" level="1">
+        <channel name="rateGroup1.MaxCycleTime"/>
+        <channel name="rateGroup1.CycleTime"/>
+        <channel name="rateGroup1.CycleCount"/>
+        <channel name="rateGroup2.MaxCycleTime"/>
+        <channel name="rateGroup2.CycleTime"/>
+        <channel name="rateGroup2.CycleCount"/>
+    </packet>
+
+    <packet name="BlinkerChannels" id="5" level="1">
+        <channel name="blinker.LedTransitions"/>
+        <channel name="blinker.BlinkingState"/>
+    </packet>
+
+    <packet name="RadioChannels" id="6" level="1">
+        <channel name="rfm23.Status"/>
+        <channel name="rfm23.NumPacketsReceived"/>
+        <channel name="rfm23.NumPacketsSent"/>
+        <channel name="rfm23.RSSI"/>
+        <channel name="rfm23.temp"/>
+    </packet>
+
+    <!-- Ignored packets -->
+
+    <ignore>
+    </ignore>
+</packets>
