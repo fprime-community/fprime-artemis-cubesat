@@ -83,9 +83,9 @@ module TeensyFSW {
 
   # Sensors
 
-  instance imu: Sensors.LSM6DS base id 0x30000
+  # instance imu: Sensors.LSM6DS base id 0x30000
 
-  instance mag: Sensors.LIS3MDL base id 0x30100
+  # instance mag: Sensors.LIS3MDL base id 0x30100
 
   # PDU
 
