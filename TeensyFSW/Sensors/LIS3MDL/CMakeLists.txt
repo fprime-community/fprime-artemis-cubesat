@@ -11,7 +11,7 @@ set(SOURCE_FILES
   "${CMAKE_CURRENT_LIST_DIR}/LIS3MDL.cpp"
 )
 
-target_use_arduino_libraries("Adafruit_LIS3MDL" "SPI")
+target_use_arduino_libraries("Adafruit_LIS3MDL")
 
 # Uncomment and add any modules that this component depends on, else
 # they might not be available when cmake tries to build this component.
