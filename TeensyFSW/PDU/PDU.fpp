@@ -20,7 +20,7 @@ module Components {
         RPI
     }
 
-    array PDUTlm = [15] U8
+    array PDUTlm = [12] U8
 
     @ Component for the Artemis CubeSat's PDU
     passive component PDU {
@@ -44,12 +44,10 @@ module Components {
         # Events
         # ----------------------------------------------------------------------
 
-        @ Switch was set
-        event SwitchSet(
-            switchStatus: Fw.On @< the status of writing data to device
-        ) \
-        severity warning low \
-        format "PDU switch status {}"
+        @ PDU is Alive
+        event PduPong() \
+        severity activity high \
+        format "PDU is Alive"
 
         # ----------------------------------------------------------------------
         # Commands  
@@ -61,7 +59,9 @@ module Components {
                                 state: Fw.On
                               )
 
-        sync command GetSwitch(sw: Components.PDU_SW)
+        sync command GetSwitch()
+
+        sync command Ping()
         # ----------------------------------------------------------------------
         # Implementation ports
         # ----------------------------------------------------------------------

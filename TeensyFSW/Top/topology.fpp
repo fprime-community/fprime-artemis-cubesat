@@ -100,7 +100,7 @@ module TeensyFSW {
       rateGroup1.RateGroupMemberOut[0] -> commDriver.schedIn
       rateGroup1.RateGroupMemberOut[1] -> blinker.run
       rateGroup1.RateGroupMemberOut[2] -> hubCommDriver.schedIn
-      # rateGroup1.RateGroupMemberOut[3] -> pduCommDriver.schedIn
+      rateGroup1.RateGroupMemberOut[3] -> pduCommDriver.schedIn
 
       # Rate group 2
       rateGroupDriver.CycleOut[Ports_RateGroups.rateGroup2] -> rateGroup2.CycleIn

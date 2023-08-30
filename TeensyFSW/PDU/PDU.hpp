@@ -8,7 +8,6 @@
 #define PDU_HPP
 
 #include "TeensyFSW/PDU/PDUComponentAc.hpp"
-#include <string>
 
 namespace Components
 {
@@ -28,10 +27,31 @@ namespace Components
       DataSwitchTelem,
     };
 
+    enum class PDU_SW : uint8_t
+    {
+      None,
+      All,
+      SW_3V3_1,
+      SW_3V3_2,
+      SW_5V_1,
+      SW_5V_2,
+      SW_5V_3,
+      SW_5V_4,
+      SW_12V,
+      VBATT,
+      PDU_WDT,
+      HBRIDGE1,
+      HBRIDGE2,
+      BURN,
+      BURN1,
+      BURN2,
+      RPI
+    };
+
     struct __attribute__((packed)) pdu_packet
     {
       PDU_Type type = PDU_Type::NOP;
-      Components::PDU_SW sw = Components::PDU_SW::None;
+      PDU_SW sw = PDU_SW::None;
       U8 sw_state = 0;
     };
 
@@ -58,8 +78,8 @@ namespace Components
 
     PRIVATE :
 
-    void send(pdu_packet packet);
-    I32 recv(std::string &response);
+        void
+        send(pdu_packet packet);
 
     // ----------------------------------------------------------------------
     // Handler implementations for user-defined typed input ports
@@ -91,8 +111,18 @@ namespace Components
     //!
     void GetSwitch_cmdHandler(
         const FwOpcodeType opCode, /*!< The opcode*/
-        const U32 cmdSeq,          /*!< The command sequence number*/
-        Components::PDU_SW sw);
+        const U32 cmdSeq           /*!< The command sequence number*/
+    );
+
+    //! Implementation for Ping command handler
+    //!
+    void Ping_cmdHandler(
+        const FwOpcodeType opCode, /*!< The opcode*/
+        const U32 cmdSeq           /*!< The command sequence number*/
+    );
+
+    U8 pdu_packet_cmd[4];
+    Components::PDUTlm telem;
   };
 } // end namespace Components
 

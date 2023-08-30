@@ -2,6 +2,7 @@
 .idea
 .DS_Store
 venv
+dictionary.xml
 **-template
 **/logs
 **/build-artifacts
