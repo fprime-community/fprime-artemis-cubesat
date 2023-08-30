@@ -58,8 +58,8 @@
     </packet>
 
     <packet name="SensorChannels" id="7" level="1">
-        <!-- <channel name="imu.IMU_Telem"/>
-        <channel name="mag.MAG_Telem"/> -->
+        <channel name="imu.IMU_Telem"/>
+        <channel name="mag.MAG_Telem"/>
     </packet>
 
     <packet name="PDUChannels" id="8" level="1">

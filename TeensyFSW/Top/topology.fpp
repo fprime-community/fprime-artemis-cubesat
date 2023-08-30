@@ -54,8 +54,8 @@ module TeensyFSW {
     instance gpioTxOn
 
     # Sensors
-    # instance imu
-    # instance mag
+    instance imu
+    instance mag
     
     # PDU
     instance pdu
