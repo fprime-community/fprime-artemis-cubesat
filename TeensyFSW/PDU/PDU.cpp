@@ -19,6 +19,10 @@ namespace Components
       PDU(
           const char *const compName) : PDUComponentBase(compName)
   {
+    for(NATIVE_INT_TYPE i = 0; i < telem.SIZE; i++)
+    {
+      telem[i] = 0;
+    }
   }
 
   PDU ::
@@ -76,9 +80,31 @@ namespace Components
       }
       else if (type == PDU_Type::DataSwitchStatus)
       {
-        // which switch and which index
-        // telem[i] = recvBuffer.getData()[i + 2] - PDU_CMD_OFFSET;
-        // this->tlmWrite_SwitchStatus(telem);
+        PDU_SW sw = static_cast<PDU_SW>(recvBuffer.getData()[2] - PDU_CMD_OFFSET);
+        U8 state = recvBuffer.getData()[3] - PDU_CMD_OFFSET;
+
+        if(sw >= PDU_SW::SW_3V3_1 && sw <= PDU_SW::VBATT)
+        {
+          telem[static_cast<U8>(sw) - 2] = state;
+        }
+        else if(sw == PDU_SW::BURN1)
+        {
+          telem[8] = state;
+        }
+        else if(sw == PDU_SW::BURN2)
+        {
+          telem[9] = state;
+        }
+        else if(sw == PDU_SW::HBRIDGE1)
+        {
+          telem[10] = state;
+        }
+        else if(sw == PDU_SW::HBRIDGE2)
+        {
+          telem[11] = state;
+        }
+
+        this->tlmWrite_SwitchStatus(telem);
       }
     }
 
