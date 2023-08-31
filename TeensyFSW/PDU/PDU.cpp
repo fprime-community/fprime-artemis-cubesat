@@ -101,7 +101,15 @@ namespace Components
     packet.sw = (Components::PDU::PDU_SW)(U8)sw;
     packet.sw_state = (state == Fw::On::ON) ? 1 : 0;
 
-    send(packet);
+    if(packet.sw == Components::PDU::PDU_SW::RPI)
+    {
+      this->rpiGpioSet_out(0, (packet.sw_state == 1) ? Fw::Logic::HIGH : Fw::Logic::LOW);
+    }
+    else
+    {
+      send(packet);
+    }
+
     this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
   }
 

@@ -65,6 +65,7 @@ module TeensyFSW {
     # PDU
     instance pdu
     instance pduCommDriver
+    instance rpiGpioEnable
 
     # Hub
     instance cmdSplitter
@@ -210,6 +211,8 @@ module TeensyFSW {
       pdu.allocate -> staticMemory.bufferAllocate[Ports_StaticMemory.pduUplink]
       pdu.comDataOut -> pduCommDriver.send
       pduCommDriver.deallocate -> staticMemory.bufferDeallocate[Ports_StaticMemory.pduUplink]
+
+      pdu.rpiGpioSet -> rpiGpioEnable.gpioWrite
     }
 
   }

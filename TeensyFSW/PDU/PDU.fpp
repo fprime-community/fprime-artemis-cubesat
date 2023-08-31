@@ -34,6 +34,9 @@ module Components {
         @ Com data passing back out
         output port comDataOut: Drv.ByteStreamSend
 
+        @ Port sending calls to the RPI GPIO driver
+        output port rpiGpioSet: Drv.GpioWrite
+
         # ----------------------------------------------------------------------
         # Telemetry
         # ----------------------------------------------------------------------

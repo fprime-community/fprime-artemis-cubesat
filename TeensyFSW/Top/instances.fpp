@@ -103,6 +103,8 @@ module TeensyFSW {
 
   instance pduCommDriver: Arduino.StreamDriver base id 0x40100
 
+  instance rpiGpioEnable: Arduino.GpioDriver base id 0x40200
+
   # Comm Driver
 
   instance commDriver: Arduino.StreamDriver base id 0x50000

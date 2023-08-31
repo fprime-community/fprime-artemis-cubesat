@@ -12,8 +12,6 @@
 #include <Fw/Types/MallocAllocator.hpp>
 #include <Svc/FramingProtocol/FprimeProtocol.hpp>
 
-#include <Components/Radios/RFM23/RFM23.hpp>
-
 #include <Wire.h>
 
 // Allows easy reference to objects in FPP/autocoder required namespaces
@@ -100,8 +98,9 @@ namespace TeensyFSW
 
         // Configure GPIO pins
         gpioLed.open(Arduino::DEF_LED_BUILTIN, Arduino::GpioDriver::GpioDirection::OUT);
-        gpioRxOn.open(Radios::RFM23::RX_ON, Arduino::GpioDriver::GpioDirection::OUT);
-        gpioTxOn.open(Radios::RFM23::TX_ON, Arduino::GpioDriver::GpioDirection::OUT);
+        gpioRxOn.open(ARTEMIS_TEENSY_PINOUT::RX_ON, Arduino::GpioDriver::GpioDirection::OUT);
+        gpioTxOn.open(ARTEMIS_TEENSY_PINOUT::TX_ON, Arduino::GpioDriver::GpioDirection::OUT);
+        rpiGpioEnable.open(ARTEMIS_TEENSY_PINOUT::RPI_ENABLE, Arduino::GpioDriver::GpioDirection::OUT);
 
         mag.init_mag();
         imu.init_imu();
