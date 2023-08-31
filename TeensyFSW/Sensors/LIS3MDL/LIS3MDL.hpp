@@ -45,14 +45,14 @@ namespace Sensors
         //! Handler implementation for SchedIn
         //!
         void
-        SchedIn_handler(
+        run_handler(
             const NATIVE_INT_TYPE portNum, /*!< The port number*/
             NATIVE_UINT_TYPE context       /*!<
               The call order
               */
         );
 
-    Adafruit_LIS3MDL mag;
+    Adafruit_LIS3MDL *mag = new Adafruit_LIS3MDL();
   };
 
 } // end namespace Sensors

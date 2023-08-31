@@ -1,14 +1,6 @@
 module Sensors {
 
-  struct IMU_Measurement {
-    gyro_x: F32
-    gyro_y: F32
-    gyro_z: F32
-    accel_x: F32
-    accel_y: F32
-    accel_z: F32
-    temp: F32
-  }
+  array IMUTlm = [3] F32
 
   @ Component for the Adafruit LSM6DS
   passive component LSM6DS {
@@ -18,7 +10,7 @@ module Sensors {
     # ----------------------------------------------------------------------
 
     @ Scheduler output port
-    sync input port SchedIn: Svc.Sched
+    sync input port run: Svc.Sched
 
     # ----------------------------------------------------------------------
     # Events
@@ -35,7 +27,14 @@ module Sensors {
     # Telemetry channels
     # ----------------------------------------------------------------------
 
-    telemetry IMU_Telem: IMU_Measurement id 0
+    @ Accelerometer Data
+    telemetry AccelData: IMUTlm
+
+    @ Gyroscope Data
+    telemetry GyroData: IMUTlm
+
+    @ IMU Temperature Sensor
+    telemetry Temperature: F32
 
     # ----------------------------------------------------------------------
     # Special ports

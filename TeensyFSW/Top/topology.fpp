@@ -56,6 +56,11 @@ module TeensyFSW {
     # Sensors
     instance imu
     instance mag
+    instance solar_panel_1
+    instance solar_panel_2
+    instance solar_panel_3
+    instance solar_panel_4
+    instance battery_board
     
     # PDU
     instance pdu
@@ -106,8 +111,13 @@ module TeensyFSW {
       rateGroupDriver.CycleOut[Ports_RateGroups.rateGroup2] -> rateGroup2.CycleIn
       rateGroup2.RateGroupMemberOut[0] -> systemResources.run
       rateGroup2.RateGroupMemberOut[1] -> tlmSend.Run
-      # rateGroup2.RateGroupMemberOut[2] -> imu.run
-      # rateGroup2.RateGroupMemberOut[3] -> mag.run
+      rateGroup2.RateGroupMemberOut[2] -> imu.run
+      rateGroup2.RateGroupMemberOut[3] -> mag.run
+      rateGroup2.RateGroupMemberOut[4] -> solar_panel_1.run
+      rateGroup2.RateGroupMemberOut[5] -> solar_panel_2.run
+      rateGroup2.RateGroupMemberOut[6] -> solar_panel_3.run
+      rateGroup2.RateGroupMemberOut[7] -> solar_panel_4.run
+      rateGroup2.RateGroupMemberOut[8] -> battery_board.run
     }
 
     connections FaultProtection {

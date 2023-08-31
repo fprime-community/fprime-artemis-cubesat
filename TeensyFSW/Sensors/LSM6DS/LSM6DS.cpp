@@ -34,14 +34,14 @@ namespace Sensors
 
   bool LSM6DS::init_imu(void)
   {
-    if (!imu.begin_I2C())
+    if (!imu->begin_I2C())
     {
       return false;
     }
-    imu.setAccelRange(LSM6DS_ACCEL_RANGE_16_G);
-    imu.setGyroRange(LSM6DS_GYRO_RANGE_2000_DPS);
-    imu.setAccelDataRate(LSM6DS_RATE_6_66K_HZ);
-    imu.setGyroDataRate(LSM6DS_RATE_6_66K_HZ);
+    imu->setAccelRange(LSM6DS_ACCEL_RANGE_16_G);
+    imu->setGyroRange(LSM6DS_GYRO_RANGE_2000_DPS);
+    imu->setAccelDataRate(LSM6DS_RATE_6_66K_HZ);
+    imu->setGyroDataRate(LSM6DS_RATE_6_66K_HZ);
 
     return true;
   }
@@ -51,14 +51,24 @@ namespace Sensors
   // ----------------------------------------------------------------------
 
   void LSM6DS ::
-      SchedIn_handler(
+      run_handler(
           const NATIVE_INT_TYPE portNum,
           NATIVE_UINT_TYPE context)
   {
     sensors_event_t accel;
     sensors_event_t gyro;
     sensors_event_t temp;
-    imu.getEvent(&accel, &gyro, &temp);
+    imu->getEvent(&accel, &gyro, &temp);
+    Sensors::IMUTlm data;
+    data[0] = accel.acceleration.x;
+    data[1] = accel.acceleration.y;
+    data[2] = accel.acceleration.z;
+    this->tlmWrite_AccelData(data);
+    data[0] = gyro.gyro.x;
+    data[1] = gyro.gyro.y;
+    data[2] = gyro.gyro.z;
+    this->tlmWrite_GyroData(data);
+    this->tlmWrite_Temperature(temp.temperature);
   }
 
 } // end namespace Sensors

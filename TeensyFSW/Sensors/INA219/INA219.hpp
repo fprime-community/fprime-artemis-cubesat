@@ -1,20 +1,20 @@
 // ======================================================================
-// \title  LSM6DS.hpp
-// \author ethan
-// \brief  hpp file for LSM6DS component implementation class
+// \title  INA219.hpp
+// \author root
+// \brief  hpp file for INA219 component implementation class
 // ======================================================================
 
-#ifndef LSM6DS_HPP
-#define LSM6DS_HPP
+#ifndef INA219_HPP
+#define INA219_HPP
+#include <Wire.h>
+#include <Adafruit_INA219.h>
 
-#include "TeensyFSW/Sensors/LSM6DS/LSM6DSComponentAc.hpp"
-#include "Adafruit_LSM6DSOX.h"
-#include "Adafruit_Sensor.h"
+#include "TeensyFSW/Sensors/INA219/INA219ComponentAc.hpp"
 
 namespace Sensors
 {
 
-  class LSM6DS : public LSM6DSComponentBase
+  class INA219 : public INA219ComponentBase
   {
 
   public:
@@ -22,23 +22,17 @@ namespace Sensors
     // Construction, initialization, and destruction
     // ----------------------------------------------------------------------
 
-    //! Construct object LSM6DS
+    //! Construct object INA219
     //!
-    LSM6DS(
+    INA219(
         const char *const compName /*!< The component name*/
     );
 
-    //! Initialize object LSM6DS
+    //! Destroy object INA219
     //!
-    void init(
-        const NATIVE_INT_TYPE instance = 0 /*!< The instance number*/
-    );
+    ~INA219();
 
-    //! Destroy object LSM6DS
-    //!
-    ~LSM6DS();
-
-    bool init_imu(void);
+    void config(U8 addr, TwoWire *wire);
 
     PRIVATE :
 
@@ -46,7 +40,7 @@ namespace Sensors
         // Handler implementations for user-defined typed input ports
         // ----------------------------------------------------------------------
 
-        //! Handler implementation for SchedIn
+        //! Handler implementation for run
         //!
         void
         run_handler(
@@ -56,7 +50,9 @@ namespace Sensors
               */
         );
 
-    Adafruit_LSM6DSOX *imu = new Adafruit_LSM6DSOX();
+    PRIVATE :
+
+        Adafruit_INA219 *currentSensor;
   };
 
 } // end namespace Sensors

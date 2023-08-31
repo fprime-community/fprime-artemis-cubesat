@@ -87,6 +87,16 @@ module TeensyFSW {
 
   instance mag: Sensors.LIS3MDL base id 0x30100
 
+  instance solar_panel_1: Sensors.INA219 base id 0x30200
+
+  instance solar_panel_2: Sensors.INA219 base id 0x30300
+
+  instance solar_panel_3: Sensors.INA219 base id 0x30400
+
+  instance solar_panel_4: Sensors.INA219 base id 0x30500
+
+  instance battery_board: Sensors.INA219 base id 0x30600
+  
   # PDU
 
   instance pdu: Components.PDU base id 0x40000
@@ -96,6 +106,7 @@ module TeensyFSW {
   # Comm Driver
 
   instance commDriver: Arduino.StreamDriver base id 0x50000
+  
   instance commStub: Svc.ComStub base id 0x50100
   
   # Hub
