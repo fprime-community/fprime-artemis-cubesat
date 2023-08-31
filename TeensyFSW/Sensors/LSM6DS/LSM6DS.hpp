@@ -42,20 +42,21 @@ namespace Sensors
 
     PRIVATE :
 
-        Adafruit_LSM6DSOX imu;
+        // ----------------------------------------------------------------------
+        // Handler implementations for user-defined typed input ports
+        // ----------------------------------------------------------------------
 
-    // ----------------------------------------------------------------------
-    // Handler implementations for user-defined typed input ports
-    // ----------------------------------------------------------------------
+        //! Handler implementation for SchedIn
+        //!
+        void
+        SchedIn_handler(
+            const NATIVE_INT_TYPE portNum, /*!< The port number*/
+            NATIVE_UINT_TYPE context       /*!<
+              The call order
+              */
+        );
 
-    //! Handler implementation for SchedIn
-    //!
-    void SchedIn_handler(
-        const NATIVE_INT_TYPE portNum, /*!< The port number*/
-        NATIVE_UINT_TYPE context       /*!<
-          The call order
-          */
-    );
+    Adafruit_LSM6DSOX *imu = new Adafruit_LSM6DSOX();
   };
 
 } // end namespace Sensors

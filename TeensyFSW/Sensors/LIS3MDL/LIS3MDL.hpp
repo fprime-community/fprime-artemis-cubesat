@@ -52,7 +52,7 @@ namespace Sensors
               */
         );
 
-    Adafruit_LIS3MDL mag;
+    Adafruit_LIS3MDL *mag = new Adafruit_LIS3MDL();
   };
 
 } // end namespace Sensors

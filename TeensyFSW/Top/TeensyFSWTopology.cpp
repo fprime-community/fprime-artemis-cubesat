@@ -101,6 +101,9 @@ namespace TeensyFSW
         gpioRxOn.open(Radios::RFM23::RX_ON, Arduino::GpioDriver::GpioDirection::OUT);
         gpioTxOn.open(Radios::RFM23::TX_ON, Arduino::GpioDriver::GpioDirection::OUT);
 
+        mag.init_mag();
+        imu.init_imu();
+
         rateDriver.start();
     }
 

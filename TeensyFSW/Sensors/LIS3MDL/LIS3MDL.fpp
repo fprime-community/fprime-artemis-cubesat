@@ -1,35 +1,19 @@
 module Sensors {
 
-    struct MAG_Measurement {
-    mag_x: F32
-    mag_y: F32
-    mag_z: F32
-  }
+    array MagTlm = [3] F32
 
     @ Component for the Adafruit LIS3MDL
     passive component LIS3MDL {
 
-        ##############################################################################
-        #### Uncomment the following examples to start customizing your component ####
-        ##############################################################################
-
-        # @ Example async command
-        # async command COMMAND_NAME(param_name: U32)
-
-        # @ Example telemetry counter
-        # telemetry ExampleCounter: U64
-
-        # @ Example event
-        # event ExampleStateEvent(example_state: Fw.On) severity activity high id 0 format "State set to {}"
-
-        # @ Example port: receiving calls from the rate group
-        # sync input port run: Svc.Sched
+        # ----------------------------------------------------------------------
+        # Telemetry
+        # ----------------------------------------------------------------------
+        
+        @ Magnetometer Data
+        telemetry Data: MagTlm
 
         @ Scheduler output port
         sync input port SchedIn: Svc.Sched
-
-        # @ Example parameter
-        # param PARAMETER_NAME: U32
 
         ###############################################################################
         # Standard AC Ports: Required for Channels, Events, Commands, and Parameters  #
@@ -54,7 +38,6 @@ module Sensors {
 
         @ Port for sending telemetry channels to downlink
         telemetry port tlmOut
-        telemetry MAG_Telem: MAG_Measurement id 0
 
         @ Port to return the value of a parameter
         param get port prmGetOut

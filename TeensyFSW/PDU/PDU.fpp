@@ -38,30 +38,34 @@ module Components {
         # Telemetry
         # ----------------------------------------------------------------------
  
+        @ PDU Switch Statuses 0 = OFF 1 = ON
         telemetry SwitchStatus:  PDUTlm update always
 
         # ----------------------------------------------------------------------
         # Events
         # ----------------------------------------------------------------------
 
-        @ PDU is Alive
+        @ PDU connection successful
         event PduPong() \
         severity activity high \
-        format "PDU is Alive"
+        format "PDU is connected"
 
         # ----------------------------------------------------------------------
         # Commands  
         # ----------------------------------------------------------------------
 
-        @ Command to control on switch
+        @ Command to turn on/off PDU switch
         sync command SetSwitch(
                                 sw: Components.PDU_SW
                                 state: Fw.On
                               )
 
+        @ Command to get statuses of PDU switches
         sync command GetSwitch()
 
+        @ Command to Ping PDU
         sync command Ping()
+
         # ----------------------------------------------------------------------
         # Implementation ports
         # ----------------------------------------------------------------------

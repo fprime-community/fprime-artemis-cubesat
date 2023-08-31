@@ -58,8 +58,10 @@
     </packet>
 
     <packet name="SensorChannels" id="7" level="1">
-        <channel name="imu.IMU_Telem"/>
-        <channel name="mag.MAG_Telem"/>
+        <channel name="imu.AccelData"/>
+        <channel name="imu.GyroData"/>
+        <channel name="imu.Temperature"/>
+        <channel name="mag.Data"/>
     </packet>
 
     <packet name="PDUChannels" id="8" level="1">

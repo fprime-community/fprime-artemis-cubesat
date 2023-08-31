@@ -106,8 +106,8 @@ module TeensyFSW {
       rateGroupDriver.CycleOut[Ports_RateGroups.rateGroup2] -> rateGroup2.CycleIn
       rateGroup2.RateGroupMemberOut[0] -> systemResources.run
       rateGroup2.RateGroupMemberOut[1] -> tlmSend.Run
-      # rateGroup2.RateGroupMemberOut[2] -> imu.run
-      # rateGroup2.RateGroupMemberOut[3] -> mag.run
+      rateGroup2.RateGroupMemberOut[2] -> imu.SchedIn
+      rateGroup2.RateGroupMemberOut[3] -> mag.SchedIn
     }
 
     connections FaultProtection {
