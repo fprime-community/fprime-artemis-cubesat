@@ -14,6 +14,8 @@
 
 #include <Components/Radios/RFM23/RFM23.hpp>
 
+#include <Wire.h>
+
 // Allows easy reference to objects in FPP/autocoder required namespaces
 using namespace TeensyFSW;
 
@@ -103,6 +105,11 @@ namespace TeensyFSW
 
         mag.init_mag();
         imu.init_imu();
+        solar_panel_1.config(0x40, &Wire2);
+        solar_panel_2.config(0x41, &Wire2);
+        solar_panel_3.config(0x42, &Wire2);
+        solar_panel_4.config(0x43, &Wire2);
+        battery_board.config(0x44, &Wire2);
 
         rateDriver.start();
     }

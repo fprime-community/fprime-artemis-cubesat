@@ -51,7 +51,7 @@ namespace Sensors
   // ----------------------------------------------------------------------
 
   void LSM6DS ::
-      SchedIn_handler(
+      run_handler(
           const NATIVE_INT_TYPE portNum,
           NATIVE_UINT_TYPE context)
   {

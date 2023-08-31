@@ -57,14 +57,22 @@
         <channel name="rfm23.temp"/>
     </packet>
 
-    <packet name="SensorChannels" id="7" level="1">
+    <packet name="IMUChannels" id="7" level="1">
         <channel name="imu.AccelData"/>
         <channel name="imu.GyroData"/>
         <channel name="imu.Temperature"/>
         <channel name="mag.Data"/>
     </packet>
 
-    <packet name="PDUChannels" id="8" level="1">
+    <packet name="CurrentSensorChannels" id="8" level="1">
+        <channel name="solar_panel_1.CurrentSensorData"/>
+        <channel name="solar_panel_2.CurrentSensorData"/>
+        <channel name="solar_panel_3.CurrentSensorData"/>
+        <channel name="solar_panel_4.CurrentSensorData"/>
+        <channel name="battery_board.CurrentSensorData"/>
+    </packet>
+
+    <packet name="PDUChannels" id="9" level="1">
         <channel name="pdu.SwitchStatus"/>
     </packet>
 

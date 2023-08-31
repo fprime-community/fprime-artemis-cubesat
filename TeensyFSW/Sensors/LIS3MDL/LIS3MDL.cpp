@@ -47,7 +47,7 @@ namespace Sensors
   }
 
   void LIS3MDL ::
-      SchedIn_handler(
+      run_handler(
           const NATIVE_INT_TYPE portNum,
           NATIVE_UINT_TYPE context)
   {

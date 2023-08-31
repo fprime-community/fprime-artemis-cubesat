@@ -10,7 +10,7 @@ module Sensors {
     # ----------------------------------------------------------------------
 
     @ Scheduler output port
-    sync input port SchedIn: Svc.Sched
+    sync input port run: Svc.Sched
 
     # ----------------------------------------------------------------------
     # Events

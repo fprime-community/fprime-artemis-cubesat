@@ -13,7 +13,7 @@ module Sensors {
         telemetry Data: MagTlm
 
         @ Scheduler output port
-        sync input port SchedIn: Svc.Sched
+        sync input port run: Svc.Sched
 
         ###############################################################################
         # Standard AC Ports: Required for Channels, Events, Commands, and Parameters  #
