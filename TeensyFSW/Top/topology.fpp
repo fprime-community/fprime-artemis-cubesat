@@ -213,6 +213,7 @@ module TeensyFSW {
       pduCommDriver.deallocate -> staticMemory.bufferDeallocate[Ports_StaticMemory.pduUplink]
 
       pdu.rpiGpioSet -> rpiGpioEnable.gpioWrite
+      pdu.rpiGpioRead -> rpiGpioEnable.gpioRead
     }
 
   }

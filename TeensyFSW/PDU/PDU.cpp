@@ -19,7 +19,7 @@ namespace Components
       PDU(
           const char *const compName) : PDUComponentBase(compName)
   {
-    for(NATIVE_INT_TYPE i = 0; i < telem.SIZE; i++)
+    for (NATIVE_INT_TYPE i = 0; i < telem.SIZE; i++)
     {
       telem[i] = 0;
     }
@@ -66,7 +66,7 @@ namespace Components
 
     if (type == PDU_Type::DataSwitchTelem)
     {
-      for (NATIVE_INT_TYPE i = 0; i < telem.SIZE; i++)
+      for (NATIVE_INT_TYPE i = 0; i < telem.SIZE - 1; i++)
       {
         telem[i] = recvBuffer.getData()[i + 2] - PDU_CMD_OFFSET;
       }
@@ -83,23 +83,23 @@ namespace Components
         PDU_SW sw = static_cast<PDU_SW>(recvBuffer.getData()[2] - PDU_CMD_OFFSET);
         U8 state = recvBuffer.getData()[3] - PDU_CMD_OFFSET;
 
-        if(sw >= PDU_SW::SW_3V3_1 && sw <= PDU_SW::VBATT)
+        if (sw >= PDU_SW::SW_3V3_1 && sw <= PDU_SW::VBATT)
         {
           telem[static_cast<U8>(sw) - 2] = state;
         }
-        else if(sw == PDU_SW::BURN1)
+        else if (sw == PDU_SW::BURN1)
         {
           telem[8] = state;
         }
-        else if(sw == PDU_SW::BURN2)
+        else if (sw == PDU_SW::BURN2)
         {
           telem[9] = state;
         }
-        else if(sw == PDU_SW::HBRIDGE1)
+        else if (sw == PDU_SW::HBRIDGE1)
         {
           telem[10] = state;
         }
-        else if(sw == PDU_SW::HBRIDGE2)
+        else if (sw == PDU_SW::HBRIDGE2)
         {
           telem[11] = state;
         }
@@ -127,9 +127,13 @@ namespace Components
     packet.sw = (Components::PDU::PDU_SW)(U8)sw;
     packet.sw_state = (state == Fw::On::ON) ? 1 : 0;
 
-    if(packet.sw == Components::PDU::PDU_SW::RPI)
+    if (packet.sw == Components::PDU::PDU_SW::RPI)
     {
       this->rpiGpioSet_out(0, (packet.sw_state == 1) ? Fw::Logic::HIGH : Fw::Logic::LOW);
+      Fw::Logic state;
+      this->rpiGpioRead_out(0, state);
+      telem[12] = state;
+      this->tlmWrite_SwitchStatus(telem);
     }
     else
     {
@@ -149,6 +153,10 @@ namespace Components
     packet.sw = PDU_SW::All;
 
     send(packet);
+    Fw::Logic state;
+    this->rpiGpioRead_out(0, state);
+    telem[12] = state;
+    this->tlmWrite_SwitchStatus(telem);
     this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
   }
 

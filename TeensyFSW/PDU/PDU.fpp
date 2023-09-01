@@ -20,7 +20,7 @@ module Components {
         RPI
     }
 
-    array PDUTlm = [12] U8
+    array PDUTlm = [13] U8
 
     @ Component for the Artemis CubeSat's PDU
     passive component PDU {
@@ -34,8 +34,11 @@ module Components {
         @ Com data passing back out
         output port comDataOut: Drv.ByteStreamSend
 
-        @ Port sending calls to the RPI GPIO driver
+        @ Port to write to RPi gpio
         output port rpiGpioSet: Drv.GpioWrite
+
+        @ Port to read RPi gpio
+        output port rpiGpioRead: Drv.GpioRead
 
         # ----------------------------------------------------------------------
         # Telemetry
