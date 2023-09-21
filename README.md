@@ -4,7 +4,7 @@ This repository contains the flight software for the Artemis CubeSat, a cost-eff
 
 For more detailed information about the Artemis CubeSat, please visit our [website](https://sites.google.com/mahinaaerospace.com/home).
 
-#F' Requirements:
+# F' Requirements
 
 Before attempting to install F', please ensure that the following prerequisites are met:
 
@@ -16,7 +16,7 @@ Before attempting to install F', please ensure that the following prerequisites 
 
 Once you have these requirements in place, you can proceed with the project instructions.
 
-# Installing F':
+# Installing F'
 
 Before proceeding with the instructions, make sure to install F' by running the following command:
 
