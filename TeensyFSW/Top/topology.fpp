@@ -56,12 +56,19 @@ module TeensyFSW {
     # Sensors
     instance imu
     instance mag
-    instance solar_panel_1
-    instance solar_panel_2
-    instance solar_panel_3
-    instance solar_panel_4
-    instance battery_board
-    
+    instance current_solar_panel_1
+    instance current_solar_panel_2
+    instance current_solar_panel_3
+    instance current_solar_panel_4
+    instance current_battery_board
+    instance temperature_obc
+    instance temperature_pdu
+    instance temperature_solar_panel_1
+    instance temperature_solar_panel_2
+    instance temperature_solar_panel_3
+    instance temperature_solar_panel_4
+    instance temperature_battery_board
+
     # PDU
     instance pdu
     instance pduCommDriver
@@ -77,6 +84,15 @@ module TeensyFSW {
     # Comm Driver
     instance commDriver
     instance commStub
+
+    # Analog pins
+    instance Analog0
+    instance Analog1
+    instance Analog6
+    instance Analog7
+    instance Analog8
+    instance Analog9
+    instance Analog17
 
     # ----------------------------------------------------------------------
     # Pattern graph specifiers
@@ -114,11 +130,18 @@ module TeensyFSW {
       rateGroup2.RateGroupMemberOut[1] -> tlmSend.Run
       rateGroup2.RateGroupMemberOut[2] -> imu.run
       rateGroup2.RateGroupMemberOut[3] -> mag.run
-      rateGroup2.RateGroupMemberOut[4] -> solar_panel_1.run
-      rateGroup2.RateGroupMemberOut[5] -> solar_panel_2.run
-      rateGroup2.RateGroupMemberOut[6] -> solar_panel_3.run
-      rateGroup2.RateGroupMemberOut[7] -> solar_panel_4.run
-      rateGroup2.RateGroupMemberOut[8] -> battery_board.run
+      rateGroup2.RateGroupMemberOut[4] -> current_solar_panel_1.run
+      rateGroup2.RateGroupMemberOut[5] -> current_solar_panel_2.run
+      rateGroup2.RateGroupMemberOut[6] -> current_solar_panel_3.run
+      rateGroup2.RateGroupMemberOut[7] -> current_solar_panel_4.run
+      rateGroup2.RateGroupMemberOut[8] -> current_battery_board.run
+      rateGroup2.RateGroupMemberOut[9] -> temperature_obc.run
+      rateGroup2.RateGroupMemberOut[10] -> temperature_pdu.run
+      rateGroup2.RateGroupMemberOut[11] -> temperature_solar_panel_1.run
+      rateGroup2.RateGroupMemberOut[12] -> temperature_solar_panel_2.run
+      rateGroup2.RateGroupMemberOut[13] -> temperature_solar_panel_3.run
+      rateGroup2.RateGroupMemberOut[14] -> temperature_solar_panel_4.run
+      rateGroup2.RateGroupMemberOut[15] -> temperature_battery_board.run
     }
 
     connections FaultProtection {
@@ -214,6 +237,16 @@ module TeensyFSW {
 
       pdu.rpiGpioSet -> rpiGpioEnable.gpioWrite
       pdu.rpiGpioRead -> rpiGpioEnable.gpioRead
+    }
+
+    connections TemperatureSensors {
+    temperature_obc.readAnalog -> Analog0.readAnalog
+    temperature_pdu.readAnalog -> Analog1.readAnalog
+    temperature_battery_board.readAnalog -> Analog6.readAnalog
+    temperature_solar_panel_1.readAnalog -> Analog7.readAnalog
+    temperature_solar_panel_2.readAnalog -> Analog8.readAnalog
+    temperature_solar_panel_3.readAnalog -> Analog9.readAnalog
+    temperature_solar_panel_4.readAnalog -> Analog17.readAnalog
     }
 
   }

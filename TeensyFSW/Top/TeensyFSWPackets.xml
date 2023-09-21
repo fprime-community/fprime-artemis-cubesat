@@ -65,14 +65,24 @@
     </packet>
 
     <packet name="CurrentSensorChannels" id="8" level="1">
-        <channel name="solar_panel_1.CurrentSensorData"/>
-        <channel name="solar_panel_2.CurrentSensorData"/>
-        <channel name="solar_panel_3.CurrentSensorData"/>
-        <channel name="solar_panel_4.CurrentSensorData"/>
-        <channel name="battery_board.CurrentSensorData"/>
+        <channel name="current_solar_panel_1.CurrentSensorData"/>
+        <channel name="current_solar_panel_2.CurrentSensorData"/>
+        <channel name="current_solar_panel_3.CurrentSensorData"/>
+        <channel name="current_solar_panel_4.CurrentSensorData"/>
+        <channel name="current_battery_board.CurrentSensorData"/>
     </packet>
 
-    <packet name="PDUChannels" id="9" level="1">
+    <packet name="TemperatureSensorChannels" id="9" level="1">
+        <channel name="temperature_obc.TemperatureSensorData"/>
+        <channel name="temperature_pdu.TemperatureSensorData"/>
+        <channel name="temperature_solar_panel_1.TemperatureSensorData"/>
+        <channel name="temperature_solar_panel_2.TemperatureSensorData"/>
+        <channel name="temperature_solar_panel_3.TemperatureSensorData"/>
+        <channel name="temperature_solar_panel_4.TemperatureSensorData"/>
+        <channel name="temperature_battery_board.TemperatureSensorData"/>
+    </packet>
+
+    <packet name="PDUChannels" id="10" level="1">
         <channel name="pdu.SwitchStatus"/>
     </packet>
 

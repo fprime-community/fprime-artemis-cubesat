@@ -87,15 +87,29 @@ module TeensyFSW {
 
   instance mag: Sensors.LIS3MDL base id 0x30100
 
-  instance solar_panel_1: Sensors.INA219 base id 0x30200
+  instance current_solar_panel_1: Sensors.INA219 base id 0x30200
 
-  instance solar_panel_2: Sensors.INA219 base id 0x30300
+  instance current_solar_panel_2: Sensors.INA219 base id 0x30300
 
-  instance solar_panel_3: Sensors.INA219 base id 0x30400
+  instance current_solar_panel_3: Sensors.INA219 base id 0x30400
 
-  instance solar_panel_4: Sensors.INA219 base id 0x30500
+  instance current_solar_panel_4: Sensors.INA219 base id 0x30500
 
-  instance battery_board: Sensors.INA219 base id 0x30600
+  instance current_battery_board: Sensors.INA219 base id 0x30600
+
+  instance temperature_obc: Sensors.TMP36 base id 0x30700
+
+  instance temperature_pdu: Sensors.TMP36 base id 0x30800
+  
+  instance temperature_solar_panel_1: Sensors.TMP36 base id 0x30900
+
+  instance temperature_solar_panel_2: Sensors.TMP36 base id 0x31000
+
+  instance temperature_solar_panel_3: Sensors.TMP36 base id 0x31100
+
+  instance temperature_solar_panel_4: Sensors.TMP36 base id 0x31200
+
+  instance temperature_battery_board: Sensors.TMP36 base id 0x31300
   
   # PDU
 
@@ -122,5 +136,21 @@ module TeensyFSW {
   instance hubFramer: Svc.Framer base id 0x100300
 
   instance hubDeframer: Svc.Deframer base id 0x100400
+
+  # Analog Pins
+
+  instance Analog0: Arduino.AnalogDriver base id 0x200000
+
+  instance Analog1: Arduino.AnalogDriver base id 0x200100
+
+  instance Analog6: Arduino.AnalogDriver base id 0x200200
+
+  instance Analog7: Arduino.AnalogDriver base id 0x200300
+
+  instance Analog8: Arduino.AnalogDriver base id 0x200400
+
+  instance Analog9: Arduino.AnalogDriver base id 0x200500
+  
+  instance Analog17: Arduino.AnalogDriver base id 0x206000
 
 }

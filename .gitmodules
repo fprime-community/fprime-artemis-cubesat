@@ -7,7 +7,7 @@
 [submodule "lib/arduino/fprime-arduino"]
 	path = lib/arduino/fprime-arduino
 	url = https://github.com/fprime-community/fprime-arduino.git
-	branch = devel-ethan
+	branch = devel
 [submodule "lib/arduino/RadioHead"]
 	path = lib/arduino/RadioHead
 	url = https://github.com/PaulStoffregen/RadioHead.git
