@@ -147,6 +147,14 @@ namespace RpiFSW
                 FATAL = 5
             };
         }
+        namespace rpi_saveImageBufferLogger
+        {
+            enum
+            {
+                WARN = 3,
+                FATAL = 5
+            };
+        }
     } // namespace PingEntries
 } // namespace RpiFSW
 #endif

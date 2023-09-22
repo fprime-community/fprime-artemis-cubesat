@@ -133,7 +133,7 @@ namespace RpiFSW
         // Autocoded command registration. Function provided by autocoder.
         configureTopology();
         // Autocoded parameter loading. Function provided by autocoder.
-        // loadParameters();
+        loadParameters();
         // Autocoded task kick-off (active components). Function provided by autocoder.
         regCommands();
         // Project-specific component configuration. Function provided above. May be inlined, if desired.
@@ -146,12 +146,20 @@ namespace RpiFSW
             rpi_hubDriver.startReadThread(
                 100,
                 Default::STACK_SIZE);
-            printf("UART port successfully opened\n");
+            Fw::Logger::logMsg("UART port successfully opened\n");
         }
         else
         {
-            printf("Failed to open UART port %s at speed %" PRIu32 "\n", "/dev/ttyS0", "BAUD_115K");
+            Fw::Logger::logMsg("Failed to open UART port %s at speed %" PRIu32 "\n", reinterpret_cast<POINTER_CAST>("/dev/ttyS0"), reinterpret_cast<POINTER_CAST>("BAUD_115K"));
         }
+
+        if (!rpi_camera.open(0))
+        {
+            Fw::Logger::logMsg("Camera failed to open\n");
+        }
+        const char *const name = "/home/pi/images/saveImage";
+        const char *const type = ".dat";
+        rpi_saveImageBufferLogger.initLog(name, type, 1024 * 1024, 4);
     }
 
     // Variables used for cycle simulation

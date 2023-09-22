@@ -53,6 +53,16 @@ module RpiFSW {
     stack size Default.STACK_SIZE \
     priority 96
 
+  instance rpi_camera: Payload.Camera base id RPI_TOPOLOGY_BASE + 0x1000 \
+    queue size Default.QUEUE_SIZE \
+    stack size Default.STACK_SIZE \
+    priority 100
+
+  instance rpi_saveImageBufferLogger: Svc.BufferLogger base id 0x1100 \
+    queue size 30 \
+    stack size Default.STACK_SIZE \
+    priority 100 \
+
   # ----------------------------------------------------------------------
   # Queued component instances
   # ----------------------------------------------------------------------

@@ -70,6 +70,11 @@
         <channel name="rpi_hubDriver.BytesSent"/>
     </packet>
 
+    <packet name="Camera" id="9" level="1">
+         <channel name="rpi_saveImageBufferLogger.BufferLogger_NumLoggedBuffers"/>
+         <channel name="rpi_camera.photosTaken"/>
+    </packet>
+
     <!-- Ignored packets -->
 
     <ignore>
