@@ -7,16 +7,13 @@
 #ifndef LSM6DS_HPP
 #define LSM6DS_HPP
 
-#include "TeensyFSW/Sensors/LSM6DS/LSM6DSComponentAc.hpp"
 #include "Adafruit_LSM6DSOX.h"
 #include "Adafruit_Sensor.h"
+#include "TeensyFSW/Sensors/LSM6DS/LSM6DSComponentAc.hpp"
 
-namespace Sensors
-{
+namespace Sensors {
 
-  class LSM6DS : public LSM6DSComponentBase
-  {
-
+class LSM6DS : public LSM6DSComponentBase {
   public:
     // ----------------------------------------------------------------------
     // Construction, initialization, and destruction
@@ -24,14 +21,12 @@ namespace Sensors
 
     //! Construct object LSM6DS
     //!
-    LSM6DS(
-        const char *const compName /*!< The component name*/
+    LSM6DS(const char* const compName /*!< The component name*/
     );
 
     //! Initialize object LSM6DS
     //!
-    void init(
-        const NATIVE_INT_TYPE instance = 0 /*!< The instance number*/
+    void init(const NATIVE_INT_TYPE instance = 0 /*!< The instance number*/
     );
 
     //! Destroy object LSM6DS
@@ -40,25 +35,20 @@ namespace Sensors
 
     bool init_imu(void);
 
-    PRIVATE :
+  private:
+    // ----------------------------------------------------------------------
+    // Handler implementations for user-defined typed input ports
+    // ----------------------------------------------------------------------
 
-        // ----------------------------------------------------------------------
-        // Handler implementations for user-defined typed input ports
-        // ----------------------------------------------------------------------
+    //! Handler implementation for SchedIn
+    //!
+    void run_handler(const NATIVE_INT_TYPE portNum, /*!< The port number */
+                     NATIVE_UINT_TYPE context       /*!< The call order */
+    );
 
-        //! Handler implementation for SchedIn
-        //!
-        void
-        run_handler(
-            const NATIVE_INT_TYPE portNum, /*!< The port number*/
-            NATIVE_UINT_TYPE context       /*!<
-              The call order
-              */
-        );
+    Adafruit_LSM6DSOX* imu = new Adafruit_LSM6DSOX();
+};
 
-    Adafruit_LSM6DSOX *imu = new Adafruit_LSM6DSOX();
-  };
-
-} // end namespace Sensors
+}  // end namespace Sensors
 
 #endif

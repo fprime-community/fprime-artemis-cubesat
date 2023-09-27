@@ -4,36 +4,24 @@
 // \brief  cpp file for TMP36 component implementation class
 // ======================================================================
 
-#include <TeensyFSW/Sensors/TMP36/TMP36.hpp>
 #include <FpConfig.hpp>
+#include <TeensyFSW/Sensors/TMP36/TMP36.hpp>
 
-namespace Sensors
-{
+namespace Sensors {
 
-  // ----------------------------------------------------------------------
-  // Construction, initialization, and destruction
-  // ----------------------------------------------------------------------
+// ----------------------------------------------------------------------
+// Construction, initialization, and destruction
+// ----------------------------------------------------------------------
 
-  TMP36 ::
-      TMP36(
-          const char *const compName) : TMP36ComponentBase(compName)
-  {
-  }
+TMP36::TMP36(const char* const compName) : TMP36ComponentBase(compName) {}
 
-  TMP36 ::
-      ~TMP36()
-  {
-  }
+TMP36::~TMP36() {}
 
-  // ----------------------------------------------------------------------
-  // Handler implementations for user-defined typed input ports
-  // ----------------------------------------------------------------------
+// ----------------------------------------------------------------------
+// Handler implementations for user-defined typed input ports
+// ----------------------------------------------------------------------
 
-  void TMP36 ::
-      run_handler(
-          const NATIVE_INT_TYPE portNum,
-          NATIVE_UINT_TYPE context)
-  {
+void TMP36::run_handler(const NATIVE_INT_TYPE portNum, NATIVE_UINT_TYPE context) {
     U16 adcValue;
     this->readAnalog_out(0, adcValue);
     F32 voltage = adcValue * this->MV_PER_ADC_UNIT;
@@ -45,6 +33,6 @@ namespace Sensors
     F32 temperatureC = (temperatureF - 32) * 5 / 9;
 
     this->tlmWrite_TemperatureSensorData(temperatureC);
-  }
+}
 
-} // end namespace Sensors
+}  // end namespace Sensors

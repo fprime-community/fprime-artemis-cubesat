@@ -26,8 +26,9 @@ void print_usage(const char* app) {
 /**
  * \brief shutdown topology cycling on signal
  *
- * The reference topology allows for a simulated cycling of the rate groups. This simulated cycling needs to be stopped
- * in order for the program to shutdown. This is done via handling signals such that it is performed via Ctrl-C
+ * The reference topology allows for a simulated cycling of the rate groups. This simulated cycling
+ * needs to be stopped in order for the program to shutdown. This is done via handling signals such
+ * that it is performed via Ctrl-C
  *
  * @param signum
  */
@@ -38,8 +39,8 @@ static void signalHandler(int signum) {
 /**
  * \brief execute the program
  *
- * This F´ program is designed to run in standard environments (e.g. Linux/macOs running on a laptop). Thus it uses
- * command line inputs to specify how to connect.
+ * This F´ program is designed to run in standard environments (e.g. Linux/macOs running on a
+ * laptop). Thus it uses command line inputs to specify how to connect.
  *
  * @param argc: argument count supplied to program
  * @param argv: argument values supplied to program
@@ -47,8 +48,8 @@ static void signalHandler(int signum) {
  */
 int main(int argc, char* argv[]) {
     U32 port_number = 0;
-    I32 option = 0;
-    char* hostname = nullptr;
+    I32 option      = 0;
+    char* hostname  = nullptr;
 
     // Loop while reading the getopt supplied options
     while ((option = getopt(argc, argv, "hp:a:")) != -1) {
@@ -74,7 +75,7 @@ int main(int argc, char* argv[]) {
     // Object for communicating state to the reference topology
     RpiFSW::TopologyState inputs;
     inputs.hostname = hostname;
-    inputs.port = port_number;
+    inputs.port     = port_number;
 
     // Setup program shutdown via Ctrl-C
     signal(SIGINT, signalHandler);

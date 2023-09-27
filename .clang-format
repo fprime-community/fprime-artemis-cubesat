@@ -1,0 +1,11 @@
+---
+BasedOnStyle: Chromium
+IndentWidth: 4
+ColumnLimit: 100
+AccessModifierOffset: -2
+AlignConsecutiveAssignments:
+  Enabled: true
+  AcrossEmptyLines: false
+  AcrossComments: false
+  AlignCompound: true
+  PadOperators: true

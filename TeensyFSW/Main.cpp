@@ -1,17 +1,18 @@
 // ======================================================================
 // \title  Main.cpp
-// \brief main program for the F' application. Intended for CLI-based systems (Linux, macOS)
+// \brief main program for the F' application. Intended for CLI-based systems
+// (Linux, macOS)
 //
 // ======================================================================
 // Used to access topology functions
-#include <TeensyFSW/Top/TeensyFSWTopologyAc.hpp>
 #include <TeensyFSW/Top/TeensyFSWTopology.hpp>
+#include <TeensyFSW/Top/TeensyFSWTopologyAc.hpp>
 // Used for Task Runner
 #include <Os/Baremetal/TaskRunner/TaskRunner.hpp>
 
 // Used for logging
-#include <Os/Log.hpp>
 #include <Arduino/Os/StreamLog.hpp>
+#include <Os/Log.hpp>
 
 #include <Components/Radios/RFM23/RFM23.hpp>
 
@@ -25,10 +26,8 @@ Os::TaskRunner taskrunner;
  * \brief setup the program
  *
  * This is an extraction of the Arduino setup() function.
- *
  */
-void setup()
-{
+void setup() {
     // Setup Serial
     Serial.begin(115200);
     Serial1.begin(115200);
@@ -57,8 +56,7 @@ void setup()
  * This is an extraction of the Arduino loop() function.
  *
  */
-void loop()
-{
+void loop() {
 #ifdef USE_BASIC_TIMER
     rateDriver.cycle();
 #endif

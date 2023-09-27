@@ -4,14 +4,14 @@
 //
 // ======================================================================
 // Used to access topology functions
-#include <TeensyGDS/Top/TeensyGDSTopologyAc.hpp>
 #include <TeensyGDS/Top/TeensyGDSTopology.hpp>
+#include <TeensyGDS/Top/TeensyGDSTopologyAc.hpp>
 // Used for Task Runner
 #include <Os/Baremetal/TaskRunner/TaskRunner.hpp>
 
 // Used for logging
-#include <Os/Log.hpp>
 #include <Arduino/Os/StreamLog.hpp>
+#include <Os/Log.hpp>
 
 // Instantiate a system logger that will handle Fw::Logger::logMsg calls
 Os::Log logger;
@@ -25,8 +25,7 @@ Os::TaskRunner taskrunner;
  * This is an extraction of the Arduino setup() function.
  *
  */
-void setup()
-{
+void setup() {
     // Setup Serial
     Serial.begin(115200);
     SPI1.setMISO(Radios::RFM23::SPI_MISO);
@@ -39,7 +38,7 @@ void setup()
     // Object for communicating state to the reference topology
     TeensyGDS::TopologyState inputs;
     inputs.uartNumber = 0;
-    inputs.uartBaud = 115200;
+    inputs.uartBaud   = 115200;
 
     // Setup topology
     TeensyGDS::setupTopology(inputs);
@@ -51,8 +50,7 @@ void setup()
  * This is an extraction of the Arduino loop() function.
  *
  */
-void loop()
-{
+void loop() {
 #ifdef USE_BASIC_TIMER
     rateDriver.cycle();
 #endif

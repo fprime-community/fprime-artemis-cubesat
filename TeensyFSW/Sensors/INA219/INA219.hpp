@@ -6,17 +6,14 @@
 
 #ifndef INA219_HPP
 #define INA219_HPP
-#include <Wire.h>
 #include <Adafruit_INA219.h>
+#include <Wire.h>
 
 #include "TeensyFSW/Sensors/INA219/INA219ComponentAc.hpp"
 
-namespace Sensors
-{
+namespace Sensors {
 
-  class INA219 : public INA219ComponentBase
-  {
-
+class INA219 : public INA219ComponentBase {
   public:
     // ----------------------------------------------------------------------
     // Construction, initialization, and destruction
@@ -24,37 +21,29 @@ namespace Sensors
 
     //! Construct object INA219
     //!
-    INA219(
-        const char *const compName /*!< The component name*/
+    INA219(const char* const compName /*!< The component name*/
     );
 
     //! Destroy object INA219
     //!
     ~INA219();
 
-    void config(U8 addr, TwoWire *wire);
+    void config(U8 addr, TwoWire* wire);
 
-    PRIVATE :
+  private:
+    // ----------------------------------------------------------------------
+    // Handler implementations for user-defined typed input ports
+    // ----------------------------------------------------------------------
 
-        // ----------------------------------------------------------------------
-        // Handler implementations for user-defined typed input ports
-        // ----------------------------------------------------------------------
+    //! Handler implementation for run
+    //!
+    void run_handler(const NATIVE_INT_TYPE portNum, /*!< The port number */
+                     NATIVE_UINT_TYPE context       /*!< The call order */
+    );
 
-        //! Handler implementation for run
-        //!
-        void
-        run_handler(
-            const NATIVE_INT_TYPE portNum, /*!< The port number*/
-            NATIVE_UINT_TYPE context       /*!<
-              The call order
-              */
-        );
+    Adafruit_INA219* currentSensor;
+};
 
-    PRIVATE :
-
-        Adafruit_INA219 *currentSensor;
-  };
-
-} // end namespace Sensors
+}  // end namespace Sensors
 
 #endif
