@@ -83,7 +83,7 @@ module TeensyFSW {
 
     # Comm Driver
     instance commDriver
-    instance commStub
+    # instance commStub
 
     # Analog pins
     instance Analog0
@@ -118,8 +118,8 @@ module TeensyFSW {
 
       # Rate group 1
       rateGroupDriver.CycleOut[Ports_RateGroups.rateGroup1] -> rateGroup1.CycleIn
-      # rateGroup1.RateGroupMemberOut[0] -> rfm23.run
-      rateGroup1.RateGroupMemberOut[0] -> commDriver.schedIn
+      rateGroup1.RateGroupMemberOut[0] -> rfm23.run
+      # rateGroup1.RateGroupMemberOut[0] -> commDriver.schedIn
       rateGroup1.RateGroupMemberOut[1] -> blinker.run
       rateGroup1.RateGroupMemberOut[2] -> hubCommDriver.schedIn
       rateGroup1.RateGroupMemberOut[3] -> pduCommDriver.schedIn
@@ -159,24 +159,24 @@ module TeensyFSW {
       commQueue.comQueueSend -> framer.comIn
 
       framer.framedAllocate -> staticMemory.bufferAllocate[Ports_StaticMemory.framer]
-      # framer.framedOut -> rfm23.comDataIn
-      # rfm23.deallocate -> staticMemory.bufferDeallocate[Ports_StaticMemory.framer]
-      # rfm23.comStatus -> commQueue.comStatusIn
-      framer.framedOut -> commStub.comDataIn
-      commDriver.deallocate -> staticMemory.bufferDeallocate[Ports_StaticMemory.framer]
-      commStub.drvDataOut -> commDriver.send
-      commDriver.ready -> commStub.drvConnected
-      commStub.comStatus -> commQueue.comStatusIn
+      framer.framedOut -> rfm23.comDataIn
+      rfm23.deallocate -> staticMemory.bufferDeallocate[Ports_StaticMemory.framer]
+      rfm23.comStatus -> commQueue.comStatusIn
+      # framer.framedOut -> commStub.comDataIn
+      # commDriver.deallocate -> staticMemory.bufferDeallocate[Ports_StaticMemory.framer]
+      # commStub.drvDataOut -> commDriver.send
+      # commDriver.ready -> commStub.drvConnected
+      # commStub.comStatus -> commQueue.comStatusIn
 
     }
 
     connections Uplink {
 
-      # rfm23.allocate -> staticMemory.bufferAllocate[Ports_StaticMemory.deframer]
-      # rfm23.comDataOut -> deframer.framedIn
-      commDriver.allocate -> staticMemory.bufferAllocate[Ports_StaticMemory.deframer]
-      commDriver.$recv -> commStub.drvDataIn
-      commStub.comDataOut -> deframer.framedIn
+      rfm23.allocate -> staticMemory.bufferAllocate[Ports_StaticMemory.deframer]
+      rfm23.comDataOut -> deframer.framedIn
+      # commDriver.allocate -> staticMemory.bufferAllocate[Ports_StaticMemory.deframer]
+      # commDriver.$recv -> commStub.drvDataIn
+      # commStub.comDataOut -> deframer.framedIn
       deframer.framedDeallocate -> staticMemory.bufferDeallocate[Ports_StaticMemory.deframer]
 
       deframer.comOut -> cmdSplitter.CmdBuff
@@ -222,8 +222,8 @@ module TeensyFSW {
     }
 
     connections Radio {
-      # rfm23.gpioSetRxOn -> gpioRxOn.gpioWrite
-      # rfm23.gpioSetTxOn -> gpioTxOn.gpioWrite
+      rfm23.gpioSetRxOn -> gpioRxOn.gpioWrite
+      rfm23.gpioSetTxOn -> gpioTxOn.gpioWrite
     }
 
     connections PDU {

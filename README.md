@@ -97,7 +97,7 @@ export RPI_TOOLCHAIN_DIR=/opt/cross-pi-gcc-10.3.0-0/
 Note:
   - You'll need to run this command every time you open a new terminal.
 
-# Using the F' - Artemis Cubesat Deployment
+# Using the F' - Artemis CubeSat Deployment
 
 Download the project into a directory of your choice:
 ```shell
@@ -134,7 +134,7 @@ fprime-util build
 ```
 > `fprime-util build` has two available arguments 'teensy41' and 'raspberrypi' 
 
-> fprime-util generate` sets up the build environment for a project/deployment. It only needs to be done once and also accepts 'teensy41' and 'raspberrypi' arguments.
+> `fprime-util generate` sets up the build environment for a project/deployment. It only needs to be done once and also accepts 'teensy41' and 'raspberrypi' arguments.
 
 ## Combine RPi and Teensy Dictionaries
 

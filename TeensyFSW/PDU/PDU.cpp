@@ -46,6 +46,16 @@ namespace Components
     this->comDataOut_out(0, sendBuffer);
   }
 
+  void PDU::setSwitch(PDU_SW sw, Fw::Logic state)
+  {
+    pdu_packet packet;
+    packet.type = PDU_Type::CommandSetSwitch;
+    packet.sw = sw;
+    packet.sw_state = (state == Fw::Logic::HIGH) ? 1 : 0;
+
+    this->send(packet);
+  }
+
   // ----------------------------------------------------------------------
   // Handler implementations for user-defined typed input ports
   // ----------------------------------------------------------------------

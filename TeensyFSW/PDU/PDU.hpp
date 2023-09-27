@@ -16,6 +16,7 @@ namespace Components
   {
     const NATIVE_INT_TYPE PDU_CMD_OFFSET = 48;
 
+  public:
     enum class PDU_Type : uint8_t
     {
       NOP,
@@ -61,7 +62,6 @@ namespace Components
       U8 sw_state[12];
     };
 
-  public:
     // ----------------------------------------------------------------------
     // Construction, initialization, and destruction
     // ----------------------------------------------------------------------
@@ -75,6 +75,8 @@ namespace Components
     //! Destroy object PDU
     //!
     ~PDU();
+
+    void setSwitch(PDU_SW sw, Fw::Logic state);
 
     PRIVATE :
 

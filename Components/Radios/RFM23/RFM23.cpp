@@ -35,6 +35,11 @@ namespace Radios
         this->gpioSetRxOn_out(0, Fw::Logic::LOW);
         this->gpioSetTxOn_out(0, Fw::Logic::HIGH);
 
+        if (this->radio_state == Fw::On::OFF)
+        {
+            return;
+        }
+
         if (rfm23.available())
         {
             U8 buf[RH_RF22_MAX_MESSAGE_LEN];
@@ -61,6 +66,11 @@ namespace Radios
         FW_ASSERT(payload != nullptr);
         this->gpioSetRxOn_out(0, Fw::Logic::HIGH);
         this->gpioSetTxOn_out(0, Fw::Logic::LOW);
+
+        if (this->radio_state == Fw::On::OFF)
+        {
+            return false;
+        }
 
         NATIVE_UINT_TYPE offset = 0;
         while (len > RH_RF22_MAX_MESSAGE_LEN)
@@ -130,6 +140,7 @@ namespace Radios
     {
         if (radio_state == Fw::On::OFF)
         {
+            Fw::Logger::logMsg("attempt to init radio \n");
             // rfm23.reset();
             if (!rfm23.init())
             {
@@ -139,7 +150,7 @@ namespace Radios
             rfm23.setFrequency(RFM23_FREQ);
             rfm23.setTxPower(RH_RF22_RF23BP_TXPOW_30DBM);
             rfm23.sleep();
-            rfm23.setModemConfig(RH_RF22::FSK_Rb2Fd5);
+            rfm23.setModemConfig(RH_RF22::GFSK_Rb2Fd5);
             rfm23.sleep();
             // rfm23.setModeIdle();
             Fw::Success radioSuccess = Fw::Success::SUCCESS;
@@ -150,9 +161,13 @@ namespace Radios
             Fw::Logger::logMsg("radio init success \n");
             radio_state = Fw::On::ON;
         }
-        this->recv();
+        else
+        {
+            this->recv();
+            this->tlmWrite_temp(rfm23.temperatureRead());
+        }
+
         this->tlmWrite_Status(radio_state);
-        this->tlmWrite_temp(rfm23.temperatureRead());
     }
 
 } // end namespace Radios

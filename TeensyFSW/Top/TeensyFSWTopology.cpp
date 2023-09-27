@@ -12,6 +12,8 @@
 #include <Fw/Types/MallocAllocator.hpp>
 #include <Svc/FramingProtocol/FprimeProtocol.hpp>
 
+#include <TeensyFSW/PDU/PDU.hpp>
+
 #include <Wire.h>
 
 // Allows easy reference to objects in FPP/autocoder required namespaces
@@ -109,13 +111,16 @@ namespace TeensyFSW
         current_solar_panel_3.config(0x42, &Wire2);
         current_solar_panel_4.config(0x43, &Wire2);
         current_battery_board.config(0x44, &Wire2);
-        Analog0.open(A0, Arduino::AnalogDriver::GpioDirection::IN);
-        Analog1.open(A1, Arduino::AnalogDriver::GpioDirection::IN);
-        Analog6.open(A6, Arduino::AnalogDriver::GpioDirection::IN);
-        Analog7.open(A7, Arduino::AnalogDriver::GpioDirection::IN);
-        Analog8.open(A8, Arduino::AnalogDriver::GpioDirection::IN);
-        Analog9.open(A9, Arduino::AnalogDriver::GpioDirection::IN);
-        Analog17.open(A17, Arduino::AnalogDriver::GpioDirection::IN);
+        Analog0.open(ARTEMIS_TEENSY_PINOUT::AIN0, Arduino::AnalogDriver::GpioDirection::IN);
+        Analog1.open(ARTEMIS_TEENSY_PINOUT::AIN1, Arduino::AnalogDriver::GpioDirection::IN);
+        Analog6.open(ARTEMIS_TEENSY_PINOUT::AIN3, Arduino::AnalogDriver::GpioDirection::IN);
+        Analog7.open(ARTEMIS_TEENSY_PINOUT::AIN4, Arduino::AnalogDriver::GpioDirection::IN);
+        Analog8.open(ARTEMIS_TEENSY_PINOUT::AIN5, Arduino::AnalogDriver::GpioDirection::IN);
+        Analog9.open(ARTEMIS_TEENSY_PINOUT::AIN6, Arduino::AnalogDriver::GpioDirection::IN);
+        Analog17.open(ARTEMIS_TEENSY_PINOUT::AIN2, Arduino::AnalogDriver::GpioDirection::IN);
+
+        // Init Switches
+        pdu.setSwitch(Components::PDU::PDU_SW::SW_3V3_2, Fw::Logic::HIGH);
 
         rateDriver.start();
     }
