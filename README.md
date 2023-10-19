@@ -221,7 +221,7 @@ fprime-util build
 ```
 > `fprime-util build` has two available arguments 'teensy41' and 'raspberrypi' 
 
-> fprime-util generate` sets up the build environment for a project/deployment. It only needs to be done once and also accepts 'teensy41' and 'raspberrypi' arguments.
+> `fprime-util generate` sets up the build environment for a project/deployment. It only needs to be done once and also accepts 'teensy41' and 'raspberrypi' arguments.
 
 ### Combine RPi and Teensy Dictionaries
 
@@ -237,21 +237,61 @@ combine_dictionaries build-artifacts/teensy41/TeensyFSW/dict/TeensyFSWTopologyAp
 ```
 
 Note:
-  - You only need to run this script once. 
+  - You only need to run this script once.
+
+If you are using the Docker method, you'll need to transfer the `dictionary.xml` file to your host machine. To achieve this, simply run the following command. Make sure to replace `DOCKER_ID` with your container's ID and `/path/to/directory/` with the destination folder where you intend to store the file. 
+
+You can do this by using the following command, make sure to 
+
+```bash
+docker cp DOCKER_ID:/root/fprime-artemis-cubesat/dictionary.xml /path/to/directory/
+```
+
+Note:
+  - You can find your docker container's ID by using the command:
+  ```bash
+  docker ps
+  ```
+  - All  `docker` commands must be run on your host machine's terminal, not inside the docker contianer. 
 
 # Programming and Running on Hardware
 
-## Uploading hex file for the Teensy
-After running fprime-util build teensy41, open up the Teensyduino application. Choose the hex file located in ./build-artifacts/teensy41/TeensyFSW/bin/ to load into Teensyduino. Manually press the reset button on the Teensy to upload the program.
+## Uploading .hex File for the Teensy
+After running building the Teensy deployment, open up the `Teensy Loader` application. 
 
-## Using GDS over serial
+If you are using the Docker method, you'll need to transfer the `TeensyFSW.hex` file to your host machine. To achieve this, simply run the following command. Make sure to replace `DOCKER_ID` with your container's ID and `/path/to/directory/` with the destination folder where you intend to store the file. 
+
+```bash
+docker cp DOCKER_ID:/root/fprime-artemis-cubesat/build-artifacts/teensy41/TeensyFSW/bin/TeensyFSW.hex /path/to/directory/
+```
+
+After successfully transferring the file or after locating the file on your host machine, follow these steps:
+
+1. Launch the 'Teensy Loader' application.
+2. Click on the 'Open HEX File' button.
+3. Locate the Teensy .hex file at the following path: ./      build-artifacts/teensy41/TeensyFSW/bin/. (or where you saved it earlier)
+4. Load the identified .hex file into the application.
+5. Manually press the reset button on the Teensy to initiate the program upload.
+
+## Using GDS over Serial
 
 To use GDS over serial, run the following command:
 ```sh
-fprime-gds -n --dictionary dictionary.xml --comm-adapter uart --uart-device /dev/ttyACM0 --uart-baud 115200
+fprime-gds -n --dictionary /path/to/dictionary.xml --comm-adapter uart --uart-device /dev/TEENSY_NAME --uart-baud 115200
 ```
 Note:
-  - If you have more than one device connected, or if you are using a different OS, `/dev/ttyACM0` may differ for your system.
+  - Make sure to edit the command to reflect the correct path to your `dictionary.xml.` file and replace `TEENSY_NAME` with the correct name for your Teensy. 
+  
+  You can find your Teensy's name on Unix/Linux using:
+  ```bash
+  ls /dev/tty* 
+  ```
+  
+  or on Windows: 
+  ```bash
+  dir C:\dev\tty*
+  ```
+
 
 [comment]: <> (using the rpi deployment)
 
