@@ -82,6 +82,17 @@ class PDU : public PDUComponentBase {
                            Fw::Buffer& recvBuffer,
                            const Drv::RecvStatus& recvStatus);
 
+    //! Handler implementation for SetSwitchInternal
+    //!
+    void SetSwitchInternal_handler(const NATIVE_INT_TYPE portNum, /*!< The port number*/
+                                   const Components::PDU_SW& sw,
+                                   const Fw::On& state);
+
+    //! Handler implementation for GetSwitchInternal
+    //!
+    void GetSwitchInternal_handler(const NATIVE_INT_TYPE portNum, /*!< The port number*/
+                                   Components::PDUTlm& states);
+
     // ----------------------------------------------------------------------
     // Command handler implementations
     // ----------------------------------------------------------------------
@@ -107,6 +118,9 @@ class PDU : public PDUComponentBase {
 
     U8 pdu_packet_cmd[4];
     Components::PDUTlm telem;
+
+    Fw::String lookup[13] = {"3V_1",  "3V_2",  "5V_1",  "5V_2",     "5V_3",     "5V_4", "12V",
+                             "VBATT", "BURN1", "BURN2", "HBRIDGE1", "HBRIDGE2", "RPI"};
 };
 }  // end namespace Components
 

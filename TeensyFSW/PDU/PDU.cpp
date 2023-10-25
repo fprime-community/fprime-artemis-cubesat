@@ -16,7 +16,8 @@ namespace Components {
 
 PDU::PDU(const char* const compName) : PDUComponentBase(compName) {
     for (NATIVE_INT_TYPE i = 0; i < telem.SIZE; i++) {
-        telem[i] = 0;
+        telem[i].setsw(lookup[i]);
+        telem[i].setstate(0);
     }
 }
 
@@ -30,7 +31,7 @@ void PDU::send(pdu_packet packet) {
     }
     pdu_packet_cmd[sizeof(packet)] = '\n';
 
-    Fw::Buffer sendBuffer          = this->allocate_out(0, sizeof(pdu_packet_cmd));
+    Fw::Buffer sendBuffer = this->allocate_out(0, sizeof(pdu_packet_cmd));
     memcpy(sendBuffer.getData(), &pdu_packet_cmd[0], sizeof(pdu_packet_cmd));
     sendBuffer.setSize(sizeof(pdu_packet_cmd));
     this->comDataOut_out(0, sendBuffer);
@@ -40,17 +41,20 @@ void PDU::send(pdu_packet packet) {
 // Handler implementations for user-defined typed input ports
 // ----------------------------------------------------------------------
 
-void PDU::comDataIn_handler(const NATIVE_INT_TYPE portNum, Fw::Buffer& recvBuffer, const Drv::RecvStatus& recvStatus) {
+void PDU::comDataIn_handler(const NATIVE_INT_TYPE portNum,
+                            Fw::Buffer& recvBuffer,
+                            const Drv::RecvStatus& recvStatus) {
     if (recvBuffer.getSize() == 0) {
         this->deallocate_out(0, recvBuffer);
         return;
     }
 
-    PDU_Type type = static_cast<PDU_Type>(static_cast<U8>(recvBuffer.getData()[1]) - PDU_CMD_OFFSET);
+    PDU_Type type =
+        static_cast<PDU_Type>(static_cast<U8>(recvBuffer.getData()[1]) - PDU_CMD_OFFSET);
 
     if (type == PDU_Type::DataSwitchTelem) {
         for (NATIVE_INT_TYPE i = 0; i < telem.SIZE - 1; i++) {
-            telem[i] = recvBuffer.getData()[i + 2] - PDU_CMD_OFFSET;
+            telem[i].setstate(recvBuffer.getData()[i + 2] - PDU_CMD_OFFSET);
         }
         this->tlmWrite_SwitchStatus(telem);
     } else {
@@ -61,15 +65,15 @@ void PDU::comDataIn_handler(const NATIVE_INT_TYPE portNum, Fw::Buffer& recvBuffe
             U8 state  = recvBuffer.getData()[3] - PDU_CMD_OFFSET;
 
             if (sw >= PDU_SW::SW_3V3_1 && sw <= PDU_SW::VBATT) {
-                telem[static_cast<U8>(sw) - 2] = state;
+                telem[static_cast<U8>(sw) - 2].setstate(state);
             } else if (sw == PDU_SW::BURN1) {
-                telem[8] = state;
+                telem[8].setstate(state);
             } else if (sw == PDU_SW::BURN2) {
-                telem[9] = state;
+                telem[9].setstate(state);
             } else if (sw == PDU_SW::HBRIDGE1) {
-                telem[10] = state;
+                telem[10].setstate(state);
             } else if (sw == PDU_SW::HBRIDGE2) {
-                telem[11] = state;
+                telem[11].setstate(state);
             }
 
             this->tlmWrite_SwitchStatus(telem);
@@ -83,7 +87,10 @@ void PDU::comDataIn_handler(const NATIVE_INT_TYPE portNum, Fw::Buffer& recvBuffe
 // Command handler implementations
 // ----------------------------------------------------------------------
 
-void PDU::SetSwitch_cmdHandler(const FwOpcodeType opCode, const U32 cmdSeq, Components::PDU_SW sw, Fw::On state) {
+void PDU::SetSwitch_cmdHandler(const FwOpcodeType opCode,
+                               const U32 cmdSeq,
+                               Components::PDU_SW sw,
+                               Fw::On state) {
     pdu_packet packet;
     packet.type     = PDU_Type::CommandSetSwitch;
     packet.sw       = (Components::PDU::PDU_SW)(U8)sw;
@@ -93,7 +100,7 @@ void PDU::SetSwitch_cmdHandler(const FwOpcodeType opCode, const U32 cmdSeq, Comp
         this->rpiGpioSet_out(0, (packet.sw_state == 1) ? Fw::Logic::HIGH : Fw::Logic::LOW);
         Fw::Logic state;
         this->rpiGpioRead_out(0, state);
-        telem[12] = state;
+        telem[12].setstate(state);
         this->tlmWrite_SwitchStatus(telem);
     } else {
         send(packet);
@@ -110,7 +117,7 @@ void PDU::GetSwitch_cmdHandler(const FwOpcodeType opCode, const U32 cmdSeq) {
     send(packet);
     Fw::Logic state;
     this->rpiGpioRead_out(0, state);
-    telem[12] = state;
+    telem[12].setstate((state == Fw::Logic::HIGH) ? 1 : 0);
     this->tlmWrite_SwitchStatus(telem);
     this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
 }
@@ -121,5 +128,36 @@ void PDU::Ping_cmdHandler(const FwOpcodeType opCode, const U32 cmdSeq) {
 
     send(packet);
     this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
+}
+
+void PDU ::SetSwitchInternal_handler(const NATIVE_INT_TYPE portNum,
+                                     const Components::PDU_SW& sw,
+                                     const Fw::On& state) {
+    pdu_packet packet;
+    packet.type     = PDU_Type::CommandSetSwitch;
+    packet.sw       = (Components::PDU::PDU_SW)(U8)sw;
+    packet.sw_state = (state == Fw::On::ON) ? 1 : 0;
+
+    if (packet.sw == Components::PDU::PDU_SW::RPI) {
+        this->rpiGpioSet_out(0, (packet.sw_state == 1) ? Fw::Logic::HIGH : Fw::Logic::LOW);
+        Fw::Logic state;
+        this->rpiGpioRead_out(0, state);
+        telem[12].setstate((state == Fw::Logic::HIGH) ? 1 : 0);
+        this->tlmWrite_SwitchStatus(telem);
+    } else {
+        send(packet);
+    }
+}
+
+void PDU ::GetSwitchInternal_handler(const NATIVE_INT_TYPE portNum, Components::PDUTlm& states) {
+    pdu_packet packet;
+    packet.type = PDU_Type::CommandGetSwitchStatus;
+    packet.sw   = PDU_SW::All;
+
+    send(packet);
+    Fw::Logic state;
+    this->rpiGpioRead_out(0, state);
+    telem[12].setstate(state);
+    states = telem;
 }
 }  // end namespace Components

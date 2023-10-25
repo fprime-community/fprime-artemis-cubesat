@@ -7,6 +7,7 @@ module TeensyFSW {
     enum Ports_RateGroups {
       rateGroup1
       rateGroup2
+      rateGroup3
     }
 
     enum Ports_StaticMemory {
@@ -37,6 +38,7 @@ module TeensyFSW {
     instance rateDriver
     instance rateGroup1
     instance rateGroup2
+    instance rateGroup3
     instance rateGroupDriver
     instance staticMemory
     instance systemResources
@@ -73,6 +75,9 @@ module TeensyFSW {
     instance pdu
     instance pduCommDriver
     instance rpiGpioEnable
+
+    # Heater
+    instance heater
 
     # Hub
     instance cmdSplitter
@@ -135,13 +140,18 @@ module TeensyFSW {
       rateGroup2.RateGroupMemberOut[6] -> current_solar_panel_3.run
       rateGroup2.RateGroupMemberOut[7] -> current_solar_panel_4.run
       rateGroup2.RateGroupMemberOut[8] -> current_battery_board.run
-      rateGroup2.RateGroupMemberOut[9] -> temperature_obc.run
-      rateGroup2.RateGroupMemberOut[10] -> temperature_pdu.run
-      rateGroup2.RateGroupMemberOut[11] -> temperature_solar_panel_1.run
-      rateGroup2.RateGroupMemberOut[12] -> temperature_solar_panel_2.run
-      rateGroup2.RateGroupMemberOut[13] -> temperature_solar_panel_3.run
-      rateGroup2.RateGroupMemberOut[14] -> temperature_solar_panel_4.run
-      rateGroup2.RateGroupMemberOut[15] -> temperature_battery_board.run
+     
+
+      # Rate Group 3
+      rateGroupDriver.CycleOut[Ports_RateGroups.rateGroup3] -> rateGroup3.CycleIn
+       rateGroup3.RateGroupMemberOut[0] -> temperature_obc.run
+      rateGroup3.RateGroupMemberOut[1] -> temperature_pdu.run
+      rateGroup3.RateGroupMemberOut[2] -> temperature_solar_panel_1.run
+      rateGroup3.RateGroupMemberOut[3] -> temperature_solar_panel_2.run
+      rateGroup3.RateGroupMemberOut[4] -> temperature_solar_panel_3.run
+      rateGroup3.RateGroupMemberOut[5] -> temperature_solar_panel_4.run
+      rateGroup3.RateGroupMemberOut[6] -> temperature_battery_board.run
+      rateGroup3.RateGroupMemberOut[7] -> heater.run
     }
 
     connections FaultProtection {
@@ -239,13 +249,21 @@ module TeensyFSW {
       pdu.rpiGpioRead -> rpiGpioEnable.gpioRead
     }
 
+    connections Heater {
+
+      temperature_battery_board.temperature -> heater.BatteryTemp
+      heater.PDUSetSwitch -> pdu.SetSwitchInternal
+      heater.PDUGetSwitch -> pdu.GetSwitchInternal
+
+    }
+
     connections TemperatureSensors {
     temperature_obc.readAnalog -> Analog0.readAnalog
     temperature_pdu.readAnalog -> Analog1.readAnalog
     temperature_battery_board.readAnalog -> Analog6.readAnalog
     temperature_solar_panel_1.readAnalog -> Analog7.readAnalog
     temperature_solar_panel_2.readAnalog -> Analog8.readAnalog
-    temperature_solar_panel_3.readAnalog -> Analog9.readAnalog
+    temperature_solar_panel_3.readAnalog -> Analog0.readAnalog
     temperature_solar_panel_4.readAnalog -> Analog17.readAnalog
     }
 
