@@ -26,44 +26,46 @@ class Heater : public HeaterComponentBase {
     //!
     ~Heater();
 
-    PRIVATE :
+  private:
+    // ----------------------------------------------------------------------
+    // Handler implementations for user-defined typed input ports
+    // ----------------------------------------------------------------------
 
-        // ----------------------------------------------------------------------
-        // Handler implementations for user-defined typed input ports
-        // ----------------------------------------------------------------------
+    //! Handler implementation for BatteryTemp
+    //!
+    void BatteryTemp_handler(const NATIVE_INT_TYPE portNum, /*!< The port number*/
+                             F32 val);
 
-        //! Handler implementation for comDataIn
-        //!
-        void
-        comDataIn_handler(const NATIVE_INT_TYPE portNum, /*!< The port number*/
-                          Fw::Buffer& recvBuffer,
-                          const Drv::RecvStatus& recvStatus);
-
-    PRIVATE :
-
-        // ----------------------------------------------------------------------
-        // Command handler implementations
-        // ----------------------------------------------------------------------
-
-        //! Implementation for SetHeater command handler
-        //! Command to turn on/off Heater
-        void
-        SetHeater_cmdHandler(const FwOpcodeType opCode, /*!< The opcode*/
-                             const U32 cmdSeq,          /*!< The command sequence number*/
-                             Components::PDU_SW sw,
-                             Fw::On state);
-
-    //! Implementation for GetHeater command handler
-    //! Command to get statuses of Heater switch
-    void GetHeater_cmdHandler(const FwOpcodeType opCode, /*!< The opcode*/
-                              const U32 cmdSeq           /*!< The command sequence number*/
+    //! Handler implementation for run
+    //!
+    void run_handler(const NATIVE_INT_TYPE portNum, /*!< The port number*/
+                     NATIVE_UINT_TYPE context       /*!<
+                       The call order
+                       */
     );
 
-    //! Implementation for AutoControlHeater command handler
-    //! Command to automatically control the Heater based on temperature
-    void AutoControlHeater_cmdHandler(const FwOpcodeType opCode, /*!< The opcode*/
-                                      const U32 cmdSeq,          /*!< The command sequence number*/
-                                      F32 temperature);
+  private:
+    // ----------------------------------------------------------------------
+    // Command handler implementations
+    // ----------------------------------------------------------------------
+
+    //! Implementation for SetHeater command handler
+    //! Command to turn on/off Heater
+    void SetHeater_cmdHandler(const FwOpcodeType opCode, /*!< The opcode*/
+                              const U32 cmdSeq,          /*!< The command sequence number*/
+                              Fw::On state);
+
+    //! Implementation for ToggleAuto command handler
+    //! Command to turn off heater automation
+    void ToggleAuto_cmdHandler(const FwOpcodeType opCode, /*!< The opcode*/
+                               const U32 cmdSeq,          /*!< The command sequence number*/
+                               Fw::On state);
+
+    U8 batteryTemp;
+
+    bool enableDisableAuto;
+
+    F32 thresholdTemperature = 0;
 };
 
 }  // end namespace Components

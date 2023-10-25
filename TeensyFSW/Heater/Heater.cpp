@@ -14,7 +14,8 @@ namespace Components {
 // Construction, initialization, and destruction
 // ----------------------------------------------------------------------
 
-Heater ::Heater(const char* const compName) : HeaterComponentBase(compName) {}
+Heater ::Heater(const char* const compName)
+    : HeaterComponentBase(compName), batteryTemp(0), enableDisableAuto(true) {}
 
 Heater ::~Heater() {}
 
@@ -22,53 +23,32 @@ Heater ::~Heater() {}
 // Handler implementations for user-defined typed input ports
 // ----------------------------------------------------------------------
 
-void Heater ::comDataIn_handler(const NATIVE_INT_TYPE portNum,
-                                Fw::Buffer& recvBuffer,
-                                const Drv::RecvStatus& recvStatus) {
-    // TODO
+void Heater ::BatteryTemp_handler(const NATIVE_INT_TYPE portNum, F32 val) {
+    this->batteryTemp = val;
 }
 
+void Heater::run_handler(const NATIVE_INT_TYPE portNum, NATIVE_UINT_TYPE context) {
+    if (!this->enableDisableAuto) {
+        return;
+    }
+
+    if (this->batteryTemp < this->thresholdTemperature) {
+        this->PDUSetSwitch_out(0, Components::PDU_SW::SW_5V_2, Fw::On::ON);
+    } else {
+        this->PDUSetSwitch_out(0, Components::PDU_SW::SW_5V_2, Fw::On::OFF);
+    }
+}
 // ----------------------------------------------------------------------
 // Command handler implementations
 // ----------------------------------------------------------------------
 
-void Heater ::SetHeater_cmdHandler(const FwOpcodeType opCode,
-                                   const U32 cmdSeq,
-                                   Components::PDU_SW sw,
-                                   Fw::On state) {
-    pdu_packet packet;
-    packet.type     = PDU_Type::CommandSetSwitch;
-    packet.sw       = (Components::PDU::PDU_SW)(U8)sw;
-    packet.sw_state = (state == Fw::On::ON) ? 1 : 0;
-
-    if (packet.sw == Components::PDU::PDU_SW::RPI) {
-        this->rpiGpioSet_out(0, (packet.sw_state == 1) ? Fw::Logic::HIGH : Fw::Logic::LOW);
-        Fw::Logic state;
-        this->rpiGpioRead_out(0, state);
-        telem[12] = state;
-        this->tlmWrite_SwitchStatus(telem);
-    } else {
-        send(packet);
-    }
+void Heater ::SetHeater_cmdHandler(const FwOpcodeType opCode, const U32 cmdSeq, Fw::On state) {
+    this->PDUSetSwitch_out(0, Components::PDU_SW::SW_5V_2, state);
     this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
 }
 
-void Heater ::GetHeater_cmdHandler(const FwOpcodeType opCode, const U32 cmdSeq) {
-    pdu_packet packet;
-    packet.type = PDU_Type::CommandGetSwitchStatus;
-    packet.sw   = PDU_SW::SW_5V_2;
-
-    send(packet);
-    Fw::Logic state;
-    telem[12] = state;
-    this->tlmWrite_SwitchStatus(telem);
-    this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
-}
-
-void Heater ::AutoControlHeater_cmdHandler(const FwOpcodeType opCode,
-                                           const U32 cmdSeq,
-                                           F32 temperature) {
-    // TODO
+void Heater ::ToggleAuto_cmdHandler(const FwOpcodeType opCode, const U32 cmdSeq, Fw::On state) {
+    this->enableDisableAuto = (state == Fw::On::ON) ? true : false;
     this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
 }
 

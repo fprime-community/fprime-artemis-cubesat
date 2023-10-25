@@ -32,6 +32,10 @@ void TMP36::run_handler(const NATIVE_INT_TYPE portNum, NATIVE_UINT_TYPE context)
     // Convert temperature to Celsius
     F32 temperatureC = (temperatureF - 32) * 5 / 9;
 
+    if (this->isConnected_temperature_OutputPort(0)) {
+        this->temperature_out(0, temperatureC);
+    }
+
     this->tlmWrite_TemperatureSensorData(temperatureC);
 }
 

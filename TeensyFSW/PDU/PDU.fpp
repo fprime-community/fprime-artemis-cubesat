@@ -20,8 +20,22 @@ module Components {
         RPI
     }
 
-    array PDUTlm = [13] U8
+    struct pduTlmStruct {
+        sw: string
+        state: U8
+    }
 
+    array PDUTlm = [13] pduTlmStruct
+    
+    port PDU_SW_CMD (
+        sw: PDU_SW
+        state: Fw.On
+    )
+
+port PDU_GET_SW_CMD (
+ 
+    ref states:Components.PDUTlm
+)
     @ Component for the Artemis CubeSat's PDU
     passive component PDU {
 
@@ -39,6 +53,12 @@ module Components {
 
         @ Port to read RPi gpio
         output port rpiGpioRead: Drv.GpioRead
+
+        @ Port to allow other components to control PDU switches
+        sync input port SetSwitchInternal: Components.PDU_SW_CMD
+
+        @ Port to allow other components to get PDU switch status
+        sync input port GetSwitchInternal: Components.PDU_GET_SW_CMD
 
         # ----------------------------------------------------------------------
         # Telemetry

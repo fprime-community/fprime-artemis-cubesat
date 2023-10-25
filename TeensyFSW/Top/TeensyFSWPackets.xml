@@ -10,6 +10,9 @@
         <channel name="rateGroup2.MaxCycleTime"/>
         <channel name="rateGroup2.CycleTime"/>
         <channel name="rateGroup2.CycleCount"/>
+        <channel name="rateGroup3.MaxCycleTime"/>
+        <channel name="rateGroup3.CycleTime"/>
+        <channel name="rateGroup3.CycleCount"/>
     </packet>
 
     <packet name="SystemRes1" id="2" level="2">
@@ -82,8 +85,12 @@
         <channel name="temperature_battery_board.TemperatureSensorData"/>
     </packet>
 
-    <packet name="PDUChannels" id="10" level="1">
+    <!-- <packet name="PDUChannels" id="10" level="1">
         <channel name="pdu.SwitchStatus"/>
+    </packet> -->
+
+    <packet name="HeaterChannels" id="11" level="1">
+        <channel name="heater.HeaterStatus"/>
     </packet>
 
     <!-- Ignored packets -->
@@ -92,5 +99,6 @@
         <channel name="cmdDisp.CommandErrors"/>
         <channel name="commQueue.comQueueDepth"/>
         <channel name="commQueue.buffQueueDepth"/>
+        <channel name="pdu.SwitchStatus"/>
     </ignore>
 </packets>

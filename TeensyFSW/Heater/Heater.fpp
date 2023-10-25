@@ -3,14 +3,17 @@ module Components {
     @ Component for battery heater
     passive component Heater {
 
-        @ Data coming in from the framing component
-        sync input port comDataIn: Drv.ByteStreamRecv
+        @ Internal PDU set switch
+        output port PDUSetSwitch: Components.PDU_SW_CMD
 
-        @ Status of the last radio transmission
-        output port comStatus: Fw.SuccessCondition
+        @ Internal PDU get switch
+        output port PDUGetSwitch: Components.PDU_GET_SW_CMD
 
-        @ Com data passing back out
-        output port comDataOut: Drv.ByteStreamSend
+        @ Internal read temperature sensors
+        sync input port BatteryTemp: Sensors.TempVal
+
+        @ Port: receiving calls from the rate group
+        sync input port run: Svc.Sched
 
         # ----------------------------------------------------------------------
         # Telemetry
@@ -33,23 +36,10 @@ module Components {
         # ----------------------------------------------------------------------
 
         @ Command to turn on/off Heater
-        sync command SetHeater(
-                                sw: Components.PDU_SW
-                                state: Fw.On
-                              )
+        sync command SetHeater(state: Fw.On)
 
-        @ Command to get statuses of Heater switch
-        sync command GetHeater()
-
-        @ Command to automatically control the Heater based on temperature
-        sync command AutoControlHeater(temperature: F32)
-
-        # ----------------------------------------------------------------------
-        # Parameters
-        # ----------------------------------------------------------------------
-
-        # @ Example parameter
-        # param PARAMETER_NAME: U32
+        @ Command to turn off heater automation
+        sync command ToggleAuto(state: Fw.On)
 
         # ----------------------------------------------------------------------
         # Implementation ports

@@ -1,4 +1,7 @@
 module Sensors {
+
+port TempVal(val:F32);
+
     @ Component for the TMP36 temperature sensors
     passive component TMP36 {
 
@@ -23,6 +26,9 @@ module Sensors {
 
         # @ Example parameter
         # param PARAMETER_NAME: U32
+
+        @ Port: 
+        output port temperature: Sensors.TempVal
 
         ###############################################################################
         # Standard AC Ports: Required for Channels, Events, Commands, and Parameters  #
