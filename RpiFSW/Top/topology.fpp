@@ -110,6 +110,8 @@ module RpiFSW {
       rpi_hub.portOut[0] -> rpi_cmdDisp.seqCmdBuff
       rpi_cmdDisp.seqCmdStatus -> rpi_hub.portIn[0]
 
+      rpi_fileDownlink.bufferSendOut -> rpi_hub.portIn[1]
+      rpi_hub.portOut[1] -> rpi_fileDownlink.bufferReturn
     }
 
   }

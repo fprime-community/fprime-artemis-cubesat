@@ -45,7 +45,7 @@ NATIVE_INT_TYPE rateGroup3Context[Svc::ActiveRateGroup::CONNECTION_COUNT_MAX] = 
 enum TopologyConstants
 {
     CMD_SEQ_BUFFER_SIZE = 5 * 1024,
-    FILE_DOWNLINK_TIMEOUT = 1000,
+    FILE_DOWNLINK_TIMEOUT = 30000,
     FILE_DOWNLINK_COOLDOWN = 1000,
     FILE_DOWNLINK_CYCLE_TIME = 1000,
     FILE_DOWNLINK_FILE_QUEUE_DEPTH = 10,
@@ -91,6 +91,8 @@ void configureTopology()
     upBuffMgrBins.bins[1].numBuffers = DEFRAMER_BUFFER_COUNT;
     upBuffMgrBins.bins[2].bufferSize = COM_DRIVER_BUFFER_SIZE;
     upBuffMgrBins.bins[2].numBuffers = COM_DRIVER_BUFFER_COUNT;
+    upBuffMgrBins.bins[3].bufferSize = 1024 * 1024 * 32;
+    upBuffMgrBins.bins[3].numBuffers = 3;
     rpi_bufferManager.setup(BUFFER_MANAGER_ID, 0, mallocator, upBuffMgrBins);
 
     rpi_hubFramer.setup(framing);
@@ -177,6 +179,7 @@ namespace RpiFSW
         {
             RpiFSW::rpi_blockDrv.callIsr();
             Os::Task::delay(milliseconds);
+            printf("test\n");
 
             cycleLock.lock();
             cycling = cycleFlag;

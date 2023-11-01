@@ -37,6 +37,15 @@ NATIVE_INT_TYPE rateGroupDivisors[Svc::RateGroupDriver::DIVIDER_SIZE] = {100, 10
 NATIVE_INT_TYPE rateGroup1Context[FppConstant_PassiveRateGroupOutputPorts::PassiveRateGroupOutputPorts] = {};
 NATIVE_INT_TYPE rateGroup2Context[FppConstant_PassiveRateGroupOutputPorts::PassiveRateGroupOutputPorts] = {};
 
+// A number of constants are needed for construction of the topology. These are specified here.
+enum TopologyConstants
+{
+    FILE_DOWNLINK_TIMEOUT = 30000,
+    FILE_DOWNLINK_COOLDOWN = 1000,
+    FILE_DOWNLINK_CYCLE_TIME = 1000,
+    FILE_DOWNLINK_FILE_QUEUE_DEPTH = 10,
+};
+
 /**
  * \brief configure/setup components in project-specific way
  *
@@ -52,6 +61,10 @@ void configureTopology()
     // Rate groups require context arrays.
     rateGroup1.configure(rateGroup1Context, FW_NUM_ARRAY_ELEMENTS(rateGroup1Context));
     rateGroup2.configure(rateGroup2Context, FW_NUM_ARRAY_ELEMENTS(rateGroup2Context));
+
+    // File downlink requires some project-derived properties. a
+    fileDownlink.configure(FILE_DOWNLINK_TIMEOUT, FILE_DOWNLINK_COOLDOWN, FILE_DOWNLINK_CYCLE_TIME,
+                           FILE_DOWNLINK_FILE_QUEUE_DEPTH);
 
     // Set up ComQueue
     Svc::ComQueue::QueueConfigurationTable configurationTable;

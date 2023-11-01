@@ -33,6 +33,7 @@ module TeensyFSW {
     instance eventLogger
     instance fatalAdapter
     instance fatalHandler
+    instance fileDownlink
     instance framer
     instance rateDriver
     instance rateGroup1
@@ -123,6 +124,7 @@ module TeensyFSW {
       rateGroup1.RateGroupMemberOut[1] -> blinker.run
       rateGroup1.RateGroupMemberOut[2] -> hubCommDriver.schedIn
       rateGroup1.RateGroupMemberOut[3] -> pduCommDriver.schedIn
+      rateGroup1.RateGroupMemberOut[4] -> fileDownlink.Run
 
       # Rate group 2
       rateGroupDriver.CycleOut[Ports_RateGroups.rateGroup2] -> rateGroup2.CycleIn
@@ -157,6 +159,7 @@ module TeensyFSW {
       # eventLogger.PktSend -> framer.comIn
 
       commQueue.comQueueSend -> framer.comIn
+      commQueue.buffQueueSend -> framer.bufferIn
 
       framer.framedAllocate -> staticMemory.bufferAllocate[Ports_StaticMemory.framer]
       # framer.framedOut -> rfm23.comDataIn
@@ -215,6 +218,8 @@ module TeensyFSW {
       cmdSplitter.RemoteCmd -> hub.portIn[0]
       hub.portOut[0] -> cmdSplitter.seqCmdStatus
 
+      hub.portOut[1] -> commQueue.buffQueueIn[0]
+      framer.bufferDeallocate -> hub.portIn[1]
     }
 
     connections LedBlinker {

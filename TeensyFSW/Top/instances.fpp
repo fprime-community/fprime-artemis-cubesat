@@ -33,6 +33,11 @@ module TeensyFSW {
       stack size Default.STACK_SIZE \
       priority 100
 
+  instance fileDownlink: Svc.FileDownlink base id 0x0500 \
+    queue size Default.QUEUE_SIZE \
+    stack size Default.STACK_SIZE \
+    priority 100
+
   # ----------------------------------------------------------------------
   # Queued component instances
   # ----------------------------------------------------------------------

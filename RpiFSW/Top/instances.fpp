@@ -58,7 +58,7 @@ module RpiFSW {
     stack size Default.STACK_SIZE \
     priority 100
 
-  instance rpi_saveImageBufferLogger: Svc.BufferLogger base id 0x1100 \
+  instance rpi_saveImageBufferLogger: Svc.BufferLogger base id RPI_TOPOLOGY_BASE + 0x1100 \
     queue size 30 \
     stack size Default.STACK_SIZE \
     priority 100 \
