@@ -73,7 +73,7 @@ void configureTopology()
     // Events , highest-priority
     configurationTable.entries[1] = {.depth = 100, .priority = 0};
     // ???
-    configurationTable.entries[2] = {.depth = 1, .priority = 2};
+    configurationTable.entries[2] = {.depth = 100, .priority = 2};
     // Allocation identifier is 0 as the MallocAllocator discards it
     commQueue.configure(configurationTable, 0, mallocator);
 
