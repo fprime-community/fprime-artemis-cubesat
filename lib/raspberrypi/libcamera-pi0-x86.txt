@@ -1,0 +1,11 @@
+[binaries]
+c = '/opt/cross-pi-gcc-10.3.0-0/bin/arm-linux-gnueabihf-gcc'
+cpp = '/opt/cross-pi-gcc-10.3.0-0/bin/arm-linux-gnueabihf-g++'
+ar = '/opt/cross-pi-gcc-10.3.0-0/bin/arm-linux-gnueabihf-ar'
+strip = '/opt/cross-pi-gcc-10.3.0-0/bin/arm-linux-gnueabihf-strip'
+
+[host_machine]
+system = 'linux'
+cpu_family = 'x86_64'
+cpu = 'x86_64'
+endian = 'little'

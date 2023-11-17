@@ -11,3 +11,6 @@
 [submodule "lib/arduino/RadioHead"]
 	path = lib/arduino/RadioHead
 	url = https://github.com/PaulStoffregen/RadioHead.git
+[submodule "lib/raspberrypi/libcamera"]
+	path = lib/raspberrypi/libcamera
+	url = https://github.com/raspberrypi/libcamera.git

@@ -99,6 +99,9 @@
         <channel name="cmdDisp.CommandErrors"/>
         <channel name="commQueue.comQueueDepth"/>
         <channel name="commQueue.buffQueueDepth"/>
+        <channel name="fileDownlink.FilesSent"/>
+        <channel name="fileDownlink.PacketsSent"/>
+        <channel name="fileDownlink.Warnings"/>
         <channel name="pdu.SwitchStatus"/>
     </ignore>
 </packets>

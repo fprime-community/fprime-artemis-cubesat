@@ -18,6 +18,7 @@ module RpiFSW {
 
     instance rpi_health
     instance rpi_blockDrv
+    instance rpi_camera
     instance rpi_bufferManager
     instance rpi_fatalAdapter
     instance rpi_fatalHandler
@@ -30,6 +31,7 @@ module RpiFSW {
     instance rpi_rateGroup3
     instance rpi_rateGroupDriver
     instance rpi_textLogger
+    instance rpi_saveImageBufferLogger
     instance rpi_systemResources
     instance rpi_cmdDisp
 
@@ -79,6 +81,13 @@ module RpiFSW {
       rpi_rateGroup3.RateGroupMemberOut[2] -> rpi_systemResources.run
     }
 
+    connections Camera {
+         rpi_camera.allocate -> rpi_bufferManager.bufferGetCallee
+         rpi_camera.deallocate -> rpi_bufferManager.bufferSendIn
+         rpi_camera.$save -> rpi_saveImageBufferLogger.bufferSendIn
+         rpi_saveImageBufferLogger.bufferSendOut -> rpi_bufferManager.bufferSendIn
+    }
+
     connections HubToDriver {
       # Hub -> Framer -> Uart Driver
       rpi_hub.dataOutAllocate -> rpi_bufferManager.bufferGetCallee
@@ -101,6 +110,8 @@ module RpiFSW {
       rpi_hub.portOut[0] -> rpi_cmdDisp.seqCmdBuff
       rpi_cmdDisp.seqCmdStatus -> rpi_hub.portIn[0]
 
+      rpi_fileDownlink.bufferSendOut -> rpi_hub.portIn[1]
+      rpi_hub.portOut[1] -> rpi_fileDownlink.bufferReturn
     }
 
   }

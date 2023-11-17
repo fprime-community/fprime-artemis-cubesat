@@ -43,6 +43,15 @@ rateGroup2Context[FppConstant_PassiveRateGroupOutputPorts::PassiveRateGroupOutpu
 NATIVE_INT_TYPE
 rateGroup3Context[FppConstant_PassiveRateGroupOutputPorts::PassiveRateGroupOutputPorts] = {};
 
+// A number of constants are needed for construction of the topology. These are specified here.
+enum TopologyConstants
+{
+    FILE_DOWNLINK_TIMEOUT = 30000,
+    FILE_DOWNLINK_COOLDOWN = 1000,
+    FILE_DOWNLINK_CYCLE_TIME = 1000,
+    FILE_DOWNLINK_FILE_QUEUE_DEPTH = 10,
+};
+
 /**
  * \brief configure/setup components in project-specific way
  *
@@ -60,6 +69,10 @@ void configureTopology() {
     rateGroup2.configure(rateGroup2Context, FW_NUM_ARRAY_ELEMENTS(rateGroup2Context));
     rateGroup3.configure(rateGroup3Context, FW_NUM_ARRAY_ELEMENTS(rateGroup3Context));
 
+    // File downlink requires some project-derived properties. a
+    fileDownlink.configure(FILE_DOWNLINK_TIMEOUT, FILE_DOWNLINK_COOLDOWN, FILE_DOWNLINK_CYCLE_TIME,
+                           FILE_DOWNLINK_FILE_QUEUE_DEPTH);
+
     // Set up ComQueue
     Svc::ComQueue::QueueConfigurationTable configurationTable;
     // Channels, deep queue, low priority
@@ -67,7 +80,7 @@ void configureTopology() {
     // Events , highest-priority
     configurationTable.entries[1] = {.depth = 100, .priority = 0};
     // ???
-    configurationTable.entries[2] = {.depth = 1, .priority = 2};
+    configurationTable.entries[2] = {.depth = 100, .priority = 2};
     // Allocation identifier is 0 as the MallocAllocator discards it
     commQueue.configure(configurationTable, 0, mallocator);
 

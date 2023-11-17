@@ -256,6 +256,22 @@ Note:
 
 # Programming and Running on Hardware
 
+## Running on the Teensy
+After running fprime-util build teensy41, the Teensyduino application should appear. Choose the hex file located in ./build-artifacts/teensy41/TeensyFSW/bin/ to load into Teensyduino. Manually press the reset button on the Teensy to upload the program.
+
+## Running on the Raspberry Pi
+
+TODO:
+
+* Setting up the RPi (using rpi imager, installing os)
+* ssh into RPi
+* sudo raspi-config settings
+* Transfer files to RPi from host machine
+* Running deployment
+* Auto run on reboot
+
+
+## Using GDS over serial
 ## Uploading .hex File for the Teensy
 After running building the Teensy deployment, open up the `Teensy Loader` application. 
 
@@ -293,5 +309,4 @@ Note:
   ```
 
 
-[comment]: <> (using the rpi deployment)
 
