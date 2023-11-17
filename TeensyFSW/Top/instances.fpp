@@ -48,114 +48,119 @@ module TeensyFSW {
 
   instance rateGroup1: Svc.PassiveRateGroup base id 0x1000
 
-  instance rateGroup2: Svc.PassiveRateGroup base id 0x1100
+  instance rateGroup2: Svc.PassiveRateGroup base id 0x1050
 
-  instance framer: Svc.Framer base id 0x4100
+  instance rateGroup3: Svc.PassiveRateGroup base id 0x1100
 
-  instance fatalAdapter: Svc.AssertFatalAdapter base id 0x4200
+  instance framer: Svc.Framer base id 0x1200
 
-  instance fatalHandler: Svc.FatalHandler base id 0x4300
+  instance fatalAdapter: Svc.AssertFatalAdapter base id 0x1300
 
-  instance timeHandler: Svc.Time base id 0x4400 \
+  instance fatalHandler: Svc.FatalHandler base id 0x1400
+
+  instance timeHandler: Svc.Time base id 0x1500 \
     type "Svc::ArduinoTimeImpl" \
     at "../../lib/arduino/fprime-arduino/Arduino/ArduinoTime/ArduinoTimeImpl.hpp"
 
-  instance rateGroupDriver: Svc.RateGroupDriver base id 0x4500
+  instance rateGroupDriver: Svc.RateGroupDriver base id 0x1600
 
-  instance staticMemory: Svc.StaticMemory base id 0x4600
+  instance staticMemory: Svc.StaticMemory base id 0x1700
 
-  instance textLogger: Svc.PassiveTextLogger base id 0x4700
+  instance textLogger: Svc.PassiveTextLogger base id 0x1800
 
-  instance deframer: Svc.Deframer base id 0x4800
+  instance deframer: Svc.Deframer base id 0x1900
 
-  instance systemResources: Svc.SystemResources base id 0x4900
+  instance systemResources: Svc.SystemResources base id 0x1A00
 
-  instance rateDriver: Arduino.HardwareRateDriver base id 0x4A00
+  instance rateDriver: Arduino.HardwareRateDriver base id 0x1B00
 
   # LedBlinker
 
-  instance blinker: Components.LedBlinker base id 0x10000
+  instance blinker: Components.LedBlinker base id 0x2000
 
-  instance gpioLed: Arduino.GpioDriver base id 0x10100
+  instance gpioLed: Arduino.GpioDriver base id 0x2100
 
   # Radios
 
-  instance rfm23: Radios.RFM23 base id 0x20000
+  instance rfm23: Radios.RFM23 base id 0x2200
 
-  instance gpioRxOn: Arduino.GpioDriver base id 0x20100
+  instance gpioRxOn: Arduino.GpioDriver base id 0x2300
 
-  instance gpioTxOn: Arduino.GpioDriver base id 0x20200
+  instance gpioTxOn: Arduino.GpioDriver base id 0x2400
 
   # Sensors
 
-  instance imu: Sensors.LSM6DS base id 0x30000
+  instance imu: Sensors.LSM6DS base id 0x3000
 
-  instance mag: Sensors.LIS3MDL base id 0x30100
+  instance mag: Sensors.LIS3MDL base id 0x3100
 
-  instance current_solar_panel_1: Sensors.INA219 base id 0x30200
+  instance current_solar_panel_1: Sensors.INA219 base id 0x3200
 
-  instance current_solar_panel_2: Sensors.INA219 base id 0x30300
+  instance current_solar_panel_2: Sensors.INA219 base id 0x3300
 
-  instance current_solar_panel_3: Sensors.INA219 base id 0x30400
+  instance current_solar_panel_3: Sensors.INA219 base id 0x3400
 
-  instance current_solar_panel_4: Sensors.INA219 base id 0x30500
+  instance current_solar_panel_4: Sensors.INA219 base id 0x3500
 
-  instance current_battery_board: Sensors.INA219 base id 0x30600
+  instance current_battery_board: Sensors.INA219 base id 0x3600
 
-  instance temperature_obc: Sensors.TMP36 base id 0x30700
+  instance temperature_obc: Sensors.TMP36 base id 0x3700
 
-  instance temperature_pdu: Sensors.TMP36 base id 0x30800
+  instance temperature_pdu: Sensors.TMP36 base id 0x3800
   
-  instance temperature_solar_panel_1: Sensors.TMP36 base id 0x30900
+  instance temperature_solar_panel_1: Sensors.TMP36 base id 0x3900
 
-  instance temperature_solar_panel_2: Sensors.TMP36 base id 0x31000
+  instance temperature_solar_panel_2: Sensors.TMP36 base id 0x3A00
 
-  instance temperature_solar_panel_3: Sensors.TMP36 base id 0x31100
+  instance temperature_solar_panel_3: Sensors.TMP36 base id 0x3B00
 
-  instance temperature_solar_panel_4: Sensors.TMP36 base id 0x31200
+  instance temperature_solar_panel_4: Sensors.TMP36 base id 0x3C00
 
-  instance temperature_battery_board: Sensors.TMP36 base id 0x31300
+  instance temperature_battery_board: Sensors.TMP36 base id 0x3D00
   
   # PDU
 
-  instance pdu: Components.PDU base id 0x40000
+  instance pdu: Components.PDU base id 0x4000
 
-  instance pduCommDriver: Arduino.StreamDriver base id 0x40100
+  instance pduCommDriver: Arduino.StreamDriver base id 0x4100
 
-  instance rpiGpioEnable: Arduino.GpioDriver base id 0x40200
+  instance rpiGpioEnable: Arduino.GpioDriver base id 0x4200
+
+  # Heater 
+
+  instance heater: Components.Heater base id 0x4300
 
   # Comm Driver
 
-  instance commDriver: Arduino.StreamDriver base id 0x50000
+  instance commDriver: Arduino.StreamDriver base id 0x4400
   
-  instance commStub: Svc.ComStub base id 0x50100
+  instance commStub: Svc.ComStub base id 0x4500
   
   # Hub
 
-  instance cmdSplitter: Svc.CmdSplitter base id 0x100000
+  instance cmdSplitter: Svc.CmdSplitter base id 0x4600
 
-  instance hub: Svc.GenericHub base id 0x100100
+  instance hub: Svc.GenericHub base id 0x4700
   
-  instance hubCommDriver: Arduino.StreamDriver base id 0x100200
+  instance hubCommDriver: Arduino.StreamDriver base id 0x4800
 
-  instance hubFramer: Svc.Framer base id 0x100300
+  instance hubFramer: Svc.Framer base id 0x4900
 
-  instance hubDeframer: Svc.Deframer base id 0x100400
+  instance hubDeframer: Svc.Deframer base id 0x4A00
 
   # Analog Pins
 
-  instance Analog0: Arduino.AnalogDriver base id 0x200000
+  instance Analog0: Arduino.AnalogDriver base id 0x5000
 
-  instance Analog1: Arduino.AnalogDriver base id 0x200100
+  instance Analog1: Arduino.AnalogDriver base id 0x5100
 
-  instance Analog6: Arduino.AnalogDriver base id 0x200200
+  instance Analog6: Arduino.AnalogDriver base id 0x5200
 
-  instance Analog7: Arduino.AnalogDriver base id 0x200300
+  instance Analog7: Arduino.AnalogDriver base id 0x5300
 
-  instance Analog8: Arduino.AnalogDriver base id 0x200400
+  instance Analog8: Arduino.AnalogDriver base id 0x5400
 
-  instance Analog9: Arduino.AnalogDriver base id 0x200500
+  instance Analog9: Arduino.AnalogDriver base id 0x5500
   
-  instance Analog17: Arduino.AnalogDriver base id 0x206000
-
+  instance Analog17: Arduino.AnalogDriver base id 0x5600
 }
