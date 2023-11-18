@@ -5,10 +5,10 @@ FROM ubuntu:latest
 ENV DEBIAN_FRONTEND=noninteractive
 
 # Update and upgrade the system to ensure it's up to date
-RUN apt-get update && apt-get upgrade -y
+RUN apt update && apt-get upgrade -y
 
 # Install required packages and tools
-RUN apt-get install -y \
+RUN apt install -y \
     git \
     cmake \
     clang \
@@ -16,7 +16,18 @@ RUN apt-get install -y \
     nano \
     default-jre \
     python3 \
-    python3-pip
+    python3-pip \
+    meson \
+    ninja-build \
+    pkg-config \
+    libyaml-dev \
+    python3-yaml \
+    python3-ply \
+    python3-jinja2 \
+    build-essential \
+    gdb \
+    python3-venv \
+    libssl-dev
 
 # Upgrade pip and install fprime-tools (a set of tools for embedded systems development)
 RUN pip3 install --upgrade pip && pip3 install -U fprime-tools
@@ -59,10 +70,22 @@ RUN curl -LJO https://sourceforge.net/projects/raspberry-pi-cross-compilers/file
 # Clone the fprime-artemis-cubesat repository and set it up
 RUN git clone https://github.com/fprime-community/fprime-artemis-cubesat.git && \
     cd fprime-artemis-cubesat && \
-    git checkout dev && \ 
+    git checkout dev && git pull && \ 
     git submodule update --init --recursive && \
     pip3 install -r fprime/requirements.txt && \
     arduino-cli lib install artemis-cubesat
+
+# Install libcamera dependencies and cross compile for ARM Linux
+RUN cd fprime-artemis-cubesat/lib/raspberrypi/ && \
+    git clone https://github.com/lukeclements/libcamera.git && \
+    export RPI_TOOLS=/opt/cross-pi-gcc-10.3.0-0/ && \
+    export PATH=$RPI_TOOLS:$PATH && \
+    cd libcamera && \
+    meson setup build -Dprefix=/fprime-artemis-cubesat/lib/raspberrypi/libcamera/build -Dpipelines=rpi/vc4 -Dipas=rpi/vc4 --cross-file ../libcamera-pi0-x86.txt && \
+    cd build && \
+    ninja && \
+    ninja install && \
+    export PKG_CONFIG_PATH=/fprime-artemis-cubesat/lib/raspberrypi/libcamera/build/lib/pkgconfig/
 
 # Set the working directory inside the container
 WORKDIR /fprime-artemis-cubesat
