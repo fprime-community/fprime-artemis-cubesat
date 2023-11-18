@@ -173,6 +173,8 @@ arduino-cli lib install artemis-cubesat
 
 ## Install libcamera Dependencies and Cross Compile for ARM Linux
 
+Debian/Ubuntu packages are essential for building libcamera. If you have installed all the packages mentioned in the "Starting Requirements," you should have all the necessary components. In case you haven't, please refer to the [libcamera repository](https://github.com/raspberrypi/libcamera) for the required dependencies.
+
 1. Change to the "lib/raspberrypi" directory
 ```shell
 cd lib/raspberrypi
