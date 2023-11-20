@@ -4,14 +4,15 @@ This repository contains the flight software for the Artemis CubeSat, a spacefli
 
 For more detailed information about the Artemis CubeSat, please visit our [website](https://sites.google.com/mahinaaerospace.com/home).
 
-This project presents two installation options: leveraging Docker or opting for a manual installation. We strongly advise utilizing the Docker environment, as it streamlines the process by encompassing all necessary dependencies and installations required for seamless project development. Nevertheless, if you lean towards a manual installation, comprehensive instructions for that alternative are available.
+This project presents two installation options: leveraging Docker or opting for a manual installation. We strongly advise utilizing the Docker environment, as it streamlines the process by encompassing all necessary dependencies and installations required for development. Nevertheless, if you lean towards a manual installation, comprehensive instructions for that alternative are available.
 
 # Prerequisistes: 
 
 Before proceeding with either installation method, ensure that you have completed all necessary steps required to work with the Teensy and Raspberry Pi:
 
-- A computer running Linux or WSL 1 on Windows
-  - *Note: If you have a windows machine you must use WSL1 and not WSL2*
+- Linux, macOS, or WSL1 on Windows
+  - *On Windows, WSL1 is a requirement; WSL2 is not compatible.*
+  - *On MacOS, manual installation prevents native RPiFSW compilation.*
 - [Visual Studio](https://code.visualstudio.com/Download), an integrated development environment (IDE). With the [FPP](https://marketplace.visualstudio.com/items?itemName=jet-propulsion-laboratory.fpp), [Dev Containers](vscode:extension/ms-vscode-remote.remote-containers) (if you are using Docker), and [WSL](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-wsl) (if you are using WSL) extensions.
 - [Arduino IDE and Teensyduino](https://www.pjrc.com/teensy/td_download.html)
 - [A Set Up Raspberry Pi Zero](/docs/scripts/UserGuides/SettingUpRPi.md)

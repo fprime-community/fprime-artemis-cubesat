@@ -10,19 +10,18 @@ Before attempting to install F', please ensure that you have the following prere
 4. CLang or GNU C and C++ compilers (e.g., gcc and g++)
 5. Python 3.8+ with PIP installed
 6. Curl
-7. Nano (or your choice of command-line text editor)
-8. Default JRE (Java Runtime Environment)
-9. Meson build system
-10. Ninja build system
-11. pkg-config
-12. libyaml-dev (YAML library development files)
-13. python3-yaml (Python bindings for YAML)
-14. python3-ply (Python Lex & Yacc parsing tools)
-15. python3-jinja2 (Python template engine)
-16. Build-essential (essential packages for building software)
-17. GDB (GNU Debugger)
-18. python3-venv (Python 3 virtual environment support)
-19. libssl-dev (SSL development libraries)
+7. Default JRE (Java Runtime Environment)
+8. Meson build system
+9. Ninja build system
+10. pkg-config
+11. libyaml-dev (YAML library development files)
+12. python3-yaml (Python bindings for YAML)
+13. python3-ply (Python Lex & Yacc parsing tools)
+14. python3-jinja2 (Python template engine)
+15. Build-essential (essential packages for building software)
+16. GDB (GNU Debugger)
+17. python3-venv (Python 3 virtual environment support)
+18. libssl-dev (SSL development libraries)
 
 ## Setting Up the Development Environment
 The ecosystem of tools supporting F´ is installed as python packages available via PIP. 
@@ -223,6 +222,12 @@ ninja install
 ``` shell
 export PKG_CONFIG_PATH=/root/fprime-artemis-cubesat/lib/raspberrypi/libcamera/build/lib/pkgconfig/
 ``` 
+
+## Open the Source Code
+
+TODO
+
 <br>
 
 <span style="font-size: 1.5em;">After completing the aforementioned instructions, you should have everything necessary to commence working with the F' - Artemis Cubesat project. You can now proceed to the supplied instructions for building and deploying the project.
+
