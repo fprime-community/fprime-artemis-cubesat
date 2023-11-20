@@ -35,7 +35,7 @@ RUN pip3 install --upgrade pip && pip3 install -U fprime-tools
 # Install Arduino CLI and configure it
 RUN mkdir -p /root/.local/bin && \
     curl -fsSL https://raw.githubusercontent.com/arduino/arduino-cli/master/install.sh | BINDIR=/root/.local/bin sh && \
-    export PATH=/root/.local/bin:$PATH
+    echo 'export PATH=/root/.local/bin:$PATH' >> ~/.bashrc
 
 # Update the environment with the new PATH variable
 ENV PATH=/root/.local/bin:$PATH
@@ -78,14 +78,14 @@ RUN git clone https://github.com/fprime-community/fprime-artemis-cubesat.git && 
 # Install libcamera dependencies and cross compile for ARM Linux
 RUN cd fprime-artemis-cubesat/lib/raspberrypi/ && \
     git clone https://github.com/lukeclements/libcamera.git && \
-    export RPI_TOOLS=/opt/cross-pi-gcc-10.3.0-0/ && \
-    export PATH=$RPI_TOOLS:$PATH && \
+    echo 'export RPI_TOOLS=/opt/cross-pi-gcc-10.3.0-0/' >> ~/.bashrc && \
+    echo 'export PATH=$RPI_TOOLS:$PATH' >> ~/.bashrc && \
     cd libcamera && \
     meson setup build -Dprefix=/fprime-artemis-cubesat/lib/raspberrypi/libcamera/build -Dpipelines=rpi/vc4 -Dipas=rpi/vc4 --cross-file ../libcamera-pi0-x86.txt && \
     cd build && \
     ninja && \
     ninja install && \
-    export PKG_CONFIG_PATH=/fprime-artemis-cubesat/lib/raspberrypi/libcamera/build/lib/pkgconfig/
+    echo 'export PKG_CONFIG_PATH=/fprime-artemis-cubesat/lib/raspberrypi/libcamera/build/lib/pkgconfig/' >> ~/.bashrc
 
 # Set the working directory inside the container
 WORKDIR /fprime-artemis-cubesat
