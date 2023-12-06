@@ -33,9 +33,9 @@ void Heater::run_handler(const NATIVE_INT_TYPE portNum, NATIVE_UINT_TYPE context
     }
 
     if (this->batteryTemp < this->thresholdTemperature) {
-        this->PDUSetSwitch_out(0, Components::PDU_SW::SW_5V_2, Fw::On::ON);
+        this->PDUSetSwitch_out(0, Components::PDU_SW::HEATER, Fw::On::ON);
     } else {
-        this->PDUSetSwitch_out(0, Components::PDU_SW::SW_5V_2, Fw::On::OFF);
+        this->PDUSetSwitch_out(0, Components::PDU_SW::HEATER, Fw::On::OFF);
     }
 }
 // ----------------------------------------------------------------------
@@ -43,7 +43,7 @@ void Heater::run_handler(const NATIVE_INT_TYPE portNum, NATIVE_UINT_TYPE context
 // ----------------------------------------------------------------------
 
 void Heater ::SetHeater_cmdHandler(const FwOpcodeType opCode, const U32 cmdSeq, Fw::On state) {
-    this->PDUSetSwitch_out(0, Components::PDU_SW::SW_5V_2, state);
+    this->PDUSetSwitch_out(0, Components::PDU_SW::HEATER, state);
     this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
 }
 

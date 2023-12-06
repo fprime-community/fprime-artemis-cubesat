@@ -108,15 +108,12 @@ fprime-util build
 
 ### Combine RPi and Teensy Dictionaries
 
-Run this script to combine RPi and Teensy dictionaries:
+To use the Ground Data System (GDS) with the Artemis CubeSat, it is essential to merge the dictionaries from each of the two On-Board Computers (OBCs), each associated with different deployments, into a single comprehensive dictionary.
+
+Run this script to combine the RPi and Teensy dictionaries:
 
 ```shell
-cp docs/scripts/combine_dictionaries ~/.local/bin
-chmod +x ~/.local/bin/combine_dictionaries
-```
-
-```shell
-combine_dictionaries build-artifacts/teensy41/TeensyFSW/dict/TeensyFSWTopologyAppDictionary.xml build-artifacts/raspberrypi/RpiFSW/dict/RpiFSWTopologyAppDictionary.xml dictionary.xml
+python3 docs/scripts/combine_dictionaries build-artifacts/teensy41/TeensyFSW/dict/TeensyFSWTopologyAppDictionary.xml build-artifacts/raspberrypi/RpiFSW/dict/RpiFSWTopologyAppDictionary.xml dictionary.xml
 ```
 
 Note:

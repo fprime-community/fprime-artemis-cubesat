@@ -1,6 +1,6 @@
 # Manual Installation
 
-# Starting Requirements
+## Starting Requirements
 
 Before attempting to install F', please ensure that you have the following prerequisites:
 
