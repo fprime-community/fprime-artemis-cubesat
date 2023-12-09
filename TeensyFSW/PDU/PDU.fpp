@@ -15,12 +15,35 @@ module Components {
         RPI
     }
 
+    enum TRQ_SELECT {
+        TRQ1,
+        TRQ2,
+        TRQ1A,
+        TRQ1B,
+        TRQ2A,
+        TRQ2B,
+    }
+
+    enum TRQ_CONFIG {
+        SLEEP,
+        MOTOR_COAST_FAST_DECAY,
+        DIR_REVERSE,
+        DIR_FORWARD,
+        MOTOR_BREAK_SLOW_DECAY,
+    }
+
     struct pduTlmStruct {
         sw: string
         state: U8
     }
 
+    struct trqTlmStruct {
+        trq: string
+        mode: string
+    }
     array PDUTlm = [11] pduTlmStruct
+
+    array trqTlm = [4] trqTlmStruct
     
     port PDU_SW_CMD (
         sw: PDU_SW
@@ -65,6 +88,9 @@ port PDU_GET_SW_CMD (
         @ PDU Switch Statuses 0 = OFF 1 = ON
         telemetry SwitchStatus:  PDUTlm update always
 
+        @ Torque Coil Satus
+        telemetry TRQStatus: trqTlm update always
+
         # ----------------------------------------------------------------------
         # Events
         # ----------------------------------------------------------------------
@@ -89,6 +115,12 @@ port PDU_GET_SW_CMD (
 
         @ Command to Ping PDU
         sync command Ping()
+
+        @ Command to set TRQ mode
+        sync command SetTRQ(trq: Components.TRQ_SELECT, mode: Components.TRQ_CONFIG)
+
+        @ Command to get statuses of torque coils
+        sync command GetTRQ()
 
         # ----------------------------------------------------------------------
         # Implementation ports

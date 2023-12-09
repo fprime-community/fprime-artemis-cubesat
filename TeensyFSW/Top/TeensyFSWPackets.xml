@@ -106,5 +106,6 @@
         <channel name="fileDownlink.PacketsSent"/>
         <channel name="fileDownlink.Warnings"/>
         <channel name="pdu.SwitchStatus"/>
+        <channel name="pdu.TRQStatus"/>
     </ignore>
 </packets>

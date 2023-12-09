@@ -154,11 +154,27 @@ class PDU : public PDUComponentBase {
                          const U32 cmdSeq           /*!< The command sequence number*/
     );
 
-    U8 pdu_packet_cmd[4];
-    Components::PDUTlm telem;
+    //! Implementation for SetTRQ command handler
+    //! Command to set TRQ mode
+    void SetTRQ_cmdHandler(const FwOpcodeType opCode, /*!< The opcode*/
+                           const U32 cmdSeq,          /*!< The command sequence number*/
+                           Components::TRQ_SELECT trq,
+                           Components::TRQ_CONFIG mode);
 
-    Fw::String lookup[11] = {"3V_1", "RFM23", "5V_1",  "HEATER", "5V_3", "12V_REG",
-                             "12V",  "VBATT", "BURN1", "BURN2",  "RPI"};
+    //! Implementation for GetTRQ command handler
+    //! Command to get statuses of torque coils
+    void GetTRQ_cmdHandler(const FwOpcodeType opCode, /*!< The opcode*/
+                           const U32 cmdSeq           /*!< The command sequence number*/
+    );
+
+    U8 pdu_packet_cmd[4];
+    Components::PDUTlm sw_telem;
+    Components::trqTlm trq_telem;
+
+    Fw::String sw_lookup[11]     = {"3V_1", "RFM23", "5V_1",  "HEATER", "5V_3", "12V_REG",
+                                    "12V",  "VBATT", "BURN1", "BURN2",  "RPI"};
+    Fw::String trqName_lookup[4] = {"1A", "1B", "2A", "2B"};
+    Fw::String trqMode_lookup[5] = {"SLEEP", "COAST", "REVERSE", "FORWARD", "BRAKE"};
 };
 }  // end namespace Components
 
