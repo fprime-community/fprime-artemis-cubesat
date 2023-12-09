@@ -8,6 +8,7 @@ module TeensyFSW {
       rateGroup1
       rateGroup2
       rateGroup3
+      rateGroup4
     }
 
     enum Ports_StaticMemory {
@@ -40,6 +41,7 @@ module TeensyFSW {
     instance rateGroup1
     instance rateGroup2
     instance rateGroup3
+    instance rateGroup4
     instance rateGroupDriver
     instance staticMemory
     instance systemResources
@@ -146,7 +148,7 @@ module TeensyFSW {
 
       # Rate Group 3
       rateGroupDriver.CycleOut[Ports_RateGroups.rateGroup3] -> rateGroup3.CycleIn
-       rateGroup3.RateGroupMemberOut[0] -> temperature_obc.run
+      rateGroup3.RateGroupMemberOut[0] -> temperature_obc.run
       rateGroup3.RateGroupMemberOut[1] -> temperature_pdu.run
       rateGroup3.RateGroupMemberOut[2] -> temperature_solar_panel_1.run
       rateGroup3.RateGroupMemberOut[3] -> temperature_solar_panel_2.run
@@ -154,7 +156,15 @@ module TeensyFSW {
       rateGroup3.RateGroupMemberOut[5] -> temperature_solar_panel_4.run
       rateGroup3.RateGroupMemberOut[6] -> temperature_battery_board.run
       rateGroup3.RateGroupMemberOut[7] -> heater.run
+
+      # Rate Group 4
+      rateGroupDriver.CycleOut[Ports_RateGroups.rateGroup4] -> rateGroup4.CycleIn
+      rateGroup4.RateGroupMemberOut[0] -> pdu.wdt
+
+
     }
+
+    
 
     connections FaultProtection {
       eventLogger.FatalAnnounce -> fatalHandler.FatalReceive

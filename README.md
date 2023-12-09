@@ -1,6 +1,6 @@
 # F' Deployment for the Artemis Cubesat Kit
 
-This repository contains the flight software for the Artemis CubeSat, a spaceflight-ready 1U CubeSat designed to expand accessibility to space and aerospace engineering education.
+This repository houses the flight software developed for the Artemis CubeSat—a spaceflight-ready 1U CubeSat designed to increase space accessibility. Our mission is to reduce barriers to entry by not only lowering costs but also streamlining timelines and mitigating integration challenges.
 
 For more detailed information about the Artemis CubeSat, please visit our [website](https://sites.google.com/mahinaaerospace.com/home).
 
@@ -65,20 +65,6 @@ docker build -t fprime-artemiscubesat-image .
 ```shell
 docker run -it --name fprime-artemiscubesat fprime-artemiscubesat-image /bin/bash
 ```
-* `docker run`, This is the Docker command used to create and start a new container based on a specified image.
-* `-it`, Run the container in interactive mode
-* `--name fprime-artemiscubesat`, This option specifies a name for the container, in this case `fprime-artemiscubesat`
-* `fprime-artemiscubesat-image`, This is the name of the Docker image that the container is based on. 
-* `/bin/bash`, This is the command that is executed inside the container when it starts. In this case, it's running the Bash shell (/bin/bash) in an interactive mode, which allows you to enter commands and interact with the container.
-
-## Exiting the Docker Container
-When you're finished working inside the Docker container, you can exit the container's interactive shell. To do this, simply type:
-```shell
-exit
-```
-This will return you to your host machine's terminal.
-
-You can also use the docker desktop application to stop/start the container. 
 
 ## Open the Source Code
 - Open [Visual Studio Code](https://code.visualstudio.com/)
@@ -110,18 +96,16 @@ fprime-util build
 
 To use the Ground Data System (GDS) with the Artemis CubeSat, it is essential to merge the dictionaries from each of the two On-Board Computers (OBCs), each associated with different deployments, into a single comprehensive dictionary.
 
-Run this script to combine the RPi and Teensy dictionaries:
+To merge the RPi and Teensy dictionaries in your project, navigate to the root directory and run the following command to combine them. Ensure that you have previously built and generated deployments for both RPi and Teensy before running the script:
 
 ```shell
 python3 docs/scripts/combine_dictionaries build-artifacts/teensy41/TeensyFSW/dict/TeensyFSWTopologyAppDictionary.xml build-artifacts/raspberrypi/RpiFSW/dict/RpiFSWTopologyAppDictionary.xml dictionary.xml
 ```
 
 Note:
-  - You only need to run this script once.
+  - You'll just have to execute this script once, unless you make changes to the topology. In that case, you'll need to run it again.
 
-If you are using the Docker method, you'll need to transfer the `dictionary.xml` file to your host machine. To achieve this, simply run the following command. Make sure to replace `DOCKER_ID` with your container's ID and `/path/to/directory/` with the destination folder where you intend to store the file. 
-
-You can do this by using the following command, make sure to 
+If you are using the Docker method, you'll need to transfer the `dictionary.xml` file to your host machine. To achieve this, simply run the following command. Make sure to replace `DOCKER_ID` with your container's ID and `/path/to/directory/` with the destination folder where you intend to store the file:
 
 ```bash
 docker cp DOCKER_ID:/root/fprime-artemis-cubesat/dictionary.xml /path/to/directory/

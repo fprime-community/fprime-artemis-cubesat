@@ -4,17 +4,12 @@ module Components {
         None,
         All,
         SW_3V3_1,
-        RADIO_RFM23,
+        RFM23_RADIO,
         SW_5V_1,
         HEATER,
         SW_5V_3,
-        REGULATOR_12V,
         SW_12V,
         VBATT,
-        PDU_WDT,
-        HBRIDGE1,
-        HBRIDGE2,
-        BURN,
         BURN1,
         BURN2,
         RPI
@@ -25,7 +20,7 @@ module Components {
         state: U8
     }
 
-    array PDUTlm = [13] pduTlmStruct
+    array PDUTlm = [11] pduTlmStruct
     
     port PDU_SW_CMD (
         sw: PDU_SW
@@ -59,6 +54,9 @@ port PDU_GET_SW_CMD (
 
         @ Port to allow other components to get PDU switch status
         sync input port GetSwitchInternal: Components.PDU_GET_SW_CMD
+
+        @ Port: receiving calls from the rate group
+        sync input port wdt: Svc.Sched
 
         # ----------------------------------------------------------------------
         # Telemetry

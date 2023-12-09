@@ -52,6 +52,8 @@ module TeensyFSW {
 
   instance rateGroup3: Svc.PassiveRateGroup base id 0x1100
 
+  instance rateGroup4: Svc.PassiveRateGroup base id 0x1150
+
   instance framer: Svc.Framer base id 0x1200
 
   instance fatalAdapter: Svc.AssertFatalAdapter base id 0x1300

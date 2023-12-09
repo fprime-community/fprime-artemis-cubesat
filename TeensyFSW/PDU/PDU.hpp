@@ -19,40 +19,70 @@ class PDU : public PDUComponentBase {
         CommandPing,
         CommandSetSwitch,
         CommandGetSwitchStatus,
+        CommandSetTRQ,
+        CommandGetTRQTelem,
         DataPong,
         DataSwitchStatus,
         DataSwitchTelem,
+        DataTRQTelem,
     };
 
     enum class PDU_SW : U8 {
         None,
         All,
         SW_3V3_1,
-        RADIO_RFM23,
+        RFM23_RADIO,
         SW_5V_1,
         HEATER,
         SW_5V_3,
-        REGULATOR_12V,
         SW_12V,
         VBATT,
-        PDU_WDT,
-        HBRIDGE1,
-        HBRIDGE2,
-        BURN,
         BURN1,
         BURN2,
         RPI
     };
 
-    struct __attribute__((packed)) pdu_packet {
-        PDU_Type type = PDU_Type::NOP;
-        PDU_SW sw     = PDU_SW::None;
-        U8 sw_state   = 0;
+    enum class TRQ_SELECT : U8 {
+        TRQ1,
+        TRQ2,
+        TRQ1A,
+        TRQ1B,
+        TRQ2A,
+        TRQ2B,
     };
 
-    struct __attribute__((packed)) pdu_telem {
-        PDU_Type type = PDU_Type::DataSwitchTelem;
-        U8 sw_state[12];
+    enum class TRQ_CONFIG : U8 {
+        SLEEP,
+        MOTOR_COAST_FAST_DECAY,
+        DIR_REVERSE,
+        DIR_FORWARD,
+        MOTOR_BREAK_SLOW_DECAY,
+    };
+
+    struct __attribute__((packed)) pdu_nop_packet {
+        PDU_Type type;
+    };
+
+    struct __attribute__((packed)) pdu_sw_packet {
+        PDU_Type type;
+        PDU_SW sw;
+        U8 sw_state;
+    };
+
+    struct __attribute__((packed)) pdu_sw_telem {
+        PDU_Type type;
+        U8 sw_state[10];
+    };
+
+    struct __attribute__((packed)) pdu_hbridge_packet {
+        PDU_Type type;
+        TRQ_SELECT select;
+        TRQ_CONFIG config;
+    };
+
+    struct __attribute__((packed)) pdu_hbridge_telem {
+        PDU_Type type;
+        TRQ_CONFIG trq_state[4];
     };
 
   public:
@@ -70,7 +100,7 @@ class PDU : public PDUComponentBase {
     ~PDU();
 
   private:
-    void send(pdu_packet packet);
+    void send(U8* buf, NATIVE_INT_TYPE len);
 
     // ----------------------------------------------------------------------
     // Handler implementations for user-defined typed input ports
@@ -81,6 +111,14 @@ class PDU : public PDUComponentBase {
     void comDataIn_handler(const NATIVE_INT_TYPE portNum, /*!< The port number*/
                            Fw::Buffer& recvBuffer,
                            const Drv::RecvStatus& recvStatus);
+
+    //! Handler implementation for wdt
+    //!
+    void wdt_handler(const NATIVE_INT_TYPE portNum, /*!< The port number*/
+                     NATIVE_UINT_TYPE context       /*!<
+                       The call order
+                       */
+    );
 
     //! Handler implementation for SetSwitchInternal
     //!
@@ -119,8 +157,8 @@ class PDU : public PDUComponentBase {
     U8 pdu_packet_cmd[4];
     Components::PDUTlm telem;
 
-    Fw::String lookup[13] = {"3V_1",  "3V_2",  "5V_1",  "5V_2",     "5V_3",     "5V_4", "12V",
-                             "VBATT", "BURN1", "BURN2", "HBRIDGE1", "HBRIDGE2", "RPI"};
+    Fw::String lookup[11] = {"3V_1", "RFM23", "5V_1",  "HEATER", "5V_3", "12V_REG",
+                             "12V",  "VBATT", "BURN1", "BURN2",  "RPI"};
 };
 }  // end namespace Components
 

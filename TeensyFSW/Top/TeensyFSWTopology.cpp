@@ -31,7 +31,12 @@ Svc::FprimeDeframing hubdeframing;
 
 // The reference topology divides the incoming clock signal (1Hz) into
 // sub-signals: 1/100Hz, 1/200Hz, and 1/1000Hz
-NATIVE_INT_TYPE rateGroupDivisors[Svc::RateGroupDriver::DIVIDER_SIZE] = {100, 1000, 1500};
+NATIVE_INT_TYPE rateGroupDivisors[Svc::RateGroupDriver::DIVIDER_SIZE] = {
+    100,
+    1000,
+    1500,
+    10000,
+};
 
 // Rate groups may supply a context token to each of the attached children whose
 // purpose is set by the project. The reference topology sets each token to zero
@@ -42,13 +47,14 @@ NATIVE_INT_TYPE
 rateGroup2Context[FppConstant_PassiveRateGroupOutputPorts::PassiveRateGroupOutputPorts] = {};
 NATIVE_INT_TYPE
 rateGroup3Context[FppConstant_PassiveRateGroupOutputPorts::PassiveRateGroupOutputPorts] = {};
+NATIVE_INT_TYPE
+rateGroup4Context[FppConstant_PassiveRateGroupOutputPorts::PassiveRateGroupOutputPorts] = {};
 
 // A number of constants are needed for construction of the topology. These are specified here.
-enum TopologyConstants
-{
-    FILE_DOWNLINK_TIMEOUT = 30000,
-    FILE_DOWNLINK_COOLDOWN = 1000,
-    FILE_DOWNLINK_CYCLE_TIME = 1000,
+enum TopologyConstants {
+    FILE_DOWNLINK_TIMEOUT          = 30000,
+    FILE_DOWNLINK_COOLDOWN         = 1000,
+    FILE_DOWNLINK_CYCLE_TIME       = 1000,
     FILE_DOWNLINK_FILE_QUEUE_DEPTH = 10,
 };
 
@@ -68,6 +74,7 @@ void configureTopology() {
     rateGroup1.configure(rateGroup1Context, FW_NUM_ARRAY_ELEMENTS(rateGroup1Context));
     rateGroup2.configure(rateGroup2Context, FW_NUM_ARRAY_ELEMENTS(rateGroup2Context));
     rateGroup3.configure(rateGroup3Context, FW_NUM_ARRAY_ELEMENTS(rateGroup3Context));
+    rateGroup4.configure(rateGroup4Context, FW_NUM_ARRAY_ELEMENTS(rateGroup4Context));
 
     // File downlink requires some project-derived properties. a
     fileDownlink.configure(FILE_DOWNLINK_TIMEOUT, FILE_DOWNLINK_COOLDOWN, FILE_DOWNLINK_CYCLE_TIME,
