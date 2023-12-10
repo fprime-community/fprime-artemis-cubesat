@@ -43,7 +43,7 @@ module Components {
     }
     array PDUTlm = [11] pduTlmStruct
 
-    array trqTlm = [4] trqTlmStruct
+    array trqTlm = [6] trqTlmStruct
     
     port PDU_SW_CMD (
         sw: PDU_SW

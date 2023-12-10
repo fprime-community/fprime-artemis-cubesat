@@ -173,7 +173,7 @@ class PDU : public PDUComponentBase {
 
     Fw::String sw_lookup[11]     = {"3V_1", "RFM23", "5V_1",  "HEATER", "5V_3", "12V_REG",
                                     "12V",  "VBATT", "BURN1", "BURN2",  "RPI"};
-    Fw::String trqName_lookup[4] = {"1A", "1B", "2A", "2B"};
+    Fw::String trqName_lookup[6] = {"HBRIDGE1", "HBRIDGE2", "1A", "1B", "2A", "2B"};
     Fw::String trqMode_lookup[5] = {"SLEEP", "COAST", "REVERSE", "FORWARD", "BRAKE"};
 };
 }  // end namespace Components

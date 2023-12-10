@@ -54,20 +54,12 @@ void PDU::comDataIn_handler(const NATIVE_INT_TYPE portNum,
     PDU_Type type =
         static_cast<PDU_Type>(static_cast<U8>(recvBuffer.getData()[1]) - PDU_CMD_OFFSET);
 
-    if (type == PDU_Type::DataSwitchTelem) {
-        for (NATIVE_INT_TYPE i = 0; i < sw_telem.SIZE - 1; i++) {
-            sw_telem[i].setstate(recvBuffer.getData()[i + 2] - PDU_CMD_OFFSET);
-        }
-        this->tlmWrite_SwitchStatus(sw_telem);
-    } else if (type == PDU_Type::DataTRQTelem) {
-        for (NATIVE_INT_TYPE i = 0; i < trq_telem.SIZE; i++) {
-            trq_telem[i].setmode(trqMode_lookup[recvBuffer.getData()[i + 2] - PDU_CMD_OFFSET]);
-        }
-        this->tlmWrite_TRQStatus(trq_telem);
-    } else {
-        if (type == PDU_Type::DataPong) {
+    switch (type) {
+        case PDU_Type::DataPong: {
             this->log_ACTIVITY_HI_PduPong();
-        } else if (type == PDU_Type::DataSwitchStatus) {
+            break;
+        }
+        case PDU_Type::DataSwitchStatus: {
             PDU_SW sw = static_cast<PDU_SW>(recvBuffer.getData()[2] - PDU_CMD_OFFSET);
             U8 state  = recvBuffer.getData()[3] - PDU_CMD_OFFSET;
 
@@ -76,7 +68,28 @@ void PDU::comDataIn_handler(const NATIVE_INT_TYPE portNum,
             }
 
             this->tlmWrite_SwitchStatus(sw_telem);
+            break;
         }
+        case PDU_Type::DataSwitchTelem: {
+            for (NATIVE_INT_TYPE i = 0; i < sw_telem.SIZE - 1; i++) {
+                sw_telem[i].setstate(recvBuffer.getData()[i + 2] - PDU_CMD_OFFSET);
+            }
+            this->tlmWrite_SwitchStatus(sw_telem);
+            break;
+        }
+        case PDU_Type::DataTRQTelem: {
+            trq_telem[0].setmode((recvBuffer.getData()[2] - PDU_CMD_OFFSET) == 1 ? "OPERATIONAL"
+                                                                                 : "FAULT");
+            trq_telem[1].setmode((recvBuffer.getData()[3] - PDU_CMD_OFFSET) == 1 ? "OPERATIONAL"
+                                                                                 : "FAULT");
+            for (NATIVE_INT_TYPE i = 2; i < trq_telem.SIZE; i++) {
+                trq_telem[i].setmode(trqMode_lookup[recvBuffer.getData()[i + 2] - PDU_CMD_OFFSET]);
+            }
+            this->tlmWrite_TRQStatus(trq_telem);
+            break;
+        }
+        default:
+            break;
     }
 
     this->deallocate_out(0, recvBuffer);
@@ -175,7 +188,7 @@ void PDU ::SetSwitchInternal_handler(const NATIVE_INT_TYPE portNum,
         this->rpiGpioSet_out(0, (packet.sw_state == 1) ? Fw::Logic::HIGH : Fw::Logic::LOW);
         Fw::Logic state;
         this->rpiGpioRead_out(0, state);
-        sw_telem[12].setstate((state == Fw::Logic::HIGH) ? 1 : 0);
+        sw_telem[10].setstate((state == Fw::Logic::HIGH) ? 1 : 0);
         this->tlmWrite_SwitchStatus(sw_telem);
     } else {
         memcpy(pdu_packet_cmd, &packet, sizeof(packet));
@@ -192,7 +205,7 @@ void PDU ::GetSwitchInternal_handler(const NATIVE_INT_TYPE portNum, Components::
     send(pdu_packet_cmd, sizeof(packet));
     Fw::Logic state;
     this->rpiGpioRead_out(0, state);
-    sw_telem[12].setstate(state);
+    sw_telem[10].setstate(state);
     states = sw_telem;
 }
 }  // end namespace Components
