@@ -82,6 +82,7 @@ class PDU : public PDUComponentBase {
 
     struct __attribute__((packed)) pdu_hbridge_telem {
         PDU_Type type;
+        U8 hbridge_state[2];
         TRQ_CONFIG trq_state[4];
     };
 
