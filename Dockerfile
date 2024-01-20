@@ -77,7 +77,6 @@ RUN git clone https://github.com/fprime-community/fprime-artemis-cubesat.git && 
 
 # Install libcamera dependencies and cross compile for ARM Linux
 RUN cd fprime-artemis-cubesat/lib/raspberrypi/ && \
-    git clone https://github.com/lukeclements/libcamera.git && \
     echo 'export RPI_TOOLS=/opt/cross-pi-gcc-10.3.0-0/' >> ~/.bashrc && \
     echo 'export PATH=$RPI_TOOLS:$PATH' >> ~/.bashrc && \
     cd libcamera && \
