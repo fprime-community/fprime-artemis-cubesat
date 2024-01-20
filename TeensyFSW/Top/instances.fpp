@@ -60,9 +60,7 @@ module TeensyFSW {
 
   instance fatalHandler: Svc.FatalHandler base id 0x1400
 
-  instance timeHandler: Svc.Time base id 0x1500 \
-    type "Svc::ArduinoTimeImpl" \
-    at "../../lib/arduino/fprime-arduino/Arduino/ArduinoTime/ArduinoTimeImpl.hpp"
+  instance timeHandler: Arduino.ArduinoTime base id 0x1500
 
   instance rateGroupDriver: Svc.RateGroupDriver base id 0x1600
 

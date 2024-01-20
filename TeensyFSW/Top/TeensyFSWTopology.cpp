@@ -31,12 +31,7 @@ Svc::FprimeDeframing hubdeframing;
 
 // The reference topology divides the incoming clock signal (1Hz) into
 // sub-signals: 1/100Hz, 1/200Hz, and 1/1000Hz
-NATIVE_INT_TYPE rateGroupDivisors[Svc::RateGroupDriver::DIVIDER_SIZE] = {
-    100,
-    1000,
-    1500,
-    10000,
-};
+Svc::RateGroupDriver::DividerSet rateGroupDivisors = {{ {100, 0}, {1000, 0}, {1500, 0}, {10000, 0} }};
 
 // Rate groups may supply a context token to each of the attached children whose
 // purpose is set by the project. The reference topology sets each token to zero
@@ -68,7 +63,7 @@ enum TopologyConstants {
  */
 void configureTopology() {
     // Rate group driver needs a divisor list
-    rateGroupDriver.configure(rateGroupDivisors, FW_NUM_ARRAY_ELEMENTS(rateGroupDivisors));
+    rateGroupDriver.configure(rateGroupDivisors);
 
     // Rate groups require context arrays.
     rateGroup1.configure(rateGroup1Context, FW_NUM_ARRAY_ELEMENTS(rateGroup1Context));

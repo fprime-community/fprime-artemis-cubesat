@@ -80,9 +80,7 @@ module RpiFSW {
 
   instance rpi_bufferManager: Svc.BufferManager base id RPI_TOPOLOGY_BASE + 0x4400
 
-  instance rpi_linuxTime: Svc.Time base id RPI_TOPOLOGY_BASE + 0x4500 \
-    type "Svc::LinuxTime" \
-    at "../../Svc/LinuxTime/LinuxTime.hpp"
+  instance rpi_linuxTime: Svc.PosixTime base id RPI_TOPOLOGY_BASE + 0x4500
 
   instance rpi_rateGroupDriver: Svc.RateGroupDriver base id RPI_TOPOLOGY_BASE + 0x4600
 

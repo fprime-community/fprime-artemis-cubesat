@@ -48,9 +48,7 @@ module TeensyGDS {
 
   instance fatalHandler: Svc.FatalHandler base id 0x4300
 
-  instance timeHandler: Svc.Time base id 0x4400 \
-    type "Svc::ArduinoTimeImpl" \
-    at "../../lib/arduino/fprime-arduino/Arduino/ArduinoTime/ArduinoTimeImpl.hpp"
+  instance timeHandler: Arduino.ArduinoTime base id 0x4400
 
   instance rateGroupDriver: Svc.RateGroupDriver base id 0x4500
 
