@@ -17,6 +17,7 @@ set(MOD_DEPS
   # Communication Implementations
   Drv/Udp
   Drv/TcpClient
+  -latomic
 )
 
 register_fprime_module()
