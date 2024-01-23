@@ -161,7 +161,7 @@ module TeensyFSW {
       # Rate Group 4
       rateGroupDriver.CycleOut[Ports_RateGroups.rateGroup4] -> rateGroup4.CycleIn
       rateGroup4.RateGroupMemberOut[0] -> pdu.wdt
-      rateGroup4.RateGroupMemberOut[4] -> gps.run
+      rateGroup4.RateGroupMemberOut[1] -> gps.run
     }
 
     

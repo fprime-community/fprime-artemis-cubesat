@@ -35,7 +35,7 @@ class PA1010D : public PA1010DComponentBase {
     bool init_gps(void);
 
   private:
-    Adafruit_GPS gps;  // Remove the initializer here
+    Adafruit_GPS gps;
 
     PRIVATE :
 
