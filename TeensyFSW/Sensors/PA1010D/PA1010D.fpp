@@ -1,6 +1,11 @@
 module Sensors {
 
-    array GPSTlm = [7] F32
+    array GPSTlmData = [7] GPSTlmStruct
+
+    struct GPSTlmStruct {
+        data: string
+        val: F32
+    }
 
     @ Component for the Adafruit Mini GPS PA1010D Module
     passive component PA1010D {
@@ -17,13 +22,7 @@ module Sensors {
         # ----------------------------------------------------------------------
 
         @ GPS Data
-        telemetry Time: GPSTlm
-        telemetry Date: GPSTlm
-        telemetry FixQuality: GPSTlm
-        telemetry Satellites: GPSTlm
-        telemetry Speed: GPSTlm
-        telemetry Angle: GPSTlm
-        telemetry Altitude: GPSTlm
+       telemetry GPSTlm: GPSTlmData
 
         # ----------------------------------------------------------------------
         # Commands  

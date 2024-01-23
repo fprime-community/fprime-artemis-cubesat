@@ -41,17 +41,14 @@ void PA1010D::run_handler(NATIVE_INT_TYPE portNum, NATIVE_UINT_TYPE context) {
     if (gps.newNMEAreceived()) {
         if (gps.parse(gps.lastNMEA())) {
             if (gps.fix) {
-                // Store gps data in an array
-                Sensors::GPSTlm data;
-                data[0] = gps.hour * 3600 + gps.minute * 60 + gps.seconds;
-                data[1] = (gps.year % 100) * 10000 + gps.month * 100 + gps.day;
-                data[2] = gps.fixquality;
-                data[3] = gps.satellites;
-                data[4] = gps.speed;
-                data[5] = gps.angle;
-                data[6] = gps.altitude;
-
-                // Write telemetry data
+                Sensors::GPSTlmData data;
+                data[0] = {"Time", gps.hour * 3600 + gps.minute * 60 + gps.seconds};
+                data[1] = {"Date", (gps.year % 100) * 10000 + gps.month * 100 + gps.day};
+                data[2] = {"Fix Quality", gps.fixquality};
+                data[3] = {"Satellites", gps.satellites};
+                data[4] = {"Speed", gps.speed};
+                data[5] = {"Angle", gps.angle};
+                data[6] = {"Altitude", gps.altitude};
                 this->tlmWrite_GPSTlm(data);
             }
         }

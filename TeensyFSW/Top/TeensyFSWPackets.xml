@@ -88,15 +88,9 @@
         <channel name="temperature_battery_board.TemperatureSensorData"/>
     </packet>
 
-    <packet name="GPSChannels" id="10" level="1">
-        <channel name="gps.Time"/>
-        <channel name="gps.Date"/>
-        <channel name="gps.FixQuality"/>
-        <channel name="gps.Satellites"/>
-        <channel name="gps.Speed"/>
-        <channel name="gps.Angle"/>
-        <channel name="gps.Altitude"/>
-    </packet>
+    <!-- <packet name="GPSChannels" id="10" level="1">
+        <channel name="gps.GPSTlm"/>
+    </packet> -->
 
     <!-- <packet name="PDUChannels" id="11" level="1">
         <channel name="pdu.SwitchStatus"/>
@@ -117,5 +111,7 @@
         <channel name="fileDownlink.Warnings"/>
         <channel name="pdu.SwitchStatus"/>
         <channel name="pdu.TRQStatus"/>
+        <channel name="pdu.TRQStatus"/>
+        <channel name="gps.GPSTlm"/>
     </ignore>
 </packets>
