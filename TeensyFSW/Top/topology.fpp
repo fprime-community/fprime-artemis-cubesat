@@ -73,6 +73,7 @@ module TeensyFSW {
     instance temperature_solar_panel_3
     instance temperature_solar_panel_4
     instance temperature_battery_board
+    instance gps
 
     # PDU
     instance pdu
@@ -160,8 +161,7 @@ module TeensyFSW {
       # Rate Group 4
       rateGroupDriver.CycleOut[Ports_RateGroups.rateGroup4] -> rateGroup4.CycleIn
       rateGroup4.RateGroupMemberOut[0] -> pdu.wdt
-
-
+      rateGroup4.RateGroupMemberOut[4] -> gps.run
     }
 
     

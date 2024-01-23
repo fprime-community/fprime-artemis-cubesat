@@ -31,7 +31,7 @@ Svc::FprimeDeframing hubdeframing;
 
 // The reference topology divides the incoming clock signal (1Hz) into
 // sub-signals: 1/100Hz, 1/200Hz, and 1/1000Hz
-Svc::RateGroupDriver::DividerSet rateGroupDivisors = {{ {100, 0}, {1000, 0}, {1500, 0}, {10000, 0} }};
+Svc::RateGroupDriver::DividerSet rateGroupDivisors = {{{100, 0}, {1000, 0}, {1500, 0}, {10000, 0}}};
 
 // Rate groups may supply a context token to each of the attached children whose
 // purpose is set by the project. The reference topology sets each token to zero
@@ -139,6 +139,7 @@ void setupTopology(const TopologyState& state) {
     Analog8.open(A8, Arduino::AnalogDriver::GpioDirection::IN);
     Analog9.open(A9, Arduino::AnalogDriver::GpioDirection::IN);
     Analog17.open(A17, Arduino::AnalogDriver::GpioDirection::IN);
+    gps.init_gps();
 
     rateDriver.start();
 }

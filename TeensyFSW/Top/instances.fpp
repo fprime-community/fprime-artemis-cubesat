@@ -117,6 +117,8 @@ module TeensyFSW {
   instance temperature_solar_panel_4: Sensors.TMP36 base id 0x3C00
 
   instance temperature_battery_board: Sensors.TMP36 base id 0x3D00
+
+  instance gps: Sensors.PA1010D base id 0x3E00
   
   # PDU
 

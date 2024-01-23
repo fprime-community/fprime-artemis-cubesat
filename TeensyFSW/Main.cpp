@@ -32,9 +32,11 @@ void setup() {
     Serial.begin(115200);
     Serial1.begin(115200);
     Serial2.begin(115200);
+    Serial7.begin(115200);
     SPI1.setMISO(Radios::RFM23::SPI_MISO);
     SPI1.setMOSI(Radios::RFM23::SPI_MOSI);
     SPI1.setSCK(Radios::RFM23::SPI_SCK);
+
     Os::setArduinoStreamLogHandler(&Serial);
     delay(1000);
     Fw::Logger::logMsg("Program Started\n");
@@ -42,7 +44,7 @@ void setup() {
     // Object for communicating state to the reference topology
     TeensyFSW::TopologyState inputs;
     inputs.uartNumber = 0;
-    inputs.uartBaud = 115200;
+    inputs.uartBaud   = 115200;
 
     // Setup topology
     TeensyFSW::setupTopology(inputs);
