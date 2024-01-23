@@ -1,10 +1,10 @@
 # F' Deployment for the Artemis Cubesat Kit
 
-This repository houses the flight software developed for the Artemis CubeSat—a spaceflight-ready 1U CubeSat designed to increase space accessibility. Our mission is to reduce barriers to entry by not only lowering costs but also streamlining timelines and mitigating integration challenges.
+This repository contains the flight software developed for the Artemis CubeSat, a spaceflight-ready 1U CubeSat designed with the goal of enhancing space accessibility. Our mission is to minimize barriers to entry by not only reducing costs but also streamlining timelines and addressing integration challenges.
 
 For more detailed information about the Artemis CubeSat, please visit our [website](https://sites.google.com/mahinaaerospace.com/home).
 
-This project presents two installation options: leveraging Docker or opting for a manual installation. We strongly advise utilizing the Docker environment, as it streamlines the process by encompassing all necessary dependencies and installations required for development. Nevertheless, if you lean towards a manual installation, comprehensive instructions for that alternative are available.
+This project offers two installation options: utilizing Docker or opting for a manual installation. We highly recommend the Docker environment since it streamlines the process by incorporating all necessary dependencies and installations needed for development. However, if you prefer a manual installation, detailed instructions for that alternative are readily available.
 
 # Prerequisistes: 
 
@@ -15,14 +15,14 @@ Before proceeding with either installation method, ensure that you have complete
   - *On MacOS, manual installation prevents native RPiFSW compilation.*
 - [Visual Studio](https://code.visualstudio.com/Download), an integrated development environment (IDE). With the [FPP](https://marketplace.visualstudio.com/items?itemName=jet-propulsion-laboratory.fpp), [Dev Containers](vscode:extension/ms-vscode-remote.remote-containers) (if you are using Docker), and [WSL](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-wsl) (if you are using WSL) extensions.
 - [Arduino IDE and Teensyduino](https://www.pjrc.com/teensy/td_download.html)
-- [A Set Up Raspberry Pi Zero](/docs/scripts/UserGuides/SettingUpRPi.md)
+- [A Set Up Raspberry Pi Zero](/docs/SettingUpRPi.md)
 
 # Installation Methods
 
 Please refer to the relevant set of instructions that aligns with your preferred installation method:
 
 - [Docker Installation](#Docker-Installation)
-- [Manual Installation](/docs/scripts/UserGuides/ManualInstallation.md)
+- [Manual Installation](/docs/ManualInstallation.md)
 
 Upon successfully installing the project through one of the aforementioned methods, proceed to the supplied instructions for building and deploying the project.
 
@@ -99,7 +99,7 @@ To use the Ground Data System (GDS) with the Artemis CubeSat, it is essential to
 To merge the RPi and Teensy dictionaries in your project, navigate to the root directory and run the following command to combine them. Ensure that you have previously built and generated deployments for both RPi and Teensy before running the script:
 
 ```shell
-python3 docs/scripts/combine_dictionaries build-artifacts/teensy41/TeensyFSW/dict/TeensyFSWTopologyAppDictionary.xml build-artifacts/raspberrypi/RpiFSW/dict/RpiFSWTopologyAppDictionary.xml dictionary.xml
+python3 scripts/combine_dictionaries build-artifacts/teensy41/TeensyFSW/dict/TeensyFSWTopologyAppDictionary.xml build-artifacts/raspberrypi/RpiFSW/dict/RpiFSWTopologyAppDictionary.xml dictionary.xml
 ```
 
 Note:
