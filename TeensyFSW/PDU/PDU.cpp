@@ -44,9 +44,11 @@ void PDU::send(U8* buf, NATIVE_INT_TYPE len) {
 // ----------------------------------------------------------------------
 
 void PDU::run_handler(NATIVE_INT_TYPE portNum, NATIVE_UINT_TYPE context) {
-    Components::OpModes opmode;
-    this->getOpMode_out(0, opmode);
-    if (opmode == Components::OpModes::Startup && !this->started) {
+    Components::OpModes opMode;
+    this->getOpMode_out(0, opMode);
+
+    // If in Startup mode and the radio switch was not previously switched on, turn on radio switch.
+    if (opMode == Components::OpModes::Startup && !this->started) {
         pdu_sw_packet packet;
         packet.type     = PDU_Type::CommandSetSwitch;
         packet.sw       = Components::PDU::PDU_SW::RFM23_RADIO;
@@ -54,11 +56,25 @@ void PDU::run_handler(NATIVE_INT_TYPE portNum, NATIVE_UINT_TYPE context) {
         memcpy(pdu_packet_cmd, &packet, sizeof(packet));
         send(pdu_packet_cmd, sizeof(packet));
         this->started = true;
-    } else if (opmode == Components::OpModes::Deployment) {
-        // TODO: Turn burn wire on
+    }
+    // If in Deployment mode and BURN1 is off, turn on BURN1 switch.
+    else if (opMode == Components::OpModes::Deployment && !this->burnWireOn) {
+        pdu_sw_packet packet;
+        packet.type     = PDU_Type::CommandSetSwitch;
+        packet.sw       = Components::PDU::PDU_SW::BURN1;
+        packet.sw_state = 1;
+        memcpy(pdu_packet_cmd, &packet, sizeof(packet));
+        send(pdu_packet_cmd, sizeof(packet));
         this->burnWireOn = true;
-    } else if (opmode != Components::OpModes::Deployment && this->burnWireOn) {
-        // TODO: Turn burn wire off
+    }
+    // If BURN1 is on but it is not in Deployment mode, turn BURN1 off.
+    else if (opMode != Components::OpModes::Deployment && this->burnWireOn) {
+        pdu_sw_packet packet;
+        packet.type     = PDU_Type::CommandSetSwitch;
+        packet.sw       = Components::PDU::PDU_SW::BURN1;
+        packet.sw_state = 0;
+        memcpy(pdu_packet_cmd, &packet, sizeof(packet));
+        send(pdu_packet_cmd, sizeof(packet));
         this->burnWireOn = false;
     }
 }
