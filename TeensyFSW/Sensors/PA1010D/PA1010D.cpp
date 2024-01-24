@@ -15,9 +15,15 @@ namespace Sensors {
 
 // PA1010D::PA1010D(const char* const compName) : PA1010DComponentBase(compName) {}
 
-PA1010D::PA1010D(const char* const compName) : PA1010DComponentBase(compName), gps(&GPSSerial) {}
-
-void PA1010D::init(const NATIVE_INT_TYPE instance) {}
+PA1010D::PA1010D(const char* const compName) : PA1010DComponentBase(compName), gps(&GPSSerial) {
+    data[0].setdata("Time");
+    data[1].setdata("Date");
+    data[2].setdata("Fix Quality");
+    data[3].setdata("Satellites");
+    data[4].setdata("Speed");
+    data[5].setdata("Angle");
+    data[6].setdata("Altitude");
+}
 
 PA1010D::~PA1010D() {}
 
@@ -41,14 +47,13 @@ void PA1010D::run_handler(NATIVE_INT_TYPE portNum, NATIVE_UINT_TYPE context) {
     if (gps.newNMEAreceived()) {
         if (gps.parse(gps.lastNMEA())) {
             if (gps.fix) {
-                Sensors::GPSTlmData data;
-                data[0] = {"Time", gps.hour * 3600 + gps.minute * 60 + gps.seconds};
-                data[1] = {"Date", (gps.year % 100) * 10000 + gps.month * 100 + gps.day};
-                data[2] = {"Fix Quality", gps.fixquality};
-                data[3] = {"Satellites", gps.satellites};
-                data[4] = {"Speed", gps.speed};
-                data[5] = {"Angle", gps.angle};
-                data[6] = {"Altitude", gps.altitude};
+                data[0].setval(gps.hour * 3600 + gps.minute * 60 + gps.seconds);
+                data[1].setval((gps.year % 100) * 10000 + gps.month * 100 + gps.day);
+                data[2].setval(gps.fixquality);
+                data[3].setval(gps.satellites);
+                data[4].setval(gps.speed);
+                data[5].setval(gps.angle);
+                data[6].setval(gps.altitude);
                 this->tlmWrite_GPSTlm(data);
             }
         }

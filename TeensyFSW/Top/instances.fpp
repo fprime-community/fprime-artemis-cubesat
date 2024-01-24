@@ -48,11 +48,13 @@ module TeensyFSW {
 
   instance rateGroup1: Svc.PassiveRateGroup base id 0x1000
 
-  instance rateGroup2: Svc.PassiveRateGroup base id 0x1050
+  instance rateGroup2: Svc.PassiveRateGroup base id 0x1025
 
-  instance rateGroup3: Svc.PassiveRateGroup base id 0x1100
+  instance rateGroup3: Svc.PassiveRateGroup base id 0x1050
 
-  instance rateGroup4: Svc.PassiveRateGroup base id 0x1150
+  instance rateGroup4: Svc.PassiveRateGroup base id 0x1075
+
+  instance rateGroup5: Svc.PassiveRateGroup base id 0x1100
 
   instance framer: Svc.Framer base id 0x1200
 

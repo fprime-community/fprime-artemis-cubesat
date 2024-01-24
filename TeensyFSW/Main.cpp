@@ -32,7 +32,6 @@ void setup() {
     Serial.begin(115200);
     Serial1.begin(115200);
     Serial2.begin(115200);
-    Serial7.begin(115200);
     SPI1.setMISO(Radios::RFM23::SPI_MISO);
     SPI1.setMOSI(Radios::RFM23::SPI_MOSI);
     SPI1.setSCK(Radios::RFM23::SPI_SCK);

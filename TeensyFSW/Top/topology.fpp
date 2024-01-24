@@ -9,6 +9,7 @@ module TeensyFSW {
       rateGroup2
       rateGroup3
       rateGroup4
+      rateGroup5
     }
 
     enum Ports_StaticMemory {
@@ -42,6 +43,7 @@ module TeensyFSW {
     instance rateGroup2
     instance rateGroup3
     instance rateGroup4
+    instance rateGroup5
     instance rateGroupDriver
     instance staticMemory
     instance systemResources
@@ -125,43 +127,46 @@ module TeensyFSW {
       # Block driver
       rateDriver.CycleOut -> rateGroupDriver.CycleIn
 
-      # Rate group 1
+      # Rate Group 1
       rateGroupDriver.CycleOut[Ports_RateGroups.rateGroup1] -> rateGroup1.CycleIn
-      # rateGroup1.RateGroupMemberOut[0] -> rfm23.run
-      rateGroup1.RateGroupMemberOut[0] -> commDriver.schedIn
-      rateGroup1.RateGroupMemberOut[1] -> blinker.run
-      rateGroup1.RateGroupMemberOut[2] -> hubCommDriver.schedIn
-      rateGroup1.RateGroupMemberOut[3] -> pduCommDriver.schedIn
-      rateGroup1.RateGroupMemberOut[4] -> fileDownlink.Run
+      rateGroup1.RateGroupMemberOut[0] -> gps.run
 
       # Rate group 2
       rateGroupDriver.CycleOut[Ports_RateGroups.rateGroup2] -> rateGroup2.CycleIn
-      rateGroup2.RateGroupMemberOut[0] -> systemResources.run
-      rateGroup2.RateGroupMemberOut[1] -> tlmSend.Run
-      rateGroup2.RateGroupMemberOut[2] -> imu.run
-      rateGroup2.RateGroupMemberOut[3] -> mag.run
-      rateGroup2.RateGroupMemberOut[4] -> current_solar_panel_1.run
-      rateGroup2.RateGroupMemberOut[5] -> current_solar_panel_2.run
-      rateGroup2.RateGroupMemberOut[6] -> current_solar_panel_3.run
-      rateGroup2.RateGroupMemberOut[7] -> current_solar_panel_4.run
-      rateGroup2.RateGroupMemberOut[8] -> current_battery_board.run
-     
+      # rateGroup2.RateGroupMemberOut[0] -> rfm23.run
+      rateGroup2.RateGroupMemberOut[0] -> commDriver.schedIn
+      rateGroup2.RateGroupMemberOut[1] -> blinker.run
+      rateGroup2.RateGroupMemberOut[2] -> hubCommDriver.schedIn
+      rateGroup2.RateGroupMemberOut[3] -> pduCommDriver.schedIn
+      rateGroup2.RateGroupMemberOut[4] -> fileDownlink.Run
 
-      # Rate Group 3
+      # Rate group 3
       rateGroupDriver.CycleOut[Ports_RateGroups.rateGroup3] -> rateGroup3.CycleIn
-      rateGroup3.RateGroupMemberOut[0] -> temperature_obc.run
-      rateGroup3.RateGroupMemberOut[1] -> temperature_pdu.run
-      rateGroup3.RateGroupMemberOut[2] -> temperature_solar_panel_1.run
-      rateGroup3.RateGroupMemberOut[3] -> temperature_solar_panel_2.run
-      rateGroup3.RateGroupMemberOut[4] -> temperature_solar_panel_3.run
-      rateGroup3.RateGroupMemberOut[5] -> temperature_solar_panel_4.run
-      rateGroup3.RateGroupMemberOut[6] -> temperature_battery_board.run
-      rateGroup3.RateGroupMemberOut[7] -> heater.run
+      rateGroup3.RateGroupMemberOut[0] -> systemResources.run
+      rateGroup3.RateGroupMemberOut[1] -> tlmSend.Run
+      rateGroup3.RateGroupMemberOut[2] -> imu.run
+      rateGroup3.RateGroupMemberOut[3] -> mag.run
+      rateGroup3.RateGroupMemberOut[4] -> current_solar_panel_1.run
+      rateGroup3.RateGroupMemberOut[5] -> current_solar_panel_2.run
+      rateGroup3.RateGroupMemberOut[6] -> current_solar_panel_3.run
+      rateGroup3.RateGroupMemberOut[7] -> current_solar_panel_4.run
+      rateGroup3.RateGroupMemberOut[8] -> current_battery_board.run
+     
 
       # Rate Group 4
       rateGroupDriver.CycleOut[Ports_RateGroups.rateGroup4] -> rateGroup4.CycleIn
-      rateGroup4.RateGroupMemberOut[0] -> pdu.wdt
-      rateGroup4.RateGroupMemberOut[1] -> gps.run
+      rateGroup4.RateGroupMemberOut[0] -> temperature_obc.run
+      rateGroup4.RateGroupMemberOut[1] -> temperature_pdu.run
+      rateGroup4.RateGroupMemberOut[2] -> temperature_solar_panel_1.run
+      rateGroup4.RateGroupMemberOut[3] -> temperature_solar_panel_2.run
+      rateGroup4.RateGroupMemberOut[4] -> temperature_solar_panel_3.run
+      rateGroup4.RateGroupMemberOut[5] -> temperature_solar_panel_4.run
+      rateGroup4.RateGroupMemberOut[6] -> temperature_battery_board.run
+      rateGroup4.RateGroupMemberOut[7] -> heater.run
+
+      # Rate Group 5
+      rateGroupDriver.CycleOut[Ports_RateGroups.rateGroup5] -> rateGroup5.CycleIn
+      rateGroup5.RateGroupMemberOut[0] -> pdu.wdt
     }
 
     

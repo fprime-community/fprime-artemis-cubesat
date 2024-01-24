@@ -16,6 +16,9 @@
         <channel name="rateGroup4.MaxCycleTime"/>
         <channel name="rateGroup4.CycleTime"/>
         <channel name="rateGroup4.CycleCount"/>
+        <channel name="rateGroup5.MaxCycleTime"/>
+        <channel name="rateGroup5.CycleTime"/>
+        <channel name="rateGroup5.CycleCount"/>
     </packet>
 
     <packet name="SystemRes1" id="2" level="2">
