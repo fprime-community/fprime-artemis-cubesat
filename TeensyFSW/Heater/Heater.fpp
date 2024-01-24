@@ -9,11 +9,17 @@ module Components {
         @ Internal PDU get switch
         output port PDUGetSwitch: Components.PDU_GET_SW_CMD
 
-        @ Internal read temperature sensors
+        @ Internal read temperature sensor
         sync input port BatteryTemp: Sensors.TempVal
+
+        @ Allow Mode Manager to enable or disable component
+        sync input port enableComponent: Components.boolType
 
         @ Port: receiving calls from the rate group
         sync input port run: Svc.Sched
+
+        @ Port to get current Operation Mode
+        output port getOpMode: Components.OpMode    
 
         # ----------------------------------------------------------------------
         # Telemetry

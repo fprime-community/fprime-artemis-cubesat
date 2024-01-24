@@ -15,7 +15,7 @@ Before proceeding with either installation method, ensure that you have complete
   - *On MacOS, manual installation prevents native RPiFSW compilation.*
 - [Visual Studio](https://code.visualstudio.com/Download), an integrated development environment (IDE). With the [FPP](https://marketplace.visualstudio.com/items?itemName=jet-propulsion-laboratory.fpp), [Dev Containers](vscode:extension/ms-vscode-remote.remote-containers) (if you are using Docker), and [WSL](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-wsl) (if you are using WSL) extensions.
 - [Arduino IDE and Teensyduino](https://www.pjrc.com/teensy/td_download.html)
-- [A Set Up Raspberry Pi Zero](/docs/SettingUpRPi.md)
+- [A configured Raspberry Pi Zero](/docs/SettingUpRPi.md)
 
 # Installation Methods
 
@@ -90,7 +90,7 @@ fprime-util build
 ```
 > `fprime-util build` has two available arguments 'teensy41' and 'raspberrypi' append the appropriate one for the desired deployment to build. 
 
-> `fprime-util generate` sets up the build environment for a project/deployment. It only needs to be done once and also accepts 'teensy41' and 'raspberrypi' arguments.
+> `fprime-util generate` sets up the build environment for a project/deployment. It also accepts 'teensy41' and 'raspberrypi' as arguments.
 
 ### Combine RPi and Teensy Dictionaries
 

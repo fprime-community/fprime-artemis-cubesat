@@ -12,12 +12,16 @@ module Sensors {
         @ Magnetometer Data
         telemetry Data: MagTlm
 
+
+
+
         @ Scheduler output port
         sync input port run: Svc.Sched
 
         ###############################################################################
         # Standard AC Ports: Required for Channels, Events, Commands, and Parameters  #
         ###############################################################################
+      
         @ Port for requesting the current time
         time get port timeCaller
 

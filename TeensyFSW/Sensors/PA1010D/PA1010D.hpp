@@ -43,7 +43,15 @@ class PA1010D : public PA1010DComponentBase {
                      NATIVE_UINT_TYPE context  //!< The call order
     );
 
+    //! Handler implementation for enableComponent
+    //!
+    //! Allow Mode Manager to enable or disable component
+    void enableComponent_handler(NATIVE_INT_TYPE portNum,  //!< The port number
+                                 bool val);
+
     Sensors::GPSTlmData data;
+
+    bool enabled;
 };
 
 }  // namespace Sensors

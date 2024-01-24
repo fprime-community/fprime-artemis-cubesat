@@ -16,13 +16,6 @@ module Sensors {
     # Events
     # ----------------------------------------------------------------------
 
-    @ Signal Generator Settings Changed
-    event SomeEvent(Arg: U32) \
-    severity activity low \
-    id 0 \
-    format "SomeArg {}"
-
-
     # ----------------------------------------------------------------------
     # Telemetry channels
     # ----------------------------------------------------------------------

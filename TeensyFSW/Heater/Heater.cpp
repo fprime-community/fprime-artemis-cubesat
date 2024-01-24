@@ -15,7 +15,7 @@ namespace Components {
 // ----------------------------------------------------------------------
 
 Heater ::Heater(const char* const compName)
-    : HeaterComponentBase(compName), batteryTemp(0), enableDisableAuto(true) {}
+    : HeaterComponentBase(compName), batteryTemp(0), enabled(false) {}
 
 Heater ::~Heater() {}
 
@@ -27,7 +27,15 @@ void Heater ::BatteryTemp_handler(const NATIVE_INT_TYPE portNum, F32 val) {
     this->batteryTemp = val;
 }
 
+void Heater ::enableComponent_handler(NATIVE_INT_TYPE portNum, bool val) {
+    this->enabled = val;
+}
+
 void Heater::run_handler(const NATIVE_INT_TYPE portNum, NATIVE_UINT_TYPE context) {
+    if (!this->enabled) {
+        return;
+    }
+
     if (!this->enableDisableAuto) {
         return;
     }
@@ -43,6 +51,12 @@ void Heater::run_handler(const NATIVE_INT_TYPE portNum, NATIVE_UINT_TYPE context
 // ----------------------------------------------------------------------
 
 void Heater ::SetHeater_cmdHandler(const FwOpcodeType opCode, const U32 cmdSeq, Fw::On state) {
+    Components::OpModes opmode;
+    this->getOpMode_out(0, opmode);
+    if (opmode == Components::OpModes::PowerEmergency) {
+        this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
+        return;
+    }
     this->PDUSetSwitch_out(0, Components::PDU_SW::HEATER, state);
     this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
 }

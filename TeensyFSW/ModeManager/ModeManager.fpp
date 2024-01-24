@@ -1,15 +1,25 @@
-module Sensors {
+module Components {
 
-    array GPSTlmData = [5] GPSTlmStruct
-
-    struct GPSTlmStruct {
-        data: string
-        val: F32
+    enum OpModes {
+        Startup,
+        Deployment,
+        Nominal,
+        DataTransmit,
+        SafeMode,
+        ThermalEmergency,
+        PowerEmergency,
+        Restart
     }
 
-    @ Component for the Adafruit Mini GPS PA1010D Module
-    passive component PA1010D {
-    
+    port boolType(val: bool)
+
+    port OpMode(ref mode: OpModes)
+
+    port vbattPower(val: F32)
+
+    @ Component that controls operational modes
+    passive component ModeManager {
+        
         # ----------------------------------------------------------------------
         # General Ports
         # ----------------------------------------------------------------------
@@ -17,19 +27,34 @@ module Sensors {
         @ Port: receiving calls from the rate group
         sync input port run: Svc.Sched
 
-        @ Allow Mode Manager to enable or disable component
-        sync input port enableComponent: Components.boolType
+        @ Port to get operation mode
+        sync input port getOpMode: Components.OpMode
+
+        @ Port to enable Heater in Mode Management
+        output port enableHeater: boolType
+
+        @ Port to enable GPS in Mode Management
+        output port enableGPS: boolType
+
+        @ Internal PDU set switch
+        output port PDUSetSwitch: Components.PDU_SW_CMD
+
+        @ Internal PDU get switch
+        output port PDUGetSwitch: Components.PDU_GET_SW_CMD
+
+        @ Port to read battery power
+        output port getBatteryPower: Components.vbattPower
 
         # ----------------------------------------------------------------------
         # Telemetry channels
         # ----------------------------------------------------------------------
 
-        @ GPS Data
-       telemetry GPSTlm: GPSTlmData
 
         # ----------------------------------------------------------------------
         # Commands  
         # ----------------------------------------------------------------------
+
+        sync command SetMode(mode: Components.OpModes)
 
         ###############################################################################
         # Standard AC Ports: Required for Channels, Events, Commands, and Parameters  #
@@ -45,6 +70,12 @@ module Sensors {
 
         @ Port for sending command responses
         command resp port cmdResponseOut
+
+        @ Port for sending textual representation of events
+        text event port logTextOut
+
+        @ Port for sending events to downlink
+        event port logOut
 
         @ Port for sending telemetry channels to downlink
         telemetry port tlmOut

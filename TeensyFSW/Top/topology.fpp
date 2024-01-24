@@ -105,6 +105,9 @@ module TeensyFSW {
     instance Analog9
     instance Analog17
 
+    # Mode Manager
+    instance ModeManager
+
     # ----------------------------------------------------------------------
     # Pattern graph specifiers
     # ----------------------------------------------------------------------
@@ -167,6 +170,7 @@ module TeensyFSW {
       # Rate Group 5
       rateGroupDriver.CycleOut[Ports_RateGroups.rateGroup5] -> rateGroup5.CycleIn
       rateGroup5.RateGroupMemberOut[0] -> pdu.wdt
+      rateGroup5.RateGroupMemberOut[1] -> rfm23.healthCheck
     }
 
     
@@ -254,6 +258,8 @@ module TeensyFSW {
     connections Radio {
       # rfm23.gpioSetRxOn -> gpioRxOn.gpioWrite
       # rfm23.gpioSetTxOn -> gpioTxOn.gpioWrite
+      rfm23.PDUSetSwitch -> pdu.SetSwitchInternal
+      rfm23.PDUGetSwitch -> pdu.GetSwitchInternal
     }
 
     connections PDU {
@@ -285,6 +291,15 @@ module TeensyFSW {
     temperature_solar_panel_2.readAnalog -> Analog8.readAnalog
     temperature_solar_panel_3.readAnalog -> Analog0.readAnalog
     temperature_solar_panel_4.readAnalog -> Analog17.readAnalog
+    }
+
+    connections ModeManagerConnection { 
+    ModeManager.enableHeater -> heater.enableComponent
+    ModeManager.enableGPS -> gps.enableComponent
+    heater.getOpMode -> ModeManager.getOpMode
+    pdu.getOpMode -> ModeManager.getOpMode
+
+
     }
 
   }

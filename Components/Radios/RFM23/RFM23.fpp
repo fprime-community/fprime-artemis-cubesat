@@ -21,7 +21,7 @@ module Radios {
         @ Allows for allocation of buffers
         output port allocate: Fw.BufferGet
 
-          # ----------------------------------------------------------------------
+        # ----------------------------------------------------------------------
         # Telemetry
         # ----------------------------------------------------------------------
 
@@ -57,11 +57,20 @@ module Radios {
         @ Port receiving calls from the rate group
         sync input port run: Svc.Sched
 
+        @ Port receiving calls from the rate group
+        sync input port healthCheck: Svc.Sched
+
         @ Port sending calls to the GPIO driver
         output port gpioSetRxOn: Drv.GpioWrite
 
         @ Port sending calls to the GPIO driver
         output port gpioSetTxOn: Drv.GpioWrite
+
+        @ Internal PDU set switch
+        output port PDUSetSwitch: Components.PDU_SW_CMD
+
+        @ Internal PDU get switch
+        output port PDUGetSwitch: Components.PDU_GET_SW_CMD
 
         ###############################################################################
         # Standard AC Ports: Required for Channels, Events, Commands, and Parameters  #

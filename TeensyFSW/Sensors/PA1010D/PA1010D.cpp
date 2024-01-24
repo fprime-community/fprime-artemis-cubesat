@@ -14,9 +14,8 @@ namespace Sensors {
 // Component construction and destruction
 // ----------------------------------------------------------------------
 
-// PA1010D::PA1010D(const char* const compName) : PA1010DComponentBase(compName) {}
-
-PA1010D::PA1010D(const char* const compName) : PA1010DComponentBase(compName), gps(&GPSSerial) {
+PA1010D::PA1010D(const char* const compName)
+    : PA1010DComponentBase(compName), gps(&GPSSerial), enabled(false) {
     data[0].setdata("Fix Quality");
     data[1].setdata("Satellites");
     data[2].setdata("Speed");
@@ -38,7 +37,20 @@ bool PA1010D::init_gps(void) {
 // Handler implementations for user-defined typed input ports
 // ----------------------------------------------------------------------
 
+void PA1010D ::enableComponent_handler(NATIVE_INT_TYPE portNum, bool val) {
+    if (val && this->enabled == false) {
+        gps.wakeup();
+    } else if (!val && this->enabled == true) {
+        gps.standby();
+    }
+    this->enabled = val;
+}
+
 void PA1010D::run_handler(NATIVE_INT_TYPE portNum, NATIVE_UINT_TYPE context) {
+    if (!this->enabled) {
+        return;
+    }
+
     // Read data from the gps
     gps.read();
 

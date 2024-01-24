@@ -81,6 +81,9 @@ port PDU_GET_SW_CMD (
         @ Port: receiving calls from the rate group
         sync input port wdt: Svc.Sched
 
+        @ Port to get current Operation Mode
+        output port getOpMode: Components.OpMode    
+
         # ----------------------------------------------------------------------
         # Telemetry
         # ----------------------------------------------------------------------

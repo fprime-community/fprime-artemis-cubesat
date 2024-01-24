@@ -111,6 +111,12 @@ void PDU::SetSwitch_cmdHandler(const FwOpcodeType opCode,
                                const U32 cmdSeq,
                                Components::PDU_SW sw,
                                Fw::On state) {
+    Components::OpModes opmode;
+    this->getOpMode_out(0, opmode);
+    if (opmode == Components::OpModes::PowerEmergency) {
+        this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
+        return;
+    }
     pdu_sw_packet packet;
     packet.type     = PDU_Type::CommandSetSwitch;
     packet.sw       = (Components::PDU::PDU_SW)(U8)sw;
@@ -179,6 +185,12 @@ void PDU ::GetTRQ_cmdHandler(const FwOpcodeType opCode, const U32 cmdSeq) {
 void PDU ::SetSwitchInternal_handler(const NATIVE_INT_TYPE portNum,
                                      const Components::PDU_SW& sw,
                                      const Fw::On& state) {
+    Components::OpModes opmode;
+    this->getOpMode_out(0, opmode);
+    if (opmode == Components::OpModes::PowerEmergency) {
+        this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
+        return;
+    }
     pdu_sw_packet packet;
     packet.type     = PDU_Type::CommandSetSwitch;
     packet.sw       = (Components::PDU::PDU_SW)(U8)sw;
