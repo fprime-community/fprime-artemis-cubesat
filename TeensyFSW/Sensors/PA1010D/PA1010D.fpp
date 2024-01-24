@@ -1,6 +1,6 @@
 module Sensors {
 
-    array GPSTlmData = [7] GPSTlmStruct
+    array GPSTlmData = [5] GPSTlmStruct
 
     struct GPSTlmStruct {
         data: string
