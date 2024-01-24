@@ -12,14 +12,11 @@ module Components {
         @ Internal read temperature sensor
         sync input port BatteryTemp: Sensors.TempVal
 
-        @ Allow Mode Manager to enable or disable component
-        sync input port enableComponent: Components.boolType
-
         @ Port: receiving calls from the rate group
         sync input port run: Svc.Sched
 
         @ Port to get current Operation Mode
-        output port getOpMode: Components.OpMode    
+        output port getOpMode: Components.OpMode
 
         # ----------------------------------------------------------------------
         # Telemetry

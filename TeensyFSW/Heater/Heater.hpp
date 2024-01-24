@@ -36,12 +36,6 @@ class Heater : public HeaterComponentBase {
     void BatteryTemp_handler(const NATIVE_INT_TYPE portNum, /*!< The port number*/
                              F32 val);
 
-    //! Handler implementation for enableComponent
-    //!
-    //! Allow Mode Manager to enable or disable component
-    void enableComponent_handler(NATIVE_INT_TYPE portNum,  //!< The port number
-                                 bool val);
-
     //! Handler implementation for run
     //!
     void run_handler(const NATIVE_INT_TYPE portNum, /*!< The port number*/
@@ -70,8 +64,6 @@ class Heater : public HeaterComponentBase {
     U8 batteryTemp;
 
     bool enableDisableAuto;
-
-    bool enabled;
 
     F32 thresholdTemperature = 0;
 };

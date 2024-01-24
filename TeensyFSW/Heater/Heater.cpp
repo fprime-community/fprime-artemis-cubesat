@@ -15,7 +15,7 @@ namespace Components {
 // ----------------------------------------------------------------------
 
 Heater ::Heater(const char* const compName)
-    : HeaterComponentBase(compName), batteryTemp(0), enabled(false) {}
+    : HeaterComponentBase(compName), batteryTemp(0) {}
 
 Heater ::~Heater() {}
 
@@ -27,12 +27,10 @@ void Heater ::BatteryTemp_handler(const NATIVE_INT_TYPE portNum, F32 val) {
     this->batteryTemp = val;
 }
 
-void Heater ::enableComponent_handler(NATIVE_INT_TYPE portNum, bool val) {
-    this->enabled = val;
-}
-
 void Heater::run_handler(const NATIVE_INT_TYPE portNum, NATIVE_UINT_TYPE context) {
-    if (!this->enabled) {
+    Components::OpModes opMode;
+    this->getOpMode_out(0, opMode);
+    if (opMode == Components::OpModes::Startup || opMode == Components::OpModes::PowerEmergency) {
         return;
     }
 
@@ -46,6 +44,7 @@ void Heater::run_handler(const NATIVE_INT_TYPE portNum, NATIVE_UINT_TYPE context
         this->PDUSetSwitch_out(0, Components::PDU_SW::HEATER, Fw::On::OFF);
     }
 }
+
 // ----------------------------------------------------------------------
 // Command handler implementations
 // ----------------------------------------------------------------------

@@ -101,6 +101,14 @@ class PDU : public PDUComponentBase {
     ~PDU();
 
   private:
+
+    //! Handler implementation for run
+    //!
+    //! Port: receiving calls from the rate group
+    void run_handler(NATIVE_INT_TYPE portNum,  //!< The port number
+                     NATIVE_UINT_TYPE context  //!< The call order
+    );
+
     void send(U8* buf, NATIVE_INT_TYPE len);
 
     // ----------------------------------------------------------------------
@@ -167,6 +175,9 @@ class PDU : public PDUComponentBase {
     void GetTRQ_cmdHandler(const FwOpcodeType opCode, /*!< The opcode*/
                            const U32 cmdSeq           /*!< The command sequence number*/
     );
+
+    bool started;
+    bool burnWireOn;
 
     U8 pdu_packet_cmd[4];
     Components::PDUTlm sw_telem;

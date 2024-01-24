@@ -11,11 +11,7 @@ module Components {
         Restart
     }
 
-    port boolType(val: bool)
-
     port OpMode(ref mode: OpModes)
-
-    port vbattPower(val: F32)
 
     @ Component that controls operational modes
     passive component ModeManager {
@@ -30,20 +26,8 @@ module Components {
         @ Port to get operation mode
         sync input port getOpMode: Components.OpMode
 
-        @ Port to enable Heater in Mode Management
-        output port enableHeater: boolType
-
-        @ Port to enable GPS in Mode Management
-        output port enableGPS: boolType
-
-        @ Internal PDU set switch
-        output port PDUSetSwitch: Components.PDU_SW_CMD
-
-        @ Internal PDU get switch
-        output port PDUGetSwitch: Components.PDU_GET_SW_CMD
-
         @ Port to read battery power
-        output port getBatteryPower: Components.vbattPower
+        output port getBatteryPower: Sensors.powerData
 
         # ----------------------------------------------------------------------
         # Telemetry channels

@@ -17,8 +17,8 @@ module Sensors {
         @ Port: receiving calls from the rate group
         sync input port run: Svc.Sched
 
-        @ Allow Mode Manager to enable or disable component
-        sync input port enableComponent: Components.boolType
+        @ Port to get current Operation Mode
+        output port getOpMode: Components.OpMode
 
         # ----------------------------------------------------------------------
         # Telemetry channels

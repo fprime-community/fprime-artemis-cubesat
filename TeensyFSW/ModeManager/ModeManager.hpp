@@ -8,6 +8,8 @@
 #define TeensyFSW_ModeManager_HPP
 
 #include "TeensyFSW/ModeManager/ModeManagerComponentAc.hpp"
+#include <elapsedMillis.h>
+#include <FprimeArduino.hpp>
 
 namespace Components {
 
@@ -50,6 +52,12 @@ class ModeManager : public ModeManagerComponentBase {
     void SetMode_cmdHandler(FwOpcodeType opCode,  //!< The opcode
                             U32 cmdSeq,           //!< The command sequence number
                             Components::OpModes mode);
+
+    bool started;
+    Components::OpModes prevOpMode;
+
+    elapsedMillis startupTimeout;
+    elapsedMillis deploymentTimeout;
 };
 
 }  // namespace Components

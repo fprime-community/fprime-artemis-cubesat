@@ -149,11 +149,12 @@ module TeensyFSW {
       rateGroup3.RateGroupMemberOut[1] -> tlmSend.Run
       rateGroup3.RateGroupMemberOut[2] -> imu.run
       rateGroup3.RateGroupMemberOut[3] -> mag.run
-      rateGroup3.RateGroupMemberOut[4] -> current_solar_panel_1.run
-      rateGroup3.RateGroupMemberOut[5] -> current_solar_panel_2.run
-      rateGroup3.RateGroupMemberOut[6] -> current_solar_panel_3.run
-      rateGroup3.RateGroupMemberOut[7] -> current_solar_panel_4.run
-      rateGroup3.RateGroupMemberOut[8] -> current_battery_board.run
+      rateGroup3.RateGroupMemberOut[4] -> pdu.run
+      rateGroup3.RateGroupMemberOut[5] -> current_solar_panel_1.run
+      rateGroup3.RateGroupMemberOut[6] -> current_solar_panel_2.run
+      rateGroup3.RateGroupMemberOut[7] -> current_solar_panel_3.run
+      rateGroup3.RateGroupMemberOut[8] -> current_solar_panel_4.run
+      rateGroup3.RateGroupMemberOut[9] -> current_battery_board.run
      
 
       # Rate Group 4
@@ -276,30 +277,24 @@ module TeensyFSW {
     }
 
     connections Heater {
-
       temperature_battery_board.temperature -> heater.BatteryTemp
       heater.PDUSetSwitch -> pdu.SetSwitchInternal
       heater.PDUGetSwitch -> pdu.GetSwitchInternal
-
     }
 
     connections TemperatureSensors {
-    temperature_obc.readAnalog -> Analog0.readAnalog
-    temperature_pdu.readAnalog -> Analog1.readAnalog
-    temperature_battery_board.readAnalog -> Analog6.readAnalog
-    temperature_solar_panel_1.readAnalog -> Analog7.readAnalog
-    temperature_solar_panel_2.readAnalog -> Analog8.readAnalog
-    temperature_solar_panel_3.readAnalog -> Analog0.readAnalog
-    temperature_solar_panel_4.readAnalog -> Analog17.readAnalog
+      temperature_obc.readAnalog -> Analog0.readAnalog
+      temperature_pdu.readAnalog -> Analog1.readAnalog
+      temperature_battery_board.readAnalog -> Analog6.readAnalog
+      temperature_solar_panel_1.readAnalog -> Analog7.readAnalog
+      temperature_solar_panel_2.readAnalog -> Analog8.readAnalog
+      temperature_solar_panel_3.readAnalog -> Analog0.readAnalog
+      temperature_solar_panel_4.readAnalog -> Analog17.readAnalog
     }
 
     connections ModeManagerConnection { 
-    ModeManager.enableHeater -> heater.enableComponent
-    ModeManager.enableGPS -> gps.enableComponent
-    heater.getOpMode -> ModeManager.getOpMode
-    pdu.getOpMode -> ModeManager.getOpMode
-
-
+      heater.getOpMode -> ModeManager.getOpMode
+      pdu.getOpMode -> ModeManager.getOpMode
     }
 
   }

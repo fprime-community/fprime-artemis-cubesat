@@ -14,7 +14,7 @@ namespace Components {
 // Construction, initialization, and destruction
 // ----------------------------------------------------------------------
 
-PDU::PDU(const char* const compName) : PDUComponentBase(compName) {
+PDU::PDU(const char* const compName) : PDUComponentBase(compName), started(false), burnWireOn(false) {
     for (NATIVE_INT_TYPE i = 0; i < sw_telem.SIZE; i++) {
         sw_telem[i].setsw(sw_lookup[i]);
         sw_telem[i].setstate(0);
@@ -42,6 +42,26 @@ void PDU::send(U8* buf, NATIVE_INT_TYPE len) {
 // ----------------------------------------------------------------------
 // Handler implementations for user-defined typed input ports
 // ----------------------------------------------------------------------
+
+void PDU::run_handler(NATIVE_INT_TYPE portNum, NATIVE_UINT_TYPE context) {
+    Components::OpModes opmode;
+    this->getOpMode_out(0, opmode);
+    if (opmode == Components::OpModes::Startup && !this->started) {
+        pdu_sw_packet packet;
+        packet.type     = PDU_Type::CommandSetSwitch;
+        packet.sw       = Components::PDU::PDU_SW::RFM23_RADIO;
+        packet.sw_state = 1;
+        memcpy(pdu_packet_cmd, &packet, sizeof(packet));
+        send(pdu_packet_cmd, sizeof(packet));
+        this->started = true;
+    } else if (opmode == Components::OpModes::Deployment) {
+        // TODO: Turn burn wire on
+        this->burnWireOn = true;
+    } else if (opmode != Components::OpModes::Deployment && this->burnWireOn) {
+        // TODO: Turn burn wire off
+        this->burnWireOn = false;
+    }
+}
 
 void PDU::comDataIn_handler(const NATIVE_INT_TYPE portNum,
                             Fw::Buffer& recvBuffer,
@@ -111,10 +131,10 @@ void PDU::SetSwitch_cmdHandler(const FwOpcodeType opCode,
                                const U32 cmdSeq,
                                Components::PDU_SW sw,
                                Fw::On state) {
-    Components::OpModes opmode;
-    this->getOpMode_out(0, opmode);
-    if (opmode == Components::OpModes::PowerEmergency) {
-        this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
+    Components::OpModes opMode;
+    this->getOpMode_out(0, opMode);
+    if (opMode == Components::OpModes::PowerEmergency && state == Fw::On::ON) {
+        this->cmdResponse_out(opMode, cmdSeq, Fw::CmdResponse::OK);
         return;
     }
     pdu_sw_packet packet;
@@ -159,7 +179,7 @@ void PDU::Ping_cmdHandler(const FwOpcodeType opCode, const U32 cmdSeq) {
     this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
 }
 
-void PDU ::SetTRQ_cmdHandler(const FwOpcodeType opCode,
+void PDU::SetTRQ_cmdHandler(const FwOpcodeType opCode,
                              const U32 cmdSeq,
                              Components::TRQ_SELECT trq,
                              Components::TRQ_CONFIG mode) {
@@ -173,7 +193,7 @@ void PDU ::SetTRQ_cmdHandler(const FwOpcodeType opCode,
     this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
 }
 
-void PDU ::GetTRQ_cmdHandler(const FwOpcodeType opCode, const U32 cmdSeq) {
+void PDU::GetTRQ_cmdHandler(const FwOpcodeType opCode, const U32 cmdSeq) {
     pdu_nop_packet packet;
     packet.type = PDU_Type::CommandGetTRQTelem;
 
@@ -182,13 +202,12 @@ void PDU ::GetTRQ_cmdHandler(const FwOpcodeType opCode, const U32 cmdSeq) {
     this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
 }
 
-void PDU ::SetSwitchInternal_handler(const NATIVE_INT_TYPE portNum,
+void PDU::SetSwitchInternal_handler(const NATIVE_INT_TYPE portNum,
                                      const Components::PDU_SW& sw,
                                      const Fw::On& state) {
-    Components::OpModes opmode;
-    this->getOpMode_out(0, opmode);
-    if (opmode == Components::OpModes::PowerEmergency) {
-        this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
+    Components::OpModes opMode;
+    this->getOpMode_out(0, opMode);
+    if (opMode == Components::OpModes::PowerEmergency && state == Fw::On::ON) {
         return;
     }
     pdu_sw_packet packet;
@@ -208,7 +227,7 @@ void PDU ::SetSwitchInternal_handler(const NATIVE_INT_TYPE portNum,
     }
 }
 
-void PDU ::GetSwitchInternal_handler(const NATIVE_INT_TYPE portNum, Components::PDUTlm& states) {
+void PDU::GetSwitchInternal_handler(const NATIVE_INT_TYPE portNum, Components::PDUTlm& states) {
     pdu_sw_packet packet;
     packet.type = PDU_Type::CommandGetSwitchStatus;
     packet.sw   = PDU_SW::All;

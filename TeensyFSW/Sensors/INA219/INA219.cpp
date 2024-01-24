@@ -34,4 +34,10 @@ void INA219::run_handler(const NATIVE_INT_TYPE portNum, NATIVE_UINT_TYPE context
     data[2] = currentSensor->getPower_mW();
     this->tlmWrite_CurrentSensorData(data);
 }
+
+void INA219::getPowerData_handler(NATIVE_INT_TYPE portNum, F32& voltage, F32& current) {
+    voltage = currentSensor->getBusVoltage_V();
+    current = currentSensor->getCurrent_mA();
+}
+
 }  // end namespace Sensors

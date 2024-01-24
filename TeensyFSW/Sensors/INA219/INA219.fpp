@@ -2,6 +2,11 @@ module Sensors {
 
     array CurrentTlm = [3] F32
 
+    port powerData(
+        ref voltage: F32
+        ref current: F32
+    )
+
     @ Component for the INA219 current sensors
     passive component INA219 {
 
@@ -15,8 +20,8 @@ module Sensors {
         @ Port: receiving calls from the rate group
         sync input port run: Svc.Sched
 
-        # @ Example parameter
-        # param PARAMETER_NAME: U32
+        @ Port to return power data of current sensor
+        sync input port getPowerData: Sensors.powerData
 
         ###############################################################################
         # Standard AC Ports: Required for Channels, Events, Commands, and Parameters  #

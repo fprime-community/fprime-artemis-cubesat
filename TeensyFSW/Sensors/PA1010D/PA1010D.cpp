@@ -6,7 +6,7 @@
 
 #include "TeensyFSW/Sensors/PA1010D/PA1010D.hpp"
 #include "FpConfig.hpp"
-#include "TimeLib.h"
+#include <TimeLib.h>
 
 namespace Sensors {
 
@@ -37,16 +37,19 @@ bool PA1010D::init_gps(void) {
 // Handler implementations for user-defined typed input ports
 // ----------------------------------------------------------------------
 
-void PA1010D ::enableComponent_handler(NATIVE_INT_TYPE portNum, bool val) {
-    if (val && this->enabled == false) {
-        gps.wakeup();
-    } else if (!val && this->enabled == true) {
-        gps.standby();
-    }
-    this->enabled = val;
-}
-
 void PA1010D::run_handler(NATIVE_INT_TYPE portNum, NATIVE_UINT_TYPE context) {
+    Components::OpModes opmode;
+    this->getOpMode_out(0, opmode);
+    if (opmode == Components::OpModes::Startup) {
+        this->enabled = true;
+    } else if (opmode == Components::OpModes::PowerEmergency) {
+        gps.standby();
+        this->enabled = false;
+    } else if (opmode != Components::OpModes::PowerEmergency && !this->enabled) {
+        gps.wakeup();
+        this->enabled = true;
+    }
+
     if (!this->enabled) {
         return;
     }
