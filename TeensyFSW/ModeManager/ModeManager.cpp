@@ -18,8 +18,7 @@ ModeManager ::ModeManager(const char* const compName)
     : ModeManagerComponentBase(compName),
       currentMode(OpModes::Startup),
       started(false),
-      startupTimeout(0),
-      deploymentTimeout(0) {}
+      timeout(0) {}
 
 ModeManager ::~ModeManager() {}
 
@@ -54,20 +53,20 @@ void ModeManager ::run_handler(NATIVE_INT_TYPE portNum, NATIVE_UINT_TYPE context
             bool deploymentCompleted = (fileStatus == Os::File::OP_OK);
 
             if (deploymentCompleted) {
+                this->timeout = 0;
                 this->currentMode = OpModes::Initialization;
             } else {
                 // Wait 30 minutes before deploying antennas.
-                if (this->startupTimeout > 10000) {
-                    this->deploymentTimeout = 0;
-                    this->currentMode       = OpModes::Deployment;
-                    this->started           = true;
+                if (this->timeout > 10000) {
+                    this->timeout = 0;
+                    this->currentMode = OpModes::Deployment;
                 }
             }
             break;
         }
         case OpModes::Deployment: {
             // delay for 30 seconds to allow burn wires to complete.
-            if (this->deploymentTimeout > 30000) {
+            if (this->timeout > 30000) {
                 // Create and write to deployment.txt
                 Os::File deploymentFile;
                 Os::File::Status fileStatus =
@@ -79,13 +78,14 @@ void ModeManager ::run_handler(NATIVE_INT_TYPE portNum, NATIVE_UINT_TYPE context
                     deploymentFile.write(&dataToWrite, size);
                     deploymentFile.close();
                 }
+                this->timeout = 0;
                 this->currentMode = OpModes::Initialization;
             }
             break;
         }
         case OpModes::Initialization: {
             // Give 5 seconds to let everything start up properly
-            if (this->startupTimeout > 5000) {
+            if (this->timeout > 5000) {
                 this->currentMode = OpModes::Nominal;
                 this->started     = true;
             }

@@ -74,7 +74,7 @@ void PA1010D::run_handler(NATIVE_INT_TYPE portNum, NATIVE_UINT_TYPE context) {
     }
     if (opMode == Components::OpModes::Initialization) {
         this->enabled = true;
-    } else if (opMode == Components::OpModes::PowerEmergency) {
+    } else if (opMode == Components::OpModes::PowerEmergency && this->enabled) {
         this->log_ACTIVITY_HI_GPSStatus("standby");
         gps.standby();
         this->enabled = false;

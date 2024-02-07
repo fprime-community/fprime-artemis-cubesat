@@ -145,6 +145,7 @@ module TeensyFSW {
       rateGroup2.RateGroupMemberOut[2] -> hubCommDriver.schedIn
       rateGroup2.RateGroupMemberOut[3] -> pduCommDriver.schedIn
       rateGroup2.RateGroupMemberOut[4] -> fileDownlink.Run
+      rateGroup2.RateGroupMemberOut[5] -> ModeManager.run
 
       # Rate group 3
       rateGroupDriver.CycleOut[Ports_RateGroups.rateGroup3] -> rateGroup3.CycleIn
@@ -186,7 +187,8 @@ module TeensyFSW {
 
     connections Downlink {
 
-      tlmSend.PktSend -> commQueue.comQueueIn[0]
+      tlmSend.PktSend -> TlmDispatcher.comIn
+      TlmDispatcher.comOut -> commQueue.comQueueIn[0]
       eventLogger.PktSend -> commQueue.comQueueIn[1]
 
       # tlmSend.PktSend -> framer.comIn
@@ -299,6 +301,10 @@ module TeensyFSW {
     connections ModeManagerConnection { 
       heater.getOpMode -> ModeManager.getOpMode
       pdu.getOpMode -> ModeManager.getOpMode
+      gps.getOpMode -> ModeManager.getOpMode
+      rfm23.getOpMode -> ModeManager.getOpMode
+      TlmDispatcher.getOpMode -> ModeManager.getOpMode
+      ModeManager.getBatteryPower -> current_battery_board.getPowerData
     }
 
   }

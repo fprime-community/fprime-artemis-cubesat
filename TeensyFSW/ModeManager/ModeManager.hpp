@@ -63,8 +63,7 @@ class ModeManager : public ModeManagerComponentBase {
     bool started;
     Components::OpModes prevOpMode;
 
-    elapsedMillis startupTimeout;
-    elapsedMillis deploymentTimeout;
+    elapsedMillis timeout;
 };
 
 }  // namespace Components
