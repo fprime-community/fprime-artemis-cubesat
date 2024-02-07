@@ -97,17 +97,15 @@ bool RFM23::send(const U8* payload, NATIVE_UINT_TYPE len) {
 
     return true;
 }
+
 // ----------------------------------------------------------------------
 // Handler implementations for user-defined typed input ports
 // ----------------------------------------------------------------------
 
 Drv::SendStatus RFM23::comDataIn_handler(const NATIVE_INT_TYPE portNum, Fw::Buffer& sendBuffer) {
-    Components::OpModes opMode;
-    this->getOpMode_out(0, opMode);
-    if ((radio_state == Fw::On::ON) && (sendBuffer.getSize() > 0) &&
-        (opMode == Components::OpModes::Nominal || opMode == Components::OpModes::DataTransmit) &&
+    if ((this->radio_state == Fw::On::ON) && (sendBuffer.getSize() > 0) &&
         (not this->send(sendBuffer.getData(), sendBuffer.getSize()))) {
-        radio_state = Fw::On::OFF;
+        this->radio_state = Fw::On::OFF;
     }
     deallocate_out(0, sendBuffer);
     return Drv::SendStatus::SEND_OK;  // Always send ok to deframer as it does not handle this
@@ -115,7 +113,7 @@ Drv::SendStatus RFM23::comDataIn_handler(const NATIVE_INT_TYPE portNum, Fw::Buff
 }
 
 void RFM23::run_handler(const NATIVE_INT_TYPE portNum, NATIVE_UINT_TYPE context) {
-    if (isInitialized == false) {
+    if (this->isInitialized == false) {
         // rfm23.reset();
         if (!rfm23.init()) {
             Fw::Logger::logMsg("radio init failed \n");
@@ -132,21 +130,25 @@ void RFM23::run_handler(const NATIVE_INT_TYPE portNum, NATIVE_UINT_TYPE context)
             this->comStatus_out(0, radioSuccess);
         }
         Fw::Logger::logMsg("radio init success \n");
-        isInitialized = true;
-        radio_state   = Fw::On::ON;
+        this->isInitialized = true;
+        this->radio_state   = Fw::On::ON;
     } else if (this->radio_state == Fw::On::ON) {
         this->recv();
         this->tlmWrite_temp(rfm23.temperatureRead());
     }
-    this->tlmWrite_Status(radio_state);
+    this->tlmWrite_Status(this->radio_state);
 }
 
 void RFM23::healthCheck_handler(const NATIVE_INT_TYPE portNum, NATIVE_UINT_TYPE context) {
-    Components::OpModes opMode;
-    this->getOpMode_out(0, opMode);
-    if (opMode == Components::OpModes::Startup || opMode == Components::OpModes::Deployment) {
-        return;
+    if (this->isConnected_getOpMode_OutputPort(0)) {
+        Components::OpModes opMode;
+        this->getOpMode_out(0, opMode);
+        if (opMode == Components::OpModes::Startup || opMode == Components::OpModes::Deployment) {
+            this->offTime = 0;
+            return;
+        }
     }
+
     Components::PDUTlm states;
     this->PDUGetSwitch_out(0, states);
     if (states[1].getstate() == 0 && this->radio_state == Fw::On::ON) {
@@ -156,6 +158,7 @@ void RFM23::healthCheck_handler(const NATIVE_INT_TYPE portNum, NATIVE_UINT_TYPE 
     if (this->radio_state == Fw::On::OFF && this->offTime > 30000) {
         this->log_WARNING_HI_RadioReset(30);
         this->PDUSetSwitch_out(0, Components::PDU_SW::RFM23_RADIO, Fw::On::ON);
+        this->offTime = 0;
         this->isInitialized = false;
     }
 }

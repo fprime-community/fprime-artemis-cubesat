@@ -70,7 +70,7 @@ void LedBlinker::run_handler(const NATIVE_INT_TYPE portNum, NATIVE_UINT_TYPE con
                 this->gpioSet_out(0, (Fw::On::ON == new_state) ? Fw::Logic::HIGH : Fw::Logic::LOW);
             }
 
-            this->log_DIAGNOSTIC_LedState(new_state);
+            // this->log_DIAGNOSTIC_LedState(new_state);
             this->state = new_state;
         }
 
