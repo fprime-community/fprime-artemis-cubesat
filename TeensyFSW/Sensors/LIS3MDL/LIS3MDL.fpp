@@ -12,9 +12,6 @@ module Sensors {
         @ Magnetometer Data
         telemetry Data: MagTlm
 
-
-
-
         @ Scheduler output port
         sync input port run: Svc.Sched
 

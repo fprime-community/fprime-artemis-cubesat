@@ -108,6 +108,9 @@ module TeensyFSW {
     # Mode Manager
     instance ModeManager
 
+    # Telemetry Dispatcher
+    instance TlmDispatcher
+
     # ----------------------------------------------------------------------
     # Pattern graph specifiers
     # ----------------------------------------------------------------------
@@ -155,6 +158,7 @@ module TeensyFSW {
       rateGroup3.RateGroupMemberOut[7] -> current_solar_panel_3.run
       rateGroup3.RateGroupMemberOut[8] -> current_solar_panel_4.run
       rateGroup3.RateGroupMemberOut[9] -> current_battery_board.run
+      rateGroup3.RateGroupMemberOut[10] -> ModeManager.tlmSend
      
 
       # Rate Group 4

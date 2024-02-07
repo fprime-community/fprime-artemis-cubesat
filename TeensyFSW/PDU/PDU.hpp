@@ -101,7 +101,6 @@ class PDU : public PDUComponentBase {
     ~PDU();
 
   private:
-
     //! Handler implementation for run
     //!
     //! Port: receiving calls from the rate group
@@ -178,6 +177,7 @@ class PDU : public PDUComponentBase {
 
     bool started;
     bool burnWireOn;
+    bool isPowerEmergency;
 
     U8 pdu_packet_cmd[4];
     Components::PDUTlm sw_telem;

@@ -107,6 +107,14 @@ module Components {
         severity activity high \
         format "PDU is connected"
 
+        event SwitchDenied(mode: Components.OpModes) \
+        severity warning high \
+        format "Spacecraft is in {}"
+
+        event AllSwitchesOff () \
+        severity warning high \
+        format "All switches have been disabled due to low battery charge."
+
         # ----------------------------------------------------------------------
         # Commands  
         # ----------------------------------------------------------------------

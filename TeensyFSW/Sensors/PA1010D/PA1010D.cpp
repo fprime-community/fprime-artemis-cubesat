@@ -5,8 +5,8 @@
 // ======================================================================
 
 #include "TeensyFSW/Sensors/PA1010D/PA1010D.hpp"
-#include "FpConfig.hpp"
 #include <TimeLib.h>
+#include "FpConfig.hpp"
 
 namespace Sensors {
 
@@ -27,10 +27,39 @@ PA1010D::~PA1010D() {}
 
 bool PA1010D::init_gps(void) {
     gps.begin(9600);
-    // Set gps modes
+    // Set gps settings
     gps.sendCommand(PMTK_SET_NMEA_OUTPUT_RMCGGA);
     gps.sendCommand(PMTK_SET_NMEA_UPDATE_1HZ);
     return true;
+}
+
+// ----------------------------------------------------------------------
+// Command handler implementations
+// ----------------------------------------------------------------------
+
+void PA1010D::SetGPSMode_cmdHandler(const FwOpcodeType opCode, const U32 cmdSeq, Fw::On state) {
+    Components::OpModes opMode;
+    this->getOpMode_out(0, opMode);
+
+    if (opMode == Components::OpModes::Startup || opMode == Components::OpModes::Deployment ||
+        opMode == Components::OpModes::PowerEmergency) {
+        this->log_WARNING_HI_SetGPSDenied(opMode);
+        this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
+        return;
+    }
+    if (state == Fw::On::ON) {
+        // Wake up the GPS
+        this->log_ACTIVITY_HI_GPSStatus("wakeup");
+        gps.wakeup();
+        this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
+        this->enabled = true;
+    } else {
+        // Put GPS in standby mode
+        this->log_ACTIVITY_HI_GPSStatus("standby");
+        gps.standby();
+        this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
+        this->enabled = false;
+    }
 }
 
 // ----------------------------------------------------------------------
@@ -38,14 +67,19 @@ bool PA1010D::init_gps(void) {
 // ----------------------------------------------------------------------
 
 void PA1010D::run_handler(NATIVE_INT_TYPE portNum, NATIVE_UINT_TYPE context) {
-    Components::OpModes opmode;
-    this->getOpMode_out(0, opmode);
-    if (opmode == Components::OpModes::Startup) {
+    Components::OpModes opMode;
+    this->getOpMode_out(0, opMode);
+    if (opMode == Components::OpModes::Startup || opMode == Components::OpModes::Deployment) {
+        return;
+    }
+    if (opMode == Components::OpModes::Initialization) {
         this->enabled = true;
-    } else if (opmode == Components::OpModes::PowerEmergency) {
+    } else if (opMode == Components::OpModes::PowerEmergency) {
+        this->log_ACTIVITY_HI_GPSStatus("standby");
         gps.standby();
         this->enabled = false;
-    } else if (opmode != Components::OpModes::PowerEmergency && !this->enabled) {
+    } else if (opMode != Components::OpModes::PowerEmergency && !this->enabled) {
+        this->log_ACTIVITY_HI_GPSStatus("wakeup");
         gps.wakeup();
         this->enabled = true;
     }

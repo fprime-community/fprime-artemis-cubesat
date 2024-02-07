@@ -7,9 +7,9 @@
 #ifndef TeensyFSW_ModeManager_HPP
 #define TeensyFSW_ModeManager_HPP
 
-#include "TeensyFSW/ModeManager/ModeManagerComponentAc.hpp"
 #include <elapsedMillis.h>
 #include <FprimeArduino.hpp>
+#include "TeensyFSW/ModeManager/ModeManagerComponentAc.hpp"
 
 namespace Components {
 
@@ -42,6 +42,13 @@ class ModeManager : public ModeManagerComponentBase {
     //! Port: receiving calls from the rate group
     void run_handler(NATIVE_INT_TYPE portNum,  //!< The port number
                      NATIVE_UINT_TYPE context  //!< The call order
+    );
+
+    //! Handler implementation for run
+    //!
+    //! Port: receiving calls from the rate group
+    void tlmSend_handler(NATIVE_INT_TYPE portNum,  //!< The port number
+                         NATIVE_UINT_TYPE context  //!< The call order
     );
 
     // ----------------------------------------------------------------------

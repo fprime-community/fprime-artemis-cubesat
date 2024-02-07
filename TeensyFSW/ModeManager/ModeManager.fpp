@@ -3,10 +3,10 @@ module Components {
     enum OpModes {
         Startup,
         Deployment,
+        Initialization,
         Nominal,
         DataTransmit,
         SafeMode,
-        ThermalEmergency,
         PowerEmergency,
         Restart
     }
@@ -26,13 +26,16 @@ module Components {
         @ Port to get operation mode
         sync input port getOpMode: Components.OpMode
 
+        sync input port tlmSend: Svc.Sched
+
         @ Port to read battery power
         output port getBatteryPower: Sensors.powerData
 
         # ----------------------------------------------------------------------
         # Telemetry channels
         # ----------------------------------------------------------------------
-
+        
+        telemetry CurrentOpMode: Components.OpModes
 
         # ----------------------------------------------------------------------
         # Commands  

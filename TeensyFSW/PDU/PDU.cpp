@@ -6,6 +6,7 @@
 
 #include <FpConfig.hpp>
 #include <Fw/Time/Time.hpp>
+#include <Os/File.hpp>
 #include <TeensyFSW/PDU/PDU.hpp>
 
 namespace Components {
@@ -14,7 +15,8 @@ namespace Components {
 // Construction, initialization, and destruction
 // ----------------------------------------------------------------------
 
-PDU::PDU(const char* const compName) : PDUComponentBase(compName), started(false), burnWireOn(false) {
+PDU::PDU(const char* const compName)
+    : PDUComponentBase(compName), started(false), burnWireOn(false), isPowerEmergency(false) {
     for (NATIVE_INT_TYPE i = 0; i < sw_telem.SIZE; i++) {
         sw_telem[i].setsw(sw_lookup[i]);
         sw_telem[i].setstate(0);
@@ -48,7 +50,7 @@ void PDU::run_handler(NATIVE_INT_TYPE portNum, NATIVE_UINT_TYPE context) {
     this->getOpMode_out(0, opMode);
 
     // If in Startup mode and the radio switch was not previously switched on, turn on radio switch.
-    if (opMode == Components::OpModes::Startup && !this->started) {
+    if (opMode == Components::OpModes::Initialization && !this->started) {
         pdu_sw_packet packet;
         packet.type     = PDU_Type::CommandSetSwitch;
         packet.sw       = Components::PDU::PDU_SW::RFM23_RADIO;
@@ -67,6 +69,7 @@ void PDU::run_handler(NATIVE_INT_TYPE portNum, NATIVE_UINT_TYPE context) {
         send(pdu_packet_cmd, sizeof(packet));
         this->burnWireOn = true;
     }
+
     // If BURN1 is on but it is not in Deployment mode, turn BURN1 off.
     else if (opMode != Components::OpModes::Deployment && this->burnWireOn) {
         pdu_sw_packet packet;
@@ -76,6 +79,27 @@ void PDU::run_handler(NATIVE_INT_TYPE portNum, NATIVE_UINT_TYPE context) {
         memcpy(pdu_packet_cmd, &packet, sizeof(packet));
         send(pdu_packet_cmd, sizeof(packet));
         this->burnWireOn = false;
+    }
+
+    else if (opMode == Components::OpModes::PowerEmergency && !this->isPowerEmergency) {
+        this->log_WARNING_HI_AllSwitchesOff();
+        pdu_sw_packet packet;
+        packet.type     = PDU_Type::CommandSetSwitch;
+        packet.sw       = Components::PDU::PDU_SW::All;
+        packet.sw_state = 0;
+        memcpy(pdu_packet_cmd, &packet, sizeof(packet));
+        send(pdu_packet_cmd, sizeof(packet));
+        this->isPowerEmergency = true;
+    }
+
+    else if (opMode != Components::OpModes::PowerEmergency && this->isPowerEmergency) {
+        this->isPowerEmergency = false;
+    }
+
+    Fw::Logic rpiState;
+    this->rpiGpioRead_out(0, rpiState);
+    if (opMode == Components::OpModes::SafeMode && rpiState == Fw::Logic::HIGH) {
+        this->rpiGpioSet_out(0, Fw::Logic::LOW);
     }
 }
 
@@ -150,6 +174,7 @@ void PDU::SetSwitch_cmdHandler(const FwOpcodeType opCode,
     Components::OpModes opMode;
     this->getOpMode_out(0, opMode);
     if (opMode == Components::OpModes::PowerEmergency && state == Fw::On::ON) {
+        this->log_WARNING_HI_SwitchDenied(opMode);
         this->cmdResponse_out(opMode, cmdSeq, Fw::CmdResponse::OK);
         return;
     }
@@ -159,6 +184,11 @@ void PDU::SetSwitch_cmdHandler(const FwOpcodeType opCode,
     packet.sw_state = (state == Fw::On::ON) ? 1 : 0;
 
     if (packet.sw == Components::PDU::PDU_SW::RPI) {
+        if (opMode == Components::OpModes::SafeMode) {
+            this->log_WARNING_HI_SwitchDenied(opMode);
+            this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
+            return;
+        }
         this->rpiGpioSet_out(0, (packet.sw_state == 1) ? Fw::Logic::HIGH : Fw::Logic::LOW);
         Fw::Logic state;
         this->rpiGpioRead_out(0, state);
@@ -196,9 +226,9 @@ void PDU::Ping_cmdHandler(const FwOpcodeType opCode, const U32 cmdSeq) {
 }
 
 void PDU::SetTRQ_cmdHandler(const FwOpcodeType opCode,
-                             const U32 cmdSeq,
-                             Components::TRQ_SELECT trq,
-                             Components::TRQ_CONFIG mode) {
+                            const U32 cmdSeq,
+                            Components::TRQ_SELECT trq,
+                            Components::TRQ_CONFIG mode) {
     pdu_hbridge_packet packet;
     packet.type   = PDU_Type::CommandSetTRQ;
     packet.select = (PDU::TRQ_SELECT)(U8)trq;
@@ -219,8 +249,8 @@ void PDU::GetTRQ_cmdHandler(const FwOpcodeType opCode, const U32 cmdSeq) {
 }
 
 void PDU::SetSwitchInternal_handler(const NATIVE_INT_TYPE portNum,
-                                     const Components::PDU_SW& sw,
-                                     const Fw::On& state) {
+                                    const Components::PDU_SW& sw,
+                                    const Fw::On& state) {
     Components::OpModes opMode;
     this->getOpMode_out(0, opMode);
     if (opMode == Components::OpModes::PowerEmergency && state == Fw::On::ON) {
@@ -231,7 +261,7 @@ void PDU::SetSwitchInternal_handler(const NATIVE_INT_TYPE portNum,
     packet.sw       = (Components::PDU::PDU_SW)(U8)sw;
     packet.sw_state = (state == Fw::On::ON) ? 1 : 0;
 
-    if (packet.sw == Components::PDU::PDU_SW::RPI) {
+    if (packet.sw == Components::PDU::PDU_SW::RPI && opMode != Components::OpModes::SafeMode) {
         this->rpiGpioSet_out(0, (packet.sw_state == 1) ? Fw::Logic::HIGH : Fw::Logic::LOW);
         Fw::Logic state;
         this->rpiGpioRead_out(0, state);

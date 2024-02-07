@@ -102,7 +102,10 @@ bool RFM23::send(const U8* payload, NATIVE_UINT_TYPE len) {
 // ----------------------------------------------------------------------
 
 Drv::SendStatus RFM23::comDataIn_handler(const NATIVE_INT_TYPE portNum, Fw::Buffer& sendBuffer) {
+    Components::OpModes opMode;
+    this->getOpMode_out(0, opMode);
     if ((radio_state == Fw::On::ON) && (sendBuffer.getSize() > 0) &&
+        (opMode == Components::OpModes::Nominal || opMode == Components::OpModes::DataTransmit) &&
         (not this->send(sendBuffer.getData(), sendBuffer.getSize()))) {
         radio_state = Fw::On::OFF;
     }
@@ -139,6 +142,11 @@ void RFM23::run_handler(const NATIVE_INT_TYPE portNum, NATIVE_UINT_TYPE context)
 }
 
 void RFM23::healthCheck_handler(const NATIVE_INT_TYPE portNum, NATIVE_UINT_TYPE context) {
+    Components::OpModes opMode;
+    this->getOpMode_out(0, opMode);
+    if (opMode == Components::OpModes::Startup || opMode == Components::OpModes::Deployment) {
+        return;
+    }
     Components::PDUTlm states;
     this->PDUGetSwitch_out(0, states);
     if (states[1].getstate() == 0 && this->radio_state == Fw::On::ON) {
@@ -146,6 +154,7 @@ void RFM23::healthCheck_handler(const NATIVE_INT_TYPE portNum, NATIVE_UINT_TYPE 
         this->offTime     = 0;
     }
     if (this->radio_state == Fw::On::OFF && this->offTime > 30000) {
+        this->log_WARNING_HI_RadioReset(30);
         this->PDUSetSwitch_out(0, Components::PDU_SW::RFM23_RADIO, Fw::On::ON);
         this->isInitialized = false;
     }

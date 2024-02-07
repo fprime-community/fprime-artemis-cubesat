@@ -5,6 +5,7 @@
 // ======================================================================
 
 #include "TeensyFSW/ModeManager/ModeManager.hpp"
+#include <Os/File.hpp>
 #include "FpConfig.hpp"
 
 namespace Components {
@@ -14,7 +15,11 @@ namespace Components {
 // ----------------------------------------------------------------------
 
 ModeManager ::ModeManager(const char* const compName)
-    : ModeManagerComponentBase(compName), currentMode(OpModes::Startup), started(false), startupTimeout(0), deploymentTimeout(0) {}
+    : ModeManagerComponentBase(compName),
+      currentMode(OpModes::Startup),
+      started(false),
+      startupTimeout(0),
+      deploymentTimeout(0) {}
 
 ModeManager ::~ModeManager() {}
 
@@ -26,6 +31,10 @@ void ModeManager ::getOpMode_handler(NATIVE_INT_TYPE portNum, Components::OpMode
     mode = this->currentMode;
 }
 
+void ModeManager ::tlmSend_handler(NATIVE_INT_TYPE portNum, NATIVE_UINT_TYPE context) {
+    this->tlmWrite_CurrentOpMode(this->currentMode);
+}
+
 void ModeManager ::run_handler(NATIVE_INT_TYPE portNum, NATIVE_UINT_TYPE context) {
     F32 vbattVoltage;
     F32 vbattCurrent;
@@ -34,48 +43,74 @@ void ModeManager ::run_handler(NATIVE_INT_TYPE portNum, NATIVE_UINT_TYPE context
     if (this->started) {
         this->getBatteryPower_out(0, vbattVoltage, vbattCurrent);
     }
-    
+
     switch (this->currentMode) {
-        case OpModes::Startup:
-        {
-            // TODO: Check SD Card to see if deployment was already made. If yes, go to Nominal mode. If not, go to deployment mode.
-            bool deploymentCompleted = false;
+        case OpModes::Startup: {
+            // Check if deployment was already made by looking for the deployment file
+            Os::File deploymentFile;
+            Os::File::Status fileStatus =
+                deploymentFile.open("deployment.txt", Os::File::OPEN_READ);
+
+            bool deploymentCompleted = (fileStatus == Os::File::OP_OK);
 
             if (deploymentCompleted) {
-                // Give 5 seconds to let everything start up properly
-                if (this->startupTimeout > 5000) {
-                    this->currentMode = OpModes::Nominal;
-                    this->started = true;
-                }
+                this->currentMode = OpModes::Initialization;
             } else {
                 // Wait 30 minutes before deploying antennas.
-                if (this->startupTimeout > 30 * 60 * 1000) {
+                if (this->startupTimeout > 10000) {
                     this->deploymentTimeout = 0;
-                    this->currentMode = OpModes::Deployment;
-                    this->started = true;
+                    this->currentMode       = OpModes::Deployment;
+                    this->started           = true;
                 }
             }
             break;
         }
-        case OpModes::Deployment:
-        {
-            // TODO: delay for 30 seconds? to allow burn wires to complete.
+        case OpModes::Deployment: {
+            // delay for 30 seconds to allow burn wires to complete.
             if (this->deploymentTimeout > 30000) {
-                this->currentMode = OpModes::Nominal;
+                // Create and write to deployment.txt
+                Os::File deploymentFile;
+                Os::File::Status fileStatus =
+                    deploymentFile.open("deployment.txt", Os::File::OPEN_WRITE);
+
+                if (fileStatus == Os::File::OP_OK) {
+                    const char dataToWrite = '1';
+                    NATIVE_INT_TYPE size   = sizeof(dataToWrite);
+                    deploymentFile.write(&dataToWrite, size);
+                    deploymentFile.close();
+                }
+                this->currentMode = OpModes::Initialization;
             }
+            break;
+        }
+        case OpModes::Initialization: {
+            // Give 5 seconds to let everything start up properly
+            if (this->startupTimeout > 5000) {
+                this->currentMode = OpModes::Nominal;
+                this->started     = true;
+            }
+            break;
+        }
+        case OpModes::Nominal: {
+            break;
+        }
+        case OpModes::DataTransmit: {
             break;
         }
         case OpModes::PowerEmergency:
             // If battery power is back to reasonable power, resume to the previous operation mode.
-            this->currentMode = this->prevOpMode;
+            if (vbattVoltage >= 7.2) {
+                this->currentMode = this->prevOpMode;
+            }
             break;
         default:
             break;
     }
 
     // Check power of battery. If below threshold, switch to PowerEmergency mode.
-    if (this->currentMode != OpModes::Startup && vbattVoltage < 6) {
-        this->prevOpMode = this->currentMode;
+    if (this->currentMode != OpModes::Startup && this->currentMode != OpModes::PowerEmergency &&
+        vbattVoltage < 6) {
+        this->prevOpMode  = this->currentMode;
         this->currentMode = OpModes::PowerEmergency;
     }
 }

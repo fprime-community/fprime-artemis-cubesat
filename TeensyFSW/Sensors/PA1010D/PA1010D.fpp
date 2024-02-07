@@ -25,11 +25,27 @@ module Sensors {
         # ----------------------------------------------------------------------
 
         @ GPS Data
-       telemetry GPSTlm: GPSTlmData
+        telemetry GPSTlm: GPSTlmData
 
         # ----------------------------------------------------------------------
         # Commands  
         # ----------------------------------------------------------------------
+
+        @ Command to put GPS into standby mode
+        sync command SetGPSMode(state: Fw.On)
+
+        # ----------------------------------------------------------------------
+        # Events
+        # ----------------------------------------------------------------------
+
+        event GPSStatus(status: string) \
+            severity activity high \
+            format "GPS status has been set to {}"
+
+        event SetGPSDenied(mode: Components.OpModes) \
+            severity warning high \
+            format "Spacecraft is in {}"
+
 
         ###############################################################################
         # Standard AC Ports: Required for Channels, Events, Commands, and Parameters  #
@@ -48,6 +64,12 @@ module Sensors {
 
         @ Port for sending telemetry channels to downlink
         telemetry port tlmOut
+
+        @ Port for sending textual representation of events
+        text event port logTextOut
+
+        @ Port for sending events to downlink
+        event port logOut
 
     }
 }

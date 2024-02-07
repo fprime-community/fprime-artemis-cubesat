@@ -170,4 +170,7 @@ module TeensyFSW {
 
   # Mode Manager
   instance ModeManager: Components.ModeManager base id 0x6000
+  
+  # Telemetry Dispatcher
+  instance TlmDispatcher: Components.TlmDispatcher base id 0x7000
 }

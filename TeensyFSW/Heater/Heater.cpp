@@ -14,8 +14,7 @@ namespace Components {
 // Construction, initialization, and destruction
 // ----------------------------------------------------------------------
 
-Heater ::Heater(const char* const compName)
-    : HeaterComponentBase(compName), batteryTemp(0) {}
+Heater ::Heater(const char* const compName) : HeaterComponentBase(compName), batteryTemp(0) {}
 
 Heater ::~Heater() {}
 
@@ -50,9 +49,10 @@ void Heater::run_handler(const NATIVE_INT_TYPE portNum, NATIVE_UINT_TYPE context
 // ----------------------------------------------------------------------
 
 void Heater ::SetHeater_cmdHandler(const FwOpcodeType opCode, const U32 cmdSeq, Fw::On state) {
-    Components::OpModes opmode;
-    this->getOpMode_out(0, opmode);
-    if (opmode == Components::OpModes::PowerEmergency) {
+    Components::OpModes opMode;
+    this->getOpMode_out(0, opMode);
+    if (opMode == Components::OpModes::PowerEmergency) {
+        this->log_WARNING_HI_HeaterDenied(opMode);
         this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
         return;
     }

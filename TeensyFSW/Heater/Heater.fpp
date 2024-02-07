@@ -34,6 +34,10 @@ module Components {
         severity activity high \
         format "Heater is: {}"
 
+        event HeaterDenied(mode: Components.OpModes) \
+        severity warning high \
+        format "Spacecraft is in {}"
+
         # ----------------------------------------------------------------------
         # Commands  
         # ----------------------------------------------------------------------
