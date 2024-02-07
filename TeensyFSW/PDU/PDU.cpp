@@ -175,7 +175,7 @@ void PDU::SetSwitch_cmdHandler(const FwOpcodeType opCode,
     this->getOpMode_out(0, opMode);
     if (opMode == Components::OpModes::PowerEmergency && state == Fw::On::ON) {
         this->log_WARNING_HI_SwitchDenied(opMode);
-        this->cmdResponse_out(opMode, cmdSeq, Fw::CmdResponse::OK);
+        this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
         return;
     }
     pdu_sw_packet packet;
