@@ -118,6 +118,8 @@ void setupTopology(const TopologyState& state) {
     // autocoder.
     startTasks(state);
 
+    cmdSplitter.configure(0x10000000);
+
     rateDriver.configure(1);
     commDriver.configure(&Serial);
     pduCommDriver.configure(&Serial1);
