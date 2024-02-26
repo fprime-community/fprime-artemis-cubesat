@@ -39,9 +39,7 @@ void ModeManager ::run_handler(NATIVE_INT_TYPE portNum, NATIVE_UINT_TYPE context
     F32 vbattCurrent;
 
     // Read battery power only if startup is complete
-    if (this->started) {
-        this->getBatteryPower_out(0, vbattVoltage, vbattCurrent);
-    }
+    this->getBatteryPower_out(0, vbattVoltage, vbattCurrent);
 
     switch (this->currentMode) {
         case OpModes::Startup: {
@@ -53,12 +51,12 @@ void ModeManager ::run_handler(NATIVE_INT_TYPE portNum, NATIVE_UINT_TYPE context
             bool deploymentCompleted = (fileStatus == Os::File::OP_OK);
 
             if (deploymentCompleted) {
-                this->timeout = 0;
+                this->timeout     = 0;
                 this->currentMode = OpModes::Initialization;
             } else {
-                // Wait 30 minutes before deploying antennas.
+                // Wait x amount of time before deploying antennas.
                 if (this->timeout > 10000) {
-                    this->timeout = 0;
+                    this->timeout     = 0;
                     this->currentMode = OpModes::Deployment;
                 }
             }
@@ -78,7 +76,7 @@ void ModeManager ::run_handler(NATIVE_INT_TYPE portNum, NATIVE_UINT_TYPE context
                     deploymentFile.write(&dataToWrite, size);
                     deploymentFile.close();
                 }
-                this->timeout = 0;
+                this->timeout     = 0;
                 this->currentMode = OpModes::Initialization;
             }
             break;
@@ -99,7 +97,7 @@ void ModeManager ::run_handler(NATIVE_INT_TYPE portNum, NATIVE_UINT_TYPE context
         }
         case OpModes::PowerEmergency:
             // If battery power is back to reasonable power, resume to the previous operation mode.
-            if (vbattVoltage >= 7.2) {
+            if (vbattVoltage >= 6.5) {
                 this->currentMode = this->prevOpMode;
             }
             break;
@@ -109,7 +107,7 @@ void ModeManager ::run_handler(NATIVE_INT_TYPE portNum, NATIVE_UINT_TYPE context
 
     // Check power of battery. If below threshold, switch to PowerEmergency mode.
     if (this->currentMode != OpModes::Startup && this->currentMode != OpModes::PowerEmergency &&
-        vbattVoltage < 6) {
+        vbattVoltage < 6.5) {
         this->prevOpMode  = this->currentMode;
         this->currentMode = OpModes::PowerEmergency;
     }
