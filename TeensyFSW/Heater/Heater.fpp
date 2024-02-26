@@ -9,11 +9,14 @@ module Components {
         @ Internal PDU get switch
         output port PDUGetSwitch: Components.PDU_GET_SW_CMD
 
-        @ Internal read temperature sensors
+        @ Internal read temperature sensor
         sync input port BatteryTemp: Sensors.TempVal
 
         @ Port: receiving calls from the rate group
         sync input port run: Svc.Sched
+
+        @ Port to get current Operation Mode
+        output port getOpMode: Components.OpMode
 
         # ----------------------------------------------------------------------
         # Telemetry
@@ -30,6 +33,10 @@ module Components {
         event HeaterState(on_off: Fw.On) \
         severity activity high \
         format "Heater is: {}"
+
+        event HeaterDenied(mode: Components.OpModes) \
+        severity warning high \
+        format "Spacecraft is in {}"
 
         # ----------------------------------------------------------------------
         # Commands  

@@ -116,5 +116,6 @@
         <channel name="pdu.TRQStatus"/>
         <channel name="pdu.TRQStatus"/>
         <channel name="gps.GPSTlm"/>
+        <channel name="ModeManager.CurrentOpMode"/>
     </ignore>
 </packets>

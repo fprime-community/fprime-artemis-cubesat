@@ -41,6 +41,15 @@ class INA219 : public INA219ComponentBase {
                      NATIVE_UINT_TYPE context       /*!< The call order */
     );
 
+    //! Handler implementation for getPowerData
+      //!
+      //! Port to return power data of current sensor
+      void getPowerData_handler(
+          NATIVE_INT_TYPE portNum, //!< The port number
+          F32& voltage,
+          F32& current
+      );
+
     Adafruit_INA219* currentSensor;
 };
 

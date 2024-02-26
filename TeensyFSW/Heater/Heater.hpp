@@ -35,7 +35,6 @@ class Heater : public HeaterComponentBase {
     //!
     void BatteryTemp_handler(const NATIVE_INT_TYPE portNum, /*!< The port number*/
                              F32 val);
-
     //! Handler implementation for run
     //!
     void run_handler(const NATIVE_INT_TYPE portNum, /*!< The port number*/

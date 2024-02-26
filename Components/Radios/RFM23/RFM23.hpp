@@ -9,6 +9,7 @@
 
 #include <RHHardwareSPI1.h>
 #include <RH_RF22.h>
+#include <elapsedMillis.h>
 #include <FprimeArduino.hpp>
 #include "Components/Radios/RFM23/RFM23ComponentAc.hpp"
 
@@ -57,10 +58,19 @@ class RFM23 : public RFM23ComponentBase {
                      NATIVE_UINT_TYPE context       /*!< The call order */
     );
 
+    //! Handler implementation for health_check
+    //!
+    void healthCheck_handler(const NATIVE_INT_TYPE portNum, /*!< The port number */
+                             NATIVE_UINT_TYPE context       /*!< The call order */
+    );
+
     RH_RF22 rfm23;
+    bool isInitialized;
     Fw::On radio_state;
+    Fw::On prev_radio_state;
     U16 pkt_rx_count;
     U16 pkt_tx_count;
+    elapsedMillis offTime;
 };
 
 }  // end namespace Radios

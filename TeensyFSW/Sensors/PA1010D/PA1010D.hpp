@@ -42,8 +42,19 @@ class PA1010D : public PA1010DComponentBase {
     void run_handler(NATIVE_INT_TYPE portNum,  //!< The port number
                      NATIVE_UINT_TYPE context  //!< The call order
     );
+    // ----------------------------------------------------------------------
+    // Command handler implementations
+    // -
+    //! Implementation for SetHeater command handler
+
+    //! Command to set GPS mode
+    void SetGPSMode_cmdHandler(const FwOpcodeType opCode, /*!< The opcode*/
+                               const U32 cmdSeq,          /*!< The command sequence number*/
+                               Fw::On state);
 
     Sensors::GPSTlmData data;
+
+    bool enabled;
 };
 
 }  // namespace Sensors

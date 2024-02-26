@@ -16,6 +16,8 @@
 
 #include <Components/Radios/RFM23/RFM23.hpp>
 
+#include <SD.h>
+
 // Instantiate a system logger that will handle Fw::Logger::logMsg calls
 Os::Log logger;
 
@@ -32,6 +34,7 @@ void setup() {
     Serial.begin(115200);
     Serial1.begin(115200);
     Serial2.begin(115200);
+    SD.begin(BUILTIN_SDCARD);
     SPI1.setMISO(Radios::RFM23::SPI_MISO);
     SPI1.setMOSI(Radios::RFM23::SPI_MOSI);
     SPI1.setSCK(Radios::RFM23::SPI_SCK);

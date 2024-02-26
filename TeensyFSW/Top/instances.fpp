@@ -167,4 +167,10 @@ module TeensyFSW {
   instance Analog9: Arduino.AnalogDriver base id 0x5500
   
   instance Analog17: Arduino.AnalogDriver base id 0x5600
+
+  # Mode Manager
+  instance ModeManager: Components.ModeManager base id 0x6000
+  
+  # Telemetry Dispatcher
+  instance TlmDispatcher: Components.TlmDispatcher base id 0x7000
 }

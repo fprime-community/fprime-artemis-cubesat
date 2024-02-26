@@ -17,6 +17,7 @@ namespace Radios {
 RFM23::RFM23(const char* const compName)
     : RFM23ComponentBase(compName),
       rfm23(RFM23_CS, RFM23_INT, hardware_spi1),
+      isInitialized(false),
       radio_state(Fw::On::OFF),
       pkt_rx_count(0),
       pkt_tx_count(0) {}
@@ -26,6 +27,10 @@ RFM23::~RFM23() {}
 void RFM23 ::recv() {
     this->gpioSetRxOn_out(0, Fw::Logic::LOW);
     this->gpioSetTxOn_out(0, Fw::Logic::HIGH);
+
+    if (this->radio_state == Fw::On::OFF) {
+        return;
+    }
 
     if (rfm23.available()) {
         U8 buf[RH_RF22_MAX_MESSAGE_LEN];
@@ -51,17 +56,19 @@ bool RFM23::send(const U8* payload, NATIVE_UINT_TYPE len) {
     this->gpioSetRxOn_out(0, Fw::Logic::HIGH);
     this->gpioSetTxOn_out(0, Fw::Logic::LOW);
 
+    if (this->radio_state == Fw::On::OFF) {
+        return false;
+    }
+
     NATIVE_UINT_TYPE offset = 0;
     while (len > RH_RF22_MAX_MESSAGE_LEN)
 
     {
         if (!rfm23.send(&payload[offset], RH_RF22_MAX_MESSAGE_LEN)) {
-            Fw::Logger::logMsg("1");
             return false;
         }
         // if (!rfm23.waitPacketSent(1000))
         // {
-        //     Fw::Logger::logMsg("2");
         //     return false;
         // }
         delay(1000);
@@ -71,12 +78,10 @@ bool RFM23::send(const U8* payload, NATIVE_UINT_TYPE len) {
     }
 
     if (!rfm23.send(&payload[offset], len)) {
-        Fw::Logger::logMsg("3");
         return false;
     }
     // if (!rfm23.waitPacketSent(1000))
     // {
-    //     Fw::Logger::logMsg("4");
     //     return false;
     // }
     delay(1000);
@@ -92,14 +97,15 @@ bool RFM23::send(const U8* payload, NATIVE_UINT_TYPE len) {
 
     return true;
 }
+
 // ----------------------------------------------------------------------
 // Handler implementations for user-defined typed input ports
 // ----------------------------------------------------------------------
 
 Drv::SendStatus RFM23::comDataIn_handler(const NATIVE_INT_TYPE portNum, Fw::Buffer& sendBuffer) {
-    if ((radio_state == Fw::On::ON) && (sendBuffer.getSize() > 0) &&
+    if ((this->radio_state == Fw::On::ON) && (sendBuffer.getSize() > 0) &&
         (not this->send(sendBuffer.getData(), sendBuffer.getSize()))) {
-        radio_state = Fw::On::OFF;
+        this->radio_state = Fw::On::OFF;
     }
     deallocate_out(0, sendBuffer);
     return Drv::SendStatus::SEND_OK;  // Always send ok to deframer as it does not handle this
@@ -107,7 +113,7 @@ Drv::SendStatus RFM23::comDataIn_handler(const NATIVE_INT_TYPE portNum, Fw::Buff
 }
 
 void RFM23::run_handler(const NATIVE_INT_TYPE portNum, NATIVE_UINT_TYPE context) {
-    if (radio_state == Fw::On::OFF) {
+    if (this->isInitialized == false) {
         // rfm23.reset();
         if (!rfm23.init()) {
             Fw::Logger::logMsg("radio init failed \n");
@@ -116,7 +122,7 @@ void RFM23::run_handler(const NATIVE_INT_TYPE portNum, NATIVE_UINT_TYPE context)
         rfm23.setFrequency(RFM23_FREQ);
         rfm23.setTxPower(RH_RF22_RF23BP_TXPOW_30DBM);
         rfm23.sleep();
-        rfm23.setModemConfig(RH_RF22::FSK_Rb2Fd5);
+        rfm23.setModemConfig(RH_RF22::GFSK_Rb2Fd5);
         rfm23.sleep();
         // rfm23.setModeIdle();
         Fw::Success radioSuccess = Fw::Success::SUCCESS;
@@ -124,11 +130,37 @@ void RFM23::run_handler(const NATIVE_INT_TYPE portNum, NATIVE_UINT_TYPE context)
             this->comStatus_out(0, radioSuccess);
         }
         Fw::Logger::logMsg("radio init success \n");
-        radio_state = Fw::On::ON;
+        this->isInitialized = true;
+        this->radio_state   = Fw::On::ON;
+    } else if (this->radio_state == Fw::On::ON) {
+        this->recv();
+        this->tlmWrite_temp(rfm23.temperatureRead());
     }
-    this->recv();
-    this->tlmWrite_Status(radio_state);
-    this->tlmWrite_temp(rfm23.temperatureRead());
+    this->tlmWrite_Status(this->radio_state);
+}
+
+void RFM23::healthCheck_handler(const NATIVE_INT_TYPE portNum, NATIVE_UINT_TYPE context) {
+    if (this->isConnected_getOpMode_OutputPort(0)) {
+        Components::OpModes opMode;
+        this->getOpMode_out(0, opMode);
+        if (opMode == Components::OpModes::Startup || opMode == Components::OpModes::Deployment) {
+            this->offTime = 0;
+            return;
+        }
+    }
+
+    Components::PDUTlm states;
+    this->PDUGetSwitch_out(0, states);
+    if (states[1].getstate() == 0 && this->radio_state == Fw::On::ON) {
+        this->radio_state = Fw::On::OFF;
+        this->offTime     = 0;
+    }
+    if (this->radio_state == Fw::On::OFF && this->offTime > 30000) {
+        this->log_WARNING_HI_RadioReset(30);
+        this->PDUSetSwitch_out(0, Components::PDU_SW::RFM23_RADIO, Fw::On::ON);
+        this->offTime = 0;
+        this->isInitialized = false;
+    }
 }
 
 }  // end namespace Radios

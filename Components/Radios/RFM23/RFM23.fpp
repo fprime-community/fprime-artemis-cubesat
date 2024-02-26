@@ -11,6 +11,9 @@ module Radios {
         @ Com data passing back out
         output port comDataOut: Drv.ByteStreamRecv
 
+        @ Port to get current Operation Mode
+        output port getOpMode: Components.OpMode  
+
         # ----------------------------------------------------------------------
         # Implementation ports
         # ----------------------------------------------------------------------
@@ -21,7 +24,7 @@ module Radios {
         @ Allows for allocation of buffers
         output port allocate: Fw.BufferGet
 
-          # ----------------------------------------------------------------------
+        # ----------------------------------------------------------------------
         # Telemetry
         # ----------------------------------------------------------------------
 
@@ -40,6 +43,11 @@ module Radios {
          @ Telemetry channel for radio temp
         telemetry temp: I32
 
+
+        # ----------------------------------------------------------------------
+        # Events
+        # ----------------------------------------------------------------------
+
         @ Prints received packet payload
         event PayloadMessageTX(msg: U32) \
             severity diagnostic \
@@ -49,6 +57,10 @@ module Radios {
         event PayloadMessageRX(msg: U32) \
             severity diagnostic \
             format "Payload Size Recevied: {}"
+
+        event RadioReset(sec: U32) \
+            severity warning high \
+            format "Radio was off for {} seconds. Resetting radio now."
         
         # ----------------------------------------------------------------------
         # Special ports
@@ -57,11 +69,20 @@ module Radios {
         @ Port receiving calls from the rate group
         sync input port run: Svc.Sched
 
+        @ Port receiving calls from the rate group
+        sync input port healthCheck: Svc.Sched
+
         @ Port sending calls to the GPIO driver
         output port gpioSetRxOn: Drv.GpioWrite
 
         @ Port sending calls to the GPIO driver
         output port gpioSetTxOn: Drv.GpioWrite
+
+        @ Internal PDU set switch
+        output port PDUSetSwitch: Components.PDU_SW_CMD
+
+        @ Internal PDU get switch
+        output port PDUGetSwitch: Components.PDU_GET_SW_CMD
 
         ###############################################################################
         # Standard AC Ports: Required for Channels, Events, Commands, and Parameters  #

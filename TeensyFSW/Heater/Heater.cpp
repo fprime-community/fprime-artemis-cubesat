@@ -14,8 +14,7 @@ namespace Components {
 // Construction, initialization, and destruction
 // ----------------------------------------------------------------------
 
-Heater ::Heater(const char* const compName)
-    : HeaterComponentBase(compName), batteryTemp(0), enableDisableAuto(true) {}
+Heater ::Heater(const char* const compName) : HeaterComponentBase(compName), batteryTemp(0) {}
 
 Heater ::~Heater() {}
 
@@ -28,6 +27,12 @@ void Heater ::BatteryTemp_handler(const NATIVE_INT_TYPE portNum, F32 val) {
 }
 
 void Heater::run_handler(const NATIVE_INT_TYPE portNum, NATIVE_UINT_TYPE context) {
+    Components::OpModes opMode;
+    this->getOpMode_out(0, opMode);
+    if (opMode == Components::OpModes::Startup || opMode == Components::OpModes::PowerEmergency) {
+        return;
+    }
+
     if (!this->enableDisableAuto) {
         return;
     }
@@ -38,11 +43,19 @@ void Heater::run_handler(const NATIVE_INT_TYPE portNum, NATIVE_UINT_TYPE context
         this->PDUSetSwitch_out(0, Components::PDU_SW::HEATER, Fw::On::OFF);
     }
 }
+
 // ----------------------------------------------------------------------
 // Command handler implementations
 // ----------------------------------------------------------------------
 
 void Heater ::SetHeater_cmdHandler(const FwOpcodeType opCode, const U32 cmdSeq, Fw::On state) {
+    Components::OpModes opMode;
+    this->getOpMode_out(0, opMode);
+    if (opMode == Components::OpModes::PowerEmergency) {
+        this->log_WARNING_HI_HeaterDenied(opMode);
+        this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
+        return;
+    }
     this->PDUSetSwitch_out(0, Components::PDU_SW::HEATER, state);
     this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
 }

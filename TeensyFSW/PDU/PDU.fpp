@@ -41,6 +41,7 @@ module Components {
         trq: string
         mode: string
     }
+    
     array PDUTlm = [11] pduTlmStruct
 
     array trqTlm = [6] trqTlmStruct
@@ -50,12 +51,15 @@ module Components {
         state: Fw.On
     )
 
-port PDU_GET_SW_CMD (
- 
-    ref states:Components.PDUTlm
-)
+    port PDU_GET_SW_CMD (
+        ref states:Components.PDUTlm
+    )
+
     @ Component for the Artemis CubeSat's PDU
     passive component PDU {
+
+        @ Port: receiving calls from the rate group
+        sync input port run: Svc.Sched
 
         @ Data coming in from the framing component
         sync input port comDataIn: Drv.ByteStreamRecv
@@ -81,6 +85,9 @@ port PDU_GET_SW_CMD (
         @ Port: receiving calls from the rate group
         sync input port wdt: Svc.Sched
 
+        @ Port to get current Operation Mode
+        output port getOpMode: Components.OpMode  
+
         # ----------------------------------------------------------------------
         # Telemetry
         # ----------------------------------------------------------------------
@@ -99,6 +106,14 @@ port PDU_GET_SW_CMD (
         event PduPong() \
         severity activity high \
         format "PDU is connected"
+
+        event SwitchDenied(mode: Components.OpModes) \
+        severity warning high \
+        format "Spacecraft is in {}"
+
+        event AllSwitchesOff () \
+        severity warning high \
+        format "All switches have been disabled due to low battery charge."
 
         # ----------------------------------------------------------------------
         # Commands  

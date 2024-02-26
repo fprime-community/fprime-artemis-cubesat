@@ -1,15 +1,21 @@
-module Sensors {
+module Components {
 
-    array GPSTlmData = [5] GPSTlmStruct
-
-    struct GPSTlmStruct {
-        data: string
-        val: F32
+    enum OpModes {
+        Startup,
+        Deployment,
+        Initialization,
+        Nominal,
+        DataTransmit,
+        SafeMode,
+        PowerEmergency,
+        Restart
     }
 
-    @ Component for the Adafruit Mini GPS PA1010D Module
-    passive component PA1010D {
-    
+    port OpMode(ref mode: OpModes)
+
+    @ Component that controls operational modes
+    passive component ModeManager {
+        
         # ----------------------------------------------------------------------
         # General Ports
         # ----------------------------------------------------------------------
@@ -17,35 +23,25 @@ module Sensors {
         @ Port: receiving calls from the rate group
         sync input port run: Svc.Sched
 
-        @ Port to get current Operation Mode
-        output port getOpMode: Components.OpMode
+        @ Port to get operation mode
+        sync input port getOpMode: Components.OpMode
+
+        sync input port tlmSend: Svc.Sched
+
+        @ Port to read battery power
+        output port getBatteryPower: Sensors.powerData
 
         # ----------------------------------------------------------------------
         # Telemetry channels
         # ----------------------------------------------------------------------
-
-        @ GPS Data
-        telemetry GPSTlm: GPSTlmData
+        
+        telemetry CurrentOpMode: Components.OpModes
 
         # ----------------------------------------------------------------------
         # Commands  
         # ----------------------------------------------------------------------
 
-        @ Command to put GPS into standby mode
-        sync command SetGPSMode(state: Fw.On)
-
-        # ----------------------------------------------------------------------
-        # Events
-        # ----------------------------------------------------------------------
-
-        event GPSStatus(status: string) \
-            severity activity high \
-            format "GPS status has been set to {}"
-
-        event SetGPSDenied(mode: Components.OpModes) \
-            severity warning high \
-            format "Spacecraft is in {}"
-
+        sync command SetMode(mode: Components.OpModes)
 
         ###############################################################################
         # Standard AC Ports: Required for Channels, Events, Commands, and Parameters  #
@@ -62,14 +58,14 @@ module Sensors {
         @ Port for sending command responses
         command resp port cmdResponseOut
 
-        @ Port for sending telemetry channels to downlink
-        telemetry port tlmOut
-
         @ Port for sending textual representation of events
         text event port logTextOut
 
         @ Port for sending events to downlink
         event port logOut
+
+        @ Port for sending telemetry channels to downlink
+        telemetry port tlmOut
 
     }
 }
