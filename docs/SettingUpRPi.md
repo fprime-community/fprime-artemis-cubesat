@@ -11,32 +11,34 @@ To initiate the Raspberry Pi setup, begin by installing an operating system onto
 1. Download the [Raspberry Pi Imager](https://www.raspberrypi.com/software/)
 2. Insert the micro SD card into your computer
 3. Open the Raspberry Pi Imager application
-4. Select `CHOOSE OS` 
-5. Select `Raspberry Pi OS (Legacy) Lite`, you can find it in the `Raspberry Pi OS (other)` section
+4. Select `CHOOSE DEVICE` 
+5. Select `Raspberry Pi Zero`
+6. Next, select `CHOOSE OS` 
+7. Select `Raspberry Pi OS (Legacy) Lite`, you can find it in the `Raspberry Pi OS (other)` section
     - To utilize the Raspberry Pi Camera with F', it is imperative to have the Bullseye OS installed. Confirm that the operating system explicitly indicates `A port of Debian Bullseye` to ensure compatibility.
-6. Select `CHOOSE STORAGE` and choose the SD card you wish to write your image to
-7. Select the cog wheel will appear in the bottom right 
-    - This will open an `Advanced Options` menu, enabling you to pre-configure settings on the Raspberry Pi.
-8. In the “Advanced Options” menu there is going to be a few things that you need to select:
+8. Select `CHOOSE STORAGE` and choose the SD card you wish to write your image to
+9. Then, select `NEXT`
+10. On the popup that has appeared select `EDIT SETTINGS`
+    - This will open an `OS Customization` menu, enabling you to pre-configure settings on the Raspberry Pi.
+10. In this menu there is going to be a few things that you need to select:
     - Select the checkbox next to `Set hostname`, leave the default name
-    - Select the checkbox next to `Enable SSH`, leave the default selections
     - Select the checkbox next to `Set username and password`, and proceed to define the desired username and password. For the purposes of these instructions, we will use the following, although you are free to customize it as you prefer:
         - Username: pi
         - Password: pi
     - Select the checkbox next to `Set locale settings` and select your timezone and preffered keyboard layout.
+    - In the `SERVICES` tab select the checkbox next to `Enable SSH`, leave the default selections
     - Once you have completed all the aforementioned steps, click on `SAVE`
 
-With the SD card settings configured and verified according to the above steps, proceed to select `WRITE` This action will inscribe the configured settings and the operating system onto your SD card.
+With the SD card settings configured and verified according to the above steps, proceed to select `YES` This action will inscribe the configured settings and the operating system onto your SD card.
 
 *Note: If using Raspberry Pi Imager on Windows 10 with controlled folder access enabled, you will need to explicitly allow Raspberry Pi Imager permission to write the SD card. If this is not done, the imaging process will fail with a "failed to write" error.*
 
 # Enabling SSH over USB
 For communication with the Raspberry Pi, we will utilize SSH, also known as Secure Shell. SSH is a network protocol that provides a secure means to access a computer over an unsecured network.
 
-Enabling SSH on the Raspberry Pi allows for remote control from another computer. To achieve this, configure the Raspberry Pi to recognize the USB port as an Ethernet port. To accomplish this, we need to configure the RPI to recognize the USB port as an ethernet port. Begin by mounting the micro SD card in a computer and opening it in a code editor.
+Enabling SSH on the Raspberry Pi allows for remote control from another computer. To achieve this, configure the Raspberry Pi to recognize the USB port as an Ethernet port. Begin by mounting the micro SD card in a computer and opening it in a code editor.
 
-1. Once you have the SD card files open in your code editor, locate and open a file situated at the root of the SD card named config.txt.
-
+1. Once you have the SD card files open in your code editor, locate and open a file situated at the root of the SD card named `config.txt`.
 
     Within this file, append the following line at the very bottom:
 
@@ -46,7 +48,7 @@ Enabling SSH on the Raspberry Pi allows for remote control from another computer
 
     Save the file. 
 
-2. The aforementioned line prepares us for the modification of the next file, cmdline.txt, with a slight variation. Unlike newlines or commas, parameters in this file are delimited by space characters.
+2. The aforementioned line prepares us for the modification of the next file, `cmdline.txt`, with a slight variation. Unlike newlines or commas, parameters in this file are delimited by space characters.
 
     After "rootwait," append the following text, ensuring there is only one space between "rootwait" and the new text to ensure proper parsing:
 
@@ -61,6 +63,8 @@ Enabling SSH on the Raspberry Pi allows for remote control from another computer
     *Note: The formatting of cmdline.txt is highly strict. Commands must be separated by spaces, and newlines are not permitted.*
 
 3. Finally, create a new file inside the SD card called `ssh`.
+    
+    Save the file.
 
 
 Having made these edits to the files, eject the SD card and insert it into the Raspberry Pi.    
@@ -78,7 +82,7 @@ Power on the Pi Zero using the USB data cable. Ensure you connect it to the port
 After waiting for a moment, input the following command in your Mac's Terminal:
 
 ```shell
-$ ssh pi@raspberrypi.local
+ssh pi@raspberrypi.local
 ```
 
 Note: In this example, `pi` is the username we utilized. If you modified the username during the previous steps, remember to adjust the command accordingly to reflect the username you set.
@@ -100,7 +104,7 @@ Navigate to the device manager and examine the section labeled "Network adapters
 After waiting for a moment, input the following command in your command line interface:
 
 ``` shell
-$ ssh pi@raspberrypi.local
+ssh pi@raspberrypi.local
 ```
 
 Note: In this example, `pi` is the username we utilized. If you modified the username during the previous steps, remember to adjust the command accordingly to reflect the username you set.
@@ -147,7 +151,7 @@ The last step in setting up the Raspberry Pi is enabling the serial connection, 
 In the command line interface for your Raspberry PI run the 'raspi-config' utility: 
 
 ```shell
-$ sudo raspi-config
+sudo raspi-config
 ```
 
 Within the raspi-config menu, proceed with the following steps:
@@ -193,7 +197,7 @@ To resolve this, follow these simple steps:
 Firstly, run this command to remove the previous host identification details:
 
 ```shell
-$ rm -f .ssh/known_hosts
+rm -f .ssh/known_hosts
 ```
 
 Then, attempt to re-establish your SSH connection. You will be presented with a new message:
@@ -213,7 +217,7 @@ Verify Current Date and Time
 To check the current date and time setting of your Raspberry Pi, use the command:
 
 ```shell
-$ date
+date
 ```
 This will display the current date and time.
 
@@ -222,13 +226,13 @@ This will display the current date and time.
 To set the date and time manually, use the date command with the -s option (which stands for 'set'). The format for the date and time should be 'YYYY-MM-DD HH:MM:SS'. Here's an example command:
 
 ```shell
-$ sudo date -s '2023-05-17 14:00:00'
+sudo date -s '2023-05-17 14:00:00'
 ```
 
 After making the changes, restart your Raspberry Pi for the changes to take effect:
 
 ```shell
-$ sudo reboot
+sudo reboot
 ```
 
 After rebooting, execute the date command once more to confirm that the changes have been successfully applied. Your Raspberry Pi should now display the correct date and time, allowing you to engage in internet-related activities without encountering any issues.
