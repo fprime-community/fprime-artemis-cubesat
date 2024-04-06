@@ -51,13 +51,16 @@ RUN arduino-cli config add board_manager.additional_urls https://www.pjrc.com/te
 RUN arduino-cli core update-index
 
 # Install the Teensy core
-RUN arduino-cli core install teensy:avr
+RUN arduino-cli core install teensy:avr@1.58.2
+
+# Install fprime-arduino dependencies
+RUN arduino-cli lib install Time
 
 # Install udev rules for Teensy boards
 RUN curl -o /tmp/00-teensy.rules -L https://github.com/fprime-community/fprime-baremetal-reference/raw/main/docs/rules/00-teensy.rules
 
 # Copy the copy_rules script into the container
-COPY docs/scripts/copy_rules.sh /copy_rules.sh
+COPY scripts/copy_rules.sh /copy_rules.sh
 
 # Make the copy_rules script executable
 RUN chmod +x /copy_rules.sh
